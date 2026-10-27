@@ -37,6 +37,11 @@ header{background:var(--navy);color:#fff}
 .soon .in{justify-content:center;color:var(--sub)}
 footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 @media (max-width:560px){.logo{width:60px;height:48px}}
+.home-btn{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
+.home-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:560px){.home-btn span{display:none}.home-btn{padding:7px}}
+@media print{.home-btn{display:none}}
 </style>
 </head>
 <body>
@@ -52,6 +57,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
       <h1>꿈it(잇)다 <b>진로 수업</b></h1>
       <p>수업별 활동 바로가기 · 매탄중학교 진로상담실</p>
     </div>
+    <a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>교사 보관함</span></a>
   </div>
   <div class="bar"></div>
 </header>

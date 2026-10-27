@@ -152,6 +152,11 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   input,textarea,select{border-color:#999;background:#fff}
   .sec-head{margin-top:8px}
 }
+.home-btn{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
+.home-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:560px){.home-btn span{display:none}.home-btn{padding:7px}}
+@media print{.home-btn{display:none}}
 </style>
 </head>
 <body>
@@ -172,6 +177,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
       <h1>꿈it(잇)다 <b>학습 설계</b></h1>
       <p>CLS 학습코칭검사 · 매탄중학교 진로상담실</p>
     </div>
+    <a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>교사 보관함</span></a>
   </div>
   <div class="bar"></div>
 </header>
@@ -364,7 +370,7 @@ const SCALES=[
  {a:'마음',c:'area-mind',n:'학습효능감',d:'나도 공부를 잘 해낼 수 있다고 믿는 정도',low:'"난 해도 안 돼"라는 생각이 먼저 들어요.',tip:'문제 5개처럼 작은 목표를 세우고 성공을 기록하기, 하루 "해낸 일" 1줄 쓰기'},
  {a:'마음',c:'area-mind',n:'자기주도성',d:'누가 시키지 않아도 스스로 공부를 시작하고 이끄는 정도',low:'누군가 시켜야 공부를 시작해요.',tip:'오늘 공부할 과목을 스스로 고르고 시작 시각을 적어 두기'},
  {a:'태도',c:'area-att',n:'수업태도',d:'수업에 집중하고 적극적으로 참여하는 정도',low:'수업 중 딴생각을 하거나 질문을 하지 않아요.',tip:'수업마다 궁금한 점 1개 메모하기, 앞쪽 자리에 앉기'},
- {a:'태도',c:'area-att',n:'시험관리',d:'시험을 미리 계획하고 준비하는 정도',low:'시험 직전에 몰아서 공부해요.',tip:'시험 2주 전 과목별 거꾸로 계획표 만들기, 오답노트 쓰기'},
+ {a:'태도',c:'area-att',n:'시험준비',d:'시험을 미리 계획하고 준비하는 정도',low:'시험 직전에 몰아서 공부해요.',tip:'시험 2주 전 과목별 거꾸로 계획표 만들기, 오답노트 쓰기'},
  {a:'기술',c:'area-skill',n:'내용이해',d:'배운 내용의 핵심을 이해하고 연결하는 정도',low:'읽긴 했는데 설명은 잘 못 해요.',tip:'배운 내용을 친구나 가족에게 1분 동안 설명해 보기'},
  {a:'기술',c:'area-skill',n:'암기기억',d:'배운 내용을 오래 기억하는 방법을 쓰는 정도',low:'외워도 금방 잊어버려요.',tip:'1일·3일·7일 간격으로 복습하기, 백지에 떠올려 써 보기'},
  {a:'기술',c:'area-skill',n:'노트필기',d:'수업 내용을 정리하고 다시 활용하는 정도',low:'칠판을 베끼기만 하고 다시 보지 않아요.',tip:'코넬 노트(필기·키워드·3줄 요약), 쉬는 시간 3분 요약'},
