@@ -29,7 +29,7 @@ header{background:var(--navy);color:#fff}
 .title-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:28px 0 18px}
 .title-row h2{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(24px,4.6vw,34px);color:var(--navy)}
 .title-row span{color:var(--sub);font-weight:500}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:36px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:36px}
 .card{--c:var(--red);--cl:var(--red-l);background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column}
 .card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(29,43,83,.12)}
 .card::before{content:"";height:12px;background:var(--c)}
@@ -86,6 +86,9 @@ details > div p{margin:4px 0}
 .vbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:12px;font-size:13px;color:var(--sub)}
 .vbar .btn{text-decoration:none;box-shadow:none}
 @media print{.video,.vbar{display:none}}
+.formwrap{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.formwrap iframe{display:block;width:100%;height:1500px;border:0}
+.empty{background:var(--bg);border:1.5px dashed #b9c0d3;border-radius:14px;padding:28px 16px;text-align:center;color:var(--sub)}
 
 .styles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .style{border:2px solid var(--line);border-radius:14px;padding:14px}
@@ -172,7 +175,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 <section class="home on" id="home">
   <div class="title-row">
     <h2>단계를 골라 시작해요</h2>
-    <span>검사 안내부터 나만의 학습 전략까지</span>
+    <span>검사 안내 → 결과 해석 → 설문으로 전략 세우기</span>
   </div>
   <div class="cards">
     <div class="card c1" onclick="location.hash='1-1'"><div class="in">
@@ -192,16 +195,9 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
     <div class="card c3" onclick="location.hash='1-3'"><div class="in">
       <span class="badge">1-3</span>
       <svg viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>
-      <h3>결과지<br>탐험 지도</h3>
-      <p>나의 강점과 성장 포인트 찾기</p>
-      <div class="go">탐험 시작 ›</div>
-    </div></div>
-    <div class="card c4" onclick="location.hash='1-4'"><div class="in">
-      <span class="badge">1-4</span>
-      <svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3M4 20h16"/></svg>
-      <h3>나의 학습<br>전략 설계도</h3>
-      <p>전략 3가지와 2주 다짐</p>
-      <div class="go">설계하기 ›</div>
+      <h3>결과지 탐험 &amp;<br>학습 전략 설계</h3>
+      <p>설문으로 답하고 제출하기 (8문항)</p>
+      <div class="go">설문 시작 ›</div>
     </div></div>
   </div>
 </section>
@@ -210,8 +206,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   <a href="#">처음</a>
   <a href="#1-1" data-t="1-1">1-1 검사 안내</a>
   <a href="#1-2" data-t="1-2">1-2 결과 해석</a>
-  <a href="#1-3" data-t="1-3">1-3 결과지 탐험 지도</a>
-  <a href="#1-4" data-t="1-4">1-4 학습 전략 설계도</a>
+  <a href="#1-3" data-t="1-3">1-3 결과지 탐험 &amp; 학습 전략 설계</a>
 </nav>
 
 <!-- 1-1 -->
@@ -235,7 +230,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
       <li><div><b>안내 듣기</b> — 선생님이 알려주는 검사 시간과 접속 방법을 확인해요.</div></li>
       <li><div><b>검사 응답</b> — 한 문항씩 끝까지 읽고 지금의 내 모습에 가장 가까운 답을 골라요.</div></li>
       <li><div><b>결과지 받기</b> — 개인결과표 2쪽을 받아요. 결과지에 있는 QR 코드나 안내된 누리집(www.schoolon.kr)에서도 다시 볼 수 있어요.</div></li>
-      <li><div><b>결과 해석과 전략 세우기</b> — 1-2 → 1-3 → 1-4 순서로 진행해요.</div></li>
+      <li><div><b>결과 해석과 전략 세우기</b> — 1-2에서 결과를 함께 읽고, 1-3 설문에 답해 제출해요.</div></li>
     </ol>
   </div>
 
@@ -311,159 +306,40 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
       <li>친구의 점수를 묻거나 비교하지 않아요. 나누고 싶은 만큼만 나눠요.</li>
     </ul>
   </div>
-  <a class="next" href="#1-3">다음: 1-3 결과지 탐험 지도 ›</a>
+  <a class="next" href="#1-3">다음: 1-3 결과지 탐험 &amp; 학습 전략 설계 ›</a>
 </section>
 
 <!-- 1-3 -->
 <section class="sec" id="s1-3">
-  <div class="sec-head" style="--c:var(--green)"><span class="num">1-3</span><h2>결과지 탐험 지도</h2></div>
-  <p class="lead">결과지를 옆에 펴고 미션을 채워요. 쓴 내용은 이 기기에 자동 저장돼요.</p>
+  <div class="sec-head" style="--c:var(--green)"><span class="num">1-3</span><h2>결과지 탐험 &amp; 학습 전략 설계</h2></div>
+  <p class="lead">결과지를 옆에 펴고 설문 8문항에 답한 뒤 <b>제출</b>을 누르면 끝이에요. 약 10분 걸려요.</p>
 
   <div class="box">
-    <div class="who">
-      <label class="f"><span class="q">반</span><input type="text" data-k="cls" data-label="반" placeholder="예) 3"></label>
-      <label class="f"><span class="q">번호</span><input type="text" data-k="num" data-label="번호"></label>
-      <label class="f"><span class="q">이름</span><input type="text" data-k="name" data-label="이름"></label>
-    </div>
-    <div class="pens"><span style="background:#fff3b0">노랑: 나의 강점</span><span style="background:#ffd3e0">분홍: 신경 쓰이는 점</span><span style="background:#c9f2d9">초록: "맞아!" 공감한 문장</span></div>
-  </div>
-
-  <div class="box" data-part="m1">
-    <h3><span class="mission">미션 1</span>결과지 1쪽 — 지금 나는 어떤 상태일까?</h3>
-    <label class="f"><span class="q">① 나의 종합진단 학습유형</span><input type="text" data-k="m1_type" data-label="종합진단 학습유형"></label>
-    <div class="f" style="font-weight:700;font-size:14px;margin-bottom:6px">② 한줄 메시지에 대한 내 생각</div>
-    <div class="radios" style="margin-bottom:8px">
-      <label><input type="radio" name="m1_agree" data-k="m1_agree" value="동의해요">동의해요</label>
-      <label><input type="radio" name="m1_agree" data-k="m1_agree" value="조금 동의해요">조금 동의해요</label>
-      <label><input type="radio" name="m1_agree" data-k="m1_agree" value="동의하지 않아요">동의하지 않아요</label>
-    </div>
-    <label class="f"><span class="q hint">그렇게 생각한 이유</span><input type="text" data-k="m1_why" data-label="한줄 메시지에 대한 생각의 이유"></label>
-    <div class="two">
-      <label class="f"><span class="q">③ [Check 1] 흥미는 높은데 성취가 낮은 과목</span><input type="text" data-k="m1_subj" data-label="흥미는 높고 성취가 낮은 과목"></label>
-      <label class="f"><span class="q">④ [Check 1] 하루 학습시간 / 좋아하는 공부 장소·시간</span><input type="text" data-k="m1_time" data-label="학습시간과 선호 환경"></label>
-      <label class="f"><span class="q">⑤ [Check 2] 나를 공부하게 만드는 가장 큰 이유</span><input type="text" data-k="m1_motive_hi" data-label="가장 큰 공부 이유"></label>
-      <label class="f"><span class="q">⑥ [Check 2] 가장 약한 공부 이유</span><input type="text" data-k="m1_motive_lo" data-label="가장 약한 공부 이유"></label>
-      <label class="f"><span class="q">⑦ [Check 3] 가장 큰 학습 스트레스</span><input type="text" data-k="m1_stress" data-label="가장 큰 학습 스트레스"></label>
-      <label class="f"><span class="q">⑧ [Check 3] 1위 방해요인 / 도움 주는 사람</span><input type="text" data-k="m1_block" data-label="방해요인과 도움 주는 사람"></label>
-    </div>
+    <h3>이렇게 진행해요</h3>
+    <ol class="steps">
+      <li><div><b>반 · 번호 · 이름</b>을 정확히 적어요.</div></li>
+      <li><div><b>PART 1 결과지 탐험 (1~5번)</b> — 나의 학습유형, 강점 2개, 성장 포인트 2개, 학습스타일, 공감하거나 의외였던 점</div></li>
+      <li><div><b>PART 2 학습 전략 설계 (6~8번)</b> — 강점 살리기 전략, 성장 포인트 키우기 전략, 나의 2주 다짐</div></li>
+      <li><div><b>제출</b>을 누르면 선생님께 전달돼요. 제출 후에도 '응답 수정'으로 고칠 수 있어요.</div></li>
+    </ol>
   </div>
 
   <div class="box">
-    <h3><span class="mission">미션 2</span>결과지 2쪽 — 나에게 맞는 공부법은?</h3>
-    <div class="two">
-      <label class="f"><span class="q">⑨ 나의 강점 1 (상위 순위)</span><input type="text" data-k="str1" data-label="강점 1"></label>
-      <label class="f"><span class="q">나의 강점 2</span><input type="text" data-k="str2" data-label="강점 2"></label>
-      <label class="f"><span class="q">⑩ 나의 성장 포인트 1 (하위 순위)</span><input type="text" data-k="grow1" data-label="성장 포인트 1"></label>
-      <label class="f"><span class="q">나의 성장 포인트 2</span><input type="text" data-k="grow2" data-label="성장 포인트 2"></label>
+    <h3>전략 카드 <small>6·7번 전략이 떠오르지 않을 때</small></h3>
+    <p class="example">좋은 전략에는 <b>언제 · 어디서 · 얼마나</b>가 들어가요.<br>나쁜 예) 열심히 필기하기 → 좋은 예) 수학 수업이 끝나면 쉬는 시간 3분 동안 핵심 3줄 요약하기</p>
+    <div class="picker"><select id="pick"><option value="">척도를 골라 전략 카드를 보세요</option></select></div>
+    <div class="tipout" id="tipOut"></div>
+    <div class="styles" style="margin-top:4px">
+      <div class="style"><b>체험선호형</b><p>직접 풀어 보기, 소리 내어 설명하기</p></div>
+      <div class="style"><b>분석선호형</b><p>표·도식 정리, 단계별 계획표</p></div>
+      <div class="style"><b>창의선호형</b><p>마인드맵, 그림 노트, 암기 이야기</p></div>
+      <div class="style"><b>원리선호형</b><p>"왜?" 질문하기, 원리 설명하기</p></div>
     </div>
-    <div class="f" style="font-weight:700;font-size:14px;margin-bottom:6px">⑪ 나의 학습스타일</div>
-    <div class="radios" style="margin-bottom:12px">
-      <label><input type="radio" name="style" data-k="style" value="체험선호형">체험선호형</label>
-      <label><input type="radio" name="style" data-k="style" value="분석선호형">분석선호형</label>
-      <label><input type="radio" name="style" data-k="style" value="창의선호형">창의선호형</label>
-      <label><input type="radio" name="style" data-k="style" value="원리선호형">원리선호형</label>
-    </div>
-    <label class="f"><span class="q">⑫ 학습스타일 설명 중 "맞아!" 했던 문장</span><textarea data-k="m2_agree" data-label="공감한 학습스타일 문장"></textarea></label>
-  </div>
-
-  <div class="box">
-    <h3><span class="mission">미션 3</span>짝과 이야기 나누기 <small>점수 말고 느낌만 나눠요</small></h3>
-    <div class="two">
-      <label class="f"><span class="q">가장 공감한 점</span><textarea data-k="m3_agree" data-label="가장 공감한 점"></textarea></label>
-      <label class="f"><span class="q">의외였던 점</span><textarea data-k="m3_surp" data-label="의외였던 점"></textarea></label>
-    </div>
-    <label class="f"><span class="q">짝이 해 준 말</span><input type="text" data-k="m3_pair" data-label="짝이 해 준 말"></label>
   </div>
 
   <div class="box" style="border:2px solid var(--green)">
-    <h3>한 문장으로 정리하기</h3>
-    <label class="f"><span class="q hint">나는 ___ 유형이고, 나의 강점은 ___, 성장 포인트는 ___이다.</span><textarea data-k="summary" data-label="한 문장 정리" id="sumBox"></textarea></label>
-    <button class="btn ghost no-print" type="button" id="autoSum">위 내용으로 자동 채우기</button>
-  </div>
-
-  <div class="toolbar">
-    <span class="saved">✓ 저장됨</span>
-    <button class="btn ghost" type="button" data-copy="s1-3">내 기록 복사</button>
-    <button class="btn" type="button" onclick="window.print()">인쇄 / PDF</button>
-  </div>
-  <a class="next no-print" href="#1-4">다음: 1-4 나의 학습 전략 설계도 ›</a>
-</section>
-
-<!-- 1-4 -->
-<section class="sec" id="s1-4">
-  <div class="sec-head" style="--c:var(--blue)"><span class="num">1-4</span><h2>나의 학습 전략 설계도</h2></div>
-  <p class="lead">결과지를 근거로 나에게 꼭 맞는 전략 3가지와 2주 다짐을 세워요. 성장 포인트는 고칠 점이 아니라 키울 점이에요.</p>
-
-  <div class="box">
-    <div class="who">
-      <label class="f"><span class="q">반</span><input type="text" data-k="cls" data-label="반"></label>
-      <label class="f"><span class="q">번호</span><input type="text" data-k="num" data-label="번호"></label>
-      <label class="f"><span class="q">이름</span><input type="text" data-k="name" data-label="이름"></label>
-    </div>
-  </div>
-
-  <div class="box">
-    <h3>STEP 1. 원인 찾기 — 왜 낮게 나왔을까?</h3>
-    <p class="example">예시) 노트필기 → 칠판만 그대로 베끼고 집에 가서 다시 보지 않는다.</p>
-    <label class="f"><span class="q">성장 포인트 1: <span class="mirror" data-of="grow1">(1-3에서 적은 내용)</span></span><textarea data-k="why1" data-label="성장 포인트 1의 원인"></textarea></label>
-    <label class="f"><span class="q">성장 포인트 2: <span class="mirror" data-of="grow2">(1-3에서 적은 내용)</span></span><textarea data-k="why2" data-label="성장 포인트 2의 원인"></textarea></label>
-  </div>
-
-  <div class="box">
-    <h3>STEP 2. 전략 카드 살펴보기</h3>
-    <div class="picker no-print">
-      <select id="pick"><option value="">척도를 골라 전략 카드를 보세요</option></select>
-    </div>
-    <div class="tipout" id="tipOut"></div>
-    <label class="f"><span class="q">해 보고 싶은 전략 메모</span><textarea data-k="gallery" data-label="해 보고 싶은 전략"></textarea></label>
-  </div>
-
-  <div class="box">
-    <h3>STEP 3. 나의 학습 전략 3가지</h3>
-    <p class="example">나쁜 예: 열심히 필기하기 / 좋은 예: 수학 수업이 끝나면 쉬는 시간 3분 동안 핵심 3줄을 요약하고 노트에 ✓ 표시하기<br>좋은 전략에는 <b>언제 · 어디서 · 얼마나 · 어떻게 확인할지</b>가 들어가요.</p>
-    <label class="f"><span class="q">① 강점 살리기 <span class="hint">(강점: <span class="mirror" data-of="str1">-</span>)</span></span><textarea data-k="plan1" data-label="전략 1 강점 살리기"></textarea></label>
-    <label class="f"><span class="q">② 성장 포인트 키우기 <span class="hint">(성장 포인트: <span class="mirror" data-of="grow1">-</span>)</span></span><textarea data-k="plan2" data-label="전략 2 성장 포인트 키우기"></textarea></label>
-    <label class="f"><span class="q">③ 내 학습스타일 맞춤 <span class="hint">(<span class="mirror" data-of="style">-</span>)</span></span><textarea data-k="plan3" data-label="전략 3 학습스타일 맞춤"></textarea></label>
-  </div>
-
-  <div class="box">
-    <h3>STEP 4. 방해요인 막기</h3>
-    <p class="example">예시) 스마트폰 → 공부할 때는 거실 충전기에 두고, 끝나면 확인하기</p>
-    <div class="two">
-      <label class="f"><span class="q">나의 1위 방해요인</span><input type="text" data-k="blocker" data-label="방해요인"></label>
-      <label class="f"><span class="q">이렇게 막을 거예요</span><input type="text" data-k="blockplan" data-label="방해요인 막는 방법"></label>
-    </div>
-  </div>
-
-  <div class="box" style="border:2px solid var(--blue)">
-    <h3>STEP 5. 나의 다짐</h3>
-    <label class="f"><span class="q">나는 앞으로 2주 동안 이렇게 하겠습니다</span><textarea data-k="pledge" data-label="2주 다짐"></textarea></label>
-    <label class="f"><span class="q">이 다짐이 필요한 이유 (결과지 근거)</span><input type="text" data-k="pledge_why" data-label="다짐의 이유"></label>
-    <label class="f"><span class="q">힘들 때 나에게 해 줄 한마디</span><input type="text" data-k="pledge_self" data-label="나에게 해 줄 한마디"></label>
-    <div class="two">
-      <label class="f"><span class="q">시작 날짜</span><input type="text" data-k="d_start" data-label="시작 날짜" placeholder="예) 11월 2일"></label>
-      <label class="f"><span class="q">점검 날짜</span><input type="text" data-k="d_check" data-label="점검 날짜" placeholder="예) 11월 16일"></label>
-    </div>
-  </div>
-
-  <div class="box">
-    <h3>2주 실천 체크 <small>칸을 누를 때마다 ○ → △ → × → 빈칸</small></h3>
-    <div class="chk"><table id="chk"></table></div>
-    <div class="count" id="chkCount"></div>
-  </div>
-
-  <div class="box">
-    <h3>2주 후 돌아보기</h3>
-    <label class="f"><span class="q">가장 잘 지킨 전략과 그 비결</span><textarea data-k="r_best" data-label="잘 지킨 전략과 비결"></textarea></label>
-    <label class="f"><span class="q">지키기 어려웠던 전략과 그 이유</span><textarea data-k="r_hard" data-label="어려웠던 전략과 이유"></textarea></label>
-    <label class="f"><span class="q">다음 2주를 위해 바꿀 점</span><textarea data-k="r_next" data-label="바꿀 점"></textarea></label>
-  </div>
-
-  <div class="toolbar">
-    <span class="saved">✓ 저장됨</span>
-    <button class="btn warn" type="button" id="resetAll">전체 지우기</button>
-    <button class="btn ghost" type="button" data-copy="s1-4">내 기록 복사</button>
-    <button class="btn" type="button" onclick="window.print()">인쇄 / PDF</button>
+    <h3>설문 응답하기</h3>
+    <div id="formArea"></div>
   </div>
 </section>
 
@@ -471,6 +347,9 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 <footer>꿈it(잇)다 진로·진학 로드맵 · 학습 설계 · 매탄중학교 진로상담실</footer>
 
 <script>
+/* ▼ 구글 설문지 학생용 링크를 아래 따옴표 안에 넣어 주세요 (…/viewform 으로 끝나는 주소) */
+const FORM_URL='';
+
 const SCALES=[
  {a:'환경',c:'area-env',n:'학습환경',d:'공부에 집중할 수 있는 장소와 분위기를 갖추고 있는 정도',low:'책상에 물건이 많고 공부 장소가 매번 바뀌어요.',tip:'공부 자리 한 곳을 정하고, 책상 위에는 그 과목 책만 두기'},
  {a:'환경',c:'area-env',n:'학습지원',d:'공부할 때 도움을 받을 수 있는 사람과 자원이 있는 정도',low:'모르는 걸 물어볼 사람이 없다고 느껴요.',tip:'과목별 질문 친구·선생님 1명 정하기, 질문 노트 만들기'},
@@ -485,46 +364,6 @@ const SCALES=[
  {a:'실행',c:'area-act',n:'실천력',d:'세운 계획을 실제로 지키는 정도',low:'계획은 세우는데 잘 지키지 못해요.',tip:'계획을 15분 단위로 잘게 쪼개고, 끝낼 때마다 ✓ 표시하기'},
  {a:'실행',c:'area-act',n:'집중력',d:'공부하는 동안 흐트러지지 않고 몰입하는 정도',low:'10분도 앉아 있기 어렵고 자꾸 휴대폰을 봐요.',tip:'25분 집중 + 5분 휴식, 휴대폰은 다른 방에 두기'}
 ];
-
-/* storage */
-const KEY='ggumitda-cls-learning-v1';
-let store={};
-try{store=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){store={}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){} flash()}
-let ft;function flash(){document.querySelectorAll('.saved').forEach(s=>s.classList.add('show'));clearTimeout(ft);ft=setTimeout(()=>document.querySelectorAll('.saved').forEach(s=>s.classList.remove('show')),1200)}
-
-const fields=[...document.querySelectorAll('[data-k]')];
-function fill(){
-  fields.forEach(el=>{
-    const v=store[el.dataset.k];
-    if(el.type==='radio') el.checked=(v===el.value);
-    else el.value=v==null?'':v;
-  });
-  mirror();
-}
-fields.forEach(el=>{
-  const ev=el.type==='radio'?'change':'input';
-  el.addEventListener(ev,()=>{
-    const k=el.dataset.k;
-    if(el.type==='radio'){ if(el.checked) store[k]=el.value; }
-    else{
-      store[k]=el.value;
-      fields.forEach(o=>{ if(o!==el && o.dataset.k===k && o.type!=='radio') o.value=el.value; });
-    }
-    mirror(); save();
-  });
-});
-function mirror(){
-  document.querySelectorAll('.mirror').forEach(m=>{const v=store[m.dataset.of];m.textContent=v&&v.trim()?v:'(1-3에서 적어 주세요)'});
-}
-
-/* auto summary */
-document.getElementById('autoSum').addEventListener('click',()=>{
-  const t=store.m1_type||'___', s=[store.str1,store.str2].filter(Boolean).join(', ')||'___', g=[store.grow1,store.grow2].filter(Boolean).join(', ')||'___';
-  const box=document.getElementById('sumBox');
-  box.value=`나는 ${t} 유형이고, 나의 강점은 ${s}, 성장 포인트는 ${g}이다.`;
-  store.summary=box.value; save();
-});
 
 /* scale list (1-2) */
 const list=document.getElementById('scaleList');
@@ -546,66 +385,32 @@ tIn.addEventListener('input',()=>{
   else tOut.innerHTML='<span style="color:var(--red)">또래보다 낮은 편 — 키워 갈 성장 포인트예요.</span>';
 });
 
-/* strategy picker (1-4) */
+/* strategy cards (1-3) */
 const pick=document.getElementById('pick'),tipOut=document.getElementById('tipOut');
 SCALES.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${s.a} · ${s.n}`;pick.appendChild(o)});
 pick.addEventListener('change',()=>{
   if(pick.value===''){tipOut.classList.remove('show');return}
   const s=SCALES[pick.value];
-  tipOut.innerHTML=`<b>${s.n}</b>이 낮을 때: ${s.low}<br><b>전략</b> · ${s.tip}<br><button class="btn ghost" type="button" id="addTip" style="margin-top:8px;padding:6px 12px">메모에 담기</button>`;
+  tipOut.innerHTML=`<b>${s.n}</b>이(가) 낮을 때: ${s.low}<br><b>전략</b> · ${s.tip}`;
   tipOut.classList.add('show');
-  document.getElementById('addTip').onclick=()=>{
-    const ta=document.querySelector('[data-k="gallery"]');
-    const line=`[${s.n}] ${s.tip}`;
-    ta.value=(ta.value?ta.value+'\n':'')+line; store.gallery=ta.value; save();
-  };
 });
 
-/* checklist */
-const chk=document.getElementById('chk'),cnt=document.getElementById('chkCount');
-const CYCLE=['','○','△','×'];
-if(!Array.isArray(store.chk)) store.chk=Array(42).fill('');
-function buildChk(){
-  let h='<tr><th>전략</th>'+Array.from({length:14},(_,i)=>`<th>${i+1}일</th>`).join('')+'</tr>';
-  for(let r=0;r<3;r++){
-    h+=`<tr><th>${['①','②','③'][r]}</th>`;
-    for(let d=0;d<14;d++){const v=store.chk[r*14+d]||'';h+=`<td class="c" data-i="${r*14+d}" data-v="${v}">${v}</td>`}
-    h+='</tr>';
-  }
-  chk.innerHTML=h; countChk();
-}
-function countChk(){const o=store.chk.filter(v=>v==='○').length,t=store.chk.filter(v=>v==='△').length;cnt.textContent=`○ ${o}개 · △ ${t}개 / 전체 42칸`}
-chk.addEventListener('click',e=>{
-  const td=e.target.closest('td.c'); if(!td) return;
-  const i=+td.dataset.i, nv=CYCLE[(CYCLE.indexOf(store.chk[i]||'')+1)%4];
-  store.chk[i]=nv; td.dataset.v=nv; td.textContent=nv; countChk(); save();
-});
+/* survey */
+(function(){
+  const area=document.getElementById('formArea'), url=FORM_URL.trim();
+  if(!url){area.innerHTML='<div class="empty">선생님이 설문 링크를 연결하면 여기에 설문이 나타나요.</div>';return}
+  const open=`<div class="vbar" style="margin:0 0 12px"><a class="btn" href="${url}" target="_blank" rel="noopener">새 창에서 설문 열기 ↗</a><span>설문이 잘 안 보이면 새 창에서 열어 주세요.</span></div>`;
+  if(/\/viewform/.test(url)){
+    const src=url+(url.includes('?')?'&':'?')+'embedded=true';
+    area.innerHTML=open+`<div class="formwrap"><iframe src="${src}" title="학습 전략 설계 설문">불러오는 중…</iframe></div>`;
+  } else area.innerHTML=open;
+})();
 
-/* copy record */
-document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
-  const sec=document.getElementById(b.dataset.copy), seen=new Set(), lines=[];
-  lines.push(sec.querySelector('h2').textContent);
-  sec.querySelectorAll('[data-k]').forEach(el=>{
-    const k=el.dataset.k; if(seen.has(k)) return; seen.add(k);
-    const v=store[k]; if(v&&String(v).trim()) lines.push(`${el.dataset.label||k}: ${v}`);
-  });
-  if(b.dataset.copy==='s1-4') lines.push(cnt.textContent);
-  const text=lines.join('\n');
-  try{await navigator.clipboard.writeText(text);b.textContent='복사됨 ✓'}
-  catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');b.textContent='복사됨 ✓'}catch(_){b.textContent='복사 실패'};ta.remove()}
-  setTimeout(()=>b.textContent='내 기록 복사',1500);
-}));
-
-document.getElementById('resetAll').addEventListener('click',()=>{
-  if(!confirm('1-3, 1-4에 쓴 내용을 모두 지울까요? 되돌릴 수 없어요.')) return;
-  store={chk:Array(42).fill('')}; save(); fill(); buildChk();
-  document.querySelector('[data-k="summary"]').value='';
-});
-
-/* routing */
+/* routing (예전 1-4 주소는 1-3으로) */
 function route(){
-  const h=decodeURIComponent(location.hash.replace('#',''));
-  const ok=['1-1','1-2','1-3','1-4'].includes(h);
+  let h=decodeURIComponent(location.hash.replace('#',''));
+  if(h==='1-4'){history.replaceState(null,'','#1-3');h='1-3'}
+  const ok=['1-1','1-2','1-3'].includes(h);
   document.getElementById('home').classList.toggle('on',!ok);
   document.getElementById('tabs').style.display=ok?'flex':'none';
   document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==='s'+h));
@@ -613,7 +418,7 @@ function route(){
   window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',route);
-fill(); buildChk(); route();
+route();
 </script>
 </body>
 </html>
