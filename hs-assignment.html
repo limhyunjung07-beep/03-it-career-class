@@ -56,6 +56,10 @@ header{background:var(--navy);color:#fff}
 .tile b{display:block;color:var(--navy);margin-bottom:2px}
 .tile span{font-size:14px;color:var(--sub)}
 .note{background:var(--orange-l);border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px;font-size:14px;margin-top:12px}
+.note.strong{display:flex;align-items:center;gap:12px;background:var(--orange);border:0;color:#fff;font-size:16px;font-weight:500;padding:16px 18px;border-radius:14px;box-shadow:0 6px 16px rgba(245,124,0,.28)}
+.note.strong .pin{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--orange);display:grid;place-items:center;font-weight:900;font-size:18px}
+.note.strong b{font-weight:900}
+.note.strong mark{background:var(--yellow);color:var(--navy);font-weight:900;border-radius:6px;padding:1px 7px}
 
 .video{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0f1730}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -119,7 +123,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
       <div class="tile" style="background:var(--green-l)"><b>1단계 · 학군내배정</b><span>수원학군에서 고른 5개 고등학교 지망 순위 작성 · 학교별 모집정원의 50%</span></div>
       <div class="tile" style="background:var(--blue-l)"><b>2단계 · 구역내배정</b><span>1단계에서 배정받지 못한 학생 대상 · 우리 구역 전체 고등학교 지망 순위 작성</span></div>
     </div>
-    <div class="note"><b>매탄중학교는 2구역(수원 남부)</b>이에요. 2구역 지망 순위는 남학생 16지망, 여학생 15지망까지 작성해요.</div>
+    <div class="note strong"><span class="pin">!</span><span><b>매탄중학교는 <mark>2구역(수원 남부)</mark></b>이에요. 2구역 지망 순위는 남학생 <mark>16지망</mark>, 여학생 <mark>15지망</mark>까지 작성해요.</span></div>
   </div>
 
   <!-- 2. 영상 -->
