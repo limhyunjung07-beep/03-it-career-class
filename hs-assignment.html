@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>평준화학군 학생배정방안 설명회 · 3학년</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1d2b53;--bg:#f4f6fb;--ink:#1f2433;--sub:#5b6275;--line:#e3e6ee;
+  --red:#e63946;--red-l:#fdecee;--orange:#f57c00;--orange-l:#fff3e3;--green:#1f9d74;--green-l:#e6f6ef;
+  --blue:#2f6fd6;--blue-l:#e8f0fd;--yellow:#ffc928}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{background:var(--navy);color:#fff}
+.hd{display:flex;align-items:center;gap:16px;padding:18px 16px}
+.logo{width:72px;height:56px;background:#fff;border-radius:14px;display:grid;place-items:center;flex:none;text-decoration:none}
+.hd h1{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(22px,4.4vw,34px);line-height:1.2}
+.hd h1 b{color:var(--yellow);font-weight:400}
+.hd p{margin:2px 0 0;opacity:.85;font-size:clamp(13px,2.4vw,16px)}
+.bar{height:8px;background:linear-gradient(90deg,var(--red) 0 25%,var(--orange) 25% 50%,var(--green) 50% 75%,var(--blue) 75%)}
+.home-btn{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
+.home-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:560px){.home-btn span{display:none}.home-btn{padding:7px}.logo{width:60px;height:48px}}
+
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:8px;overflow-x:auto;padding:12px 0 8px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;text-decoration:none;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--sub)}
+.tabs a b{color:var(--navy);margin-right:4px}
+.tabs a:hover{border-color:var(--navy);color:var(--navy)}
+
+.hero{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;margin:14px 0 22px}
+.hero::before{content:"";display:block;height:12px;background:var(--green)}
+.hero .in{padding:22px 20px}
+.hero .badge{display:inline-block;background:var(--green);color:#fff;font-weight:900;letter-spacing:.06em;border-radius:999px;padding:4px 16px;font-size:14px}
+.hero h2{margin:10px 0 4px;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(26px,5vw,40px);color:var(--navy);line-height:1.25}
+.hero p{margin:0;color:var(--sub)}
+
+.sec{padding-bottom:12px}
+.sec-head{--c:var(--green);display:flex;align-items:center;gap:12px;margin:26px 0 6px}
+.sec-head .num{background:var(--c);color:#fff;font-weight:900;border-radius:10px;padding:4px 10px;font-size:15px;flex:none}
+.sec-head h2{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(22px,4.2vw,30px);color:var(--navy)}
+.lead{color:var(--sub);margin:0 0 14px}
+.box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+.box h3{margin:0 0 10px;font-size:18px;color:var(--navy)}
+
+.timeline{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.timeline li{background:var(--bg);border-radius:14px;padding:12px 14px}
+.timeline li b{display:block;color:var(--navy)}
+.timeline li span{font-size:14px;color:var(--sub)}
+.timeline li.hl{background:var(--green-l)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.tile{border-radius:14px;padding:14px;background:var(--bg)}
+.tile b{display:block;color:var(--navy);margin-bottom:2px}
+.tile span{font-size:14px;color:var(--sub)}
+.note{background:var(--orange-l);border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px;font-size:14px;margin-top:12px}
+
+.video{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0f1730}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:12px;font-size:13px;color:var(--sub)}
+.btn{display:inline-block;font:inherit;font-weight:700;font-size:14px;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;background:var(--navy);color:#fff;text-decoration:none}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.pdf{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#525659}
+.pdf iframe{display:block;width:100%;height:80vh;min-height:520px;border:0}
+.doc-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.doc-meta span{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--bg);color:var(--sub)}
+.mobile-tip{display:none;font-size:13px;color:var(--sub);margin:0 0 10px}
+@media (max-width:760px){.pdf{display:none}.mobile-tip{display:block}}
+footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
+@media print{.tabs,.video,.vbar,.home-btn,.pdf{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <a class="logo" href="index.html" title="수업 목록으로">
+      <svg width="54" height="34" viewBox="0 0 54 34" aria-hidden="true"><g fill="none" stroke-width="4.2" stroke-linecap="round">
+        <path d="M5 30a22 22 0 0 1 44 0" stroke="#e63946"/><path d="M9.5 30a17.5 17.5 0 0 1 35 0" stroke="#f57c00"/>
+        <path d="M14 30a13 13 0 0 1 26 0" stroke="#ffc928"/><path d="M18.5 30a8.5 8.5 0 0 1 17 0" stroke="#1f9d74"/>
+        <path d="M23 30a4 4 0 0 1 8 0" stroke="#2f6fd6"/></g></svg>
+    </a>
+    <div>
+      <h1>꿈it(잇)다 <b>진로 수업</b></h1>
+      <p>3학년 · 고입 준비 · 매탄중학교 진로상담실</p>
+    </div>
+    <a class="home-btn" href="index.html" title="수업 목록으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>수업 목록</span></a>
+  </div>
+  <div class="bar"></div>
+</header>
+
+<main class="wrap">
+  <!-- 1. 제목 -->
+  <section class="hero" id="s1">
+    <div class="in">
+      <span class="badge">3학년 · 수업 02</span>
+      <h2>평준화학군 학생배정방안 설명회</h2>
+      <p>2027학년도 수원학군 일반고등학교 학생 배정 방안을 영상과 자료로 함께 알아봐요.</p>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="수업 순서">
+    <a href="#s2"><b>2</b>설명회 영상</a>
+    <a href="#s3"><b>3</b>수원학군 리플렛</a>
+    <a href="#s4"><b>4</b>수원학군 자료</a>
+    <a href="#s5"><b>5</b>응시원서</a>
+  </nav>
+
+  <div class="box">
+    <h3>한눈에 보는 일정</h3>
+    <ul class="timeline">
+      <li class="hl"><b>원서접수</b><span>2026. 12. 4.(금) ~ 12. 10.(목) 17:00</span></li>
+      <li><b>배정대상자 발표</b><span>2027. 1. 6.(수)</span></li>
+      <li class="hl"><b>배정 학교 발표</b><span>2027. 1. 22.(금) 예정</span></li>
+      <li><b>등록 기간</b><span>2027. 1. 25.(월) ~ 1. 27.(수)</span></li>
+    </ul>
+    <div class="grid2">
+      <div class="tile" style="background:var(--green-l)"><b>1단계 · 학군내배정</b><span>수원학군에서 고른 5개 고등학교 지망 순위 작성 · 학교별 모집정원의 50%</span></div>
+      <div class="tile" style="background:var(--blue-l)"><b>2단계 · 구역내배정</b><span>1단계에서 배정받지 못한 학생 대상 · 우리 구역 전체 고등학교 지망 순위 작성</span></div>
+    </div>
+    <div class="note"><b>매탄중학교는 2구역(수원 남부)</b>이에요. 2구역 지망 순위는 남학생 16지망, 여학생 15지망까지 작성해요.</div>
+  </div>
+
+  <!-- 2. 영상 -->
+  <section class="sec" id="s2">
+    <div class="sec-head"><span class="num">2</span><h2>설명회 영상</h2></div>
+    <p class="lead">경기도교육청이 안내하는 수원학군 학생 배정 방안 설명 영상이에요.</p>
+    <div class="box">
+      <div class="video"><iframe src="https://www.youtube.com/embed/V35HMqPp5lU" title="평준화학군 학생배정방안 설명회 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      <div class="vbar">
+        <a class="btn ghost" href="https://www.youtube.com/watch?v=V35HMqPp5lU" target="_blank" rel="noopener">유튜브에서 크게 보기 ↗</a>
+        <span>영상이 안 보이면 유튜브에서 열어 주세요.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 리플렛 -->
+  <section class="sec" id="s3">
+    <div class="sec-head" style="--c:var(--orange)"><span class="num">3</span><h2>수원학군 리플렛</h2></div>
+    <p class="lead">학생·학부모용 안내 리플렛이에요. 지원 자격, 지망 순위 작성법, 추첨 방법이 정리되어 있어요.</p>
+    <div class="box">
+      <div class="doc-meta"><span>학생·학부모용</span><span>PDF 8쪽</span></div>
+      <p class="mobile-tip">휴대폰에서는 아래 버튼을 눌러 열어 주세요.</p>
+      <div class="pdf"><iframe src="suwon-leaflet.pdf#view=FitH" title="수원학군 리플렛" loading="lazy"></iframe></div>
+      <div class="vbar">
+        <a class="btn" href="suwon-leaflet.pdf" target="_blank" rel="noopener">리플렛 열기 ↗</a>
+        <a class="btn ghost" href="suwon-leaflet.pdf" download="2027 수원학군 일반고 학생배정방안 리플렛.pdf">내려받기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 자료 -->
+  <section class="sec" id="s4">
+    <div class="sec-head" style="--c:var(--blue)"><span class="num">4</span><h2>수원학군 자료</h2></div>
+    <p class="lead">설명회 발표 자료예요. 구역별 중·고등학교 현황과 배정 단계를 자세히 볼 수 있어요.</p>
+    <div class="box">
+      <div class="doc-meta"><span>경기도교육청 중등교육과</span><span>PDF 42쪽</span></div>
+      <p class="mobile-tip">휴대폰에서는 아래 버튼을 눌러 열어 주세요.</p>
+      <div class="pdf"><iframe src="suwon-briefing.pdf#view=FitH" title="수원학군 학생 배정 방안 자료" loading="lazy"></iframe></div>
+      <div class="vbar">
+        <a class="btn" href="suwon-briefing.pdf" target="_blank" rel="noopener">자료 열기 ↗</a>
+        <a class="btn ghost" href="suwon-briefing.pdf" download="2027 평준화학군 학생배정방안 수원학군 자료.pdf">내려받기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 응시원서 -->
+  <section class="sec" id="s5">
+    <div class="sec-head" style="--c:var(--red)"><span class="num">5</span><h2>응시원서</h2></div>
+    <p class="lead">입학원서 작성 예시와 지망 순위 작성지예요. 학군내 5지망과 2구역 지망 순위를 미리 써 보세요.</p>
+    <div class="box">
+      <div class="doc-meta"><span>작성 예시</span><span>PDF 2쪽</span></div>
+      <p class="mobile-tip">휴대폰에서는 아래 버튼을 눌러 열어 주세요.</p>
+      <div class="pdf"><iframe src="application-form.pdf#view=FitH" title="응시원서 작성 예시" loading="lazy"></iframe></div>
+      <div class="vbar">
+        <a class="btn" href="application-form.pdf" target="_blank" rel="noopener">응시원서 열기 ↗</a>
+        <a class="btn ghost" href="application-form.pdf" download="2027 평준화지역 응시원서 작성 예시.pdf">내려받기</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>꿈it(잇)다 진로 수업 · 매탄중학교 진로상담실</footer>
+</body>
+</html>
