@@ -162,6 +162,15 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 .qrrow b{display:block;color:var(--navy);font-size:17px}
 .qrrow span{color:var(--sub);font-size:14px}
 @media (max-width:560px){.qrrow img{width:120px;height:120px}}
+.qrbtn{position:relative;flex:none;border:0;padding:0;background:none;cursor:zoom-in;border-radius:10px}
+.qrbtn img{display:block;transition:transform .15s,box-shadow .15s}
+.qrbtn:hover img,.qrbtn:focus-visible img{transform:scale(1.04);box-shadow:0 6px 18px rgba(29,43,83,.18)}
+.qrbtn em{position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);font-style:normal;font-size:12px;font-weight:700;background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.qrzoom{position:fixed;inset:0;z-index:100;background:rgba(15,23,48,.82);display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.qrzoom.on{display:flex}
+.qrzoom-in{background:#fff;border-radius:24px;padding:24px;text-align:center;cursor:default;max-width:92vw}
+.qrzoom-in img{display:block;width:min(70vh,80vw,560px);height:auto;margin:0 auto}
+.qrzoom-in p{margin:10px 0 14px;font-family:'Jua',sans-serif;font-size:clamp(20px,3.4vw,28px);color:var(--navy)}
 </style>
 </head>
 <body>
@@ -359,8 +368,15 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   <div class="box" style="border:2px solid var(--green)">
     <h3>설문 응답하기</h3>
     <div class="qrrow">
-      <img src="survey-qr.png" alt="설문 응답 QR 코드" width="150" height="150">
-      <div><b>휴대폰으로 응답하기</b><span>카메라로 QR 코드를 비추면 설문이 열려요.</span></div>
+      <button type="button" class="qrbtn" id="qrOpen" title="눌러서 크게 보기"><img src="survey-qr.png" alt="설문 응답 QR 코드" width="150" height="150"><em>🔍 크게 보기</em></button>
+      <div><b>휴대폰으로 응답하기</b><span>카메라로 QR 코드를 비추면 설문이 열려요.<br>QR 코드를 누르면 크게 볼 수 있어요.</span></div>
+    </div>
+    <div class="qrzoom" id="qrZoom" role="dialog" aria-modal="true" aria-label="설문 QR 코드 크게 보기">
+      <div class="qrzoom-in">
+        <img src="survey-qr.png" alt="설문 응답 QR 코드 (크게)">
+        <p>휴대폰 카메라로 QR 코드를 비춰 주세요</p>
+        <button type="button" class="btn" id="qrClose">닫기 ✕</button>
+      </div>
     </div>
     <div id="formArea"></div>
   </div>
@@ -448,6 +464,17 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 route();
+</script>
+<script>
+(function(){
+  const z=document.getElementById('qrZoom');if(!z)return;
+  const open=()=>{z.classList.add('on');document.body.style.overflow='hidden'};
+  const close=()=>{z.classList.remove('on');document.body.style.overflow=''};
+  document.getElementById('qrOpen').addEventListener('click',open);
+  document.getElementById('qrClose').addEventListener('click',close);
+  z.addEventListener('click',e=>{if(e.target===z)close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+})();
 </script>
 </body>
 </html>
