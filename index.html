@@ -42,6 +42,22 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .home-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:560px){.home-btn span{display:none}.home-btn{padding:7px}}
 @media print{.home-btn{display:none}}
+.grades{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:8px}
+.grade{--c:var(--orange);--cl:#fff3e3;display:flex;align-items:center;gap:16px;text-decoration:none;background:#fff;border:2px solid var(--line);border-radius:22px;padding:20px 22px;transition:transform .12s,box-shadow .12s,border-color .12s}
+.grade.g3{--c:var(--green);--cl:#e6f6ef}
+.grade:hover{transform:translateY(-3px);border-color:var(--c);box-shadow:0 10px 22px rgba(29,43,83,.1)}
+.gnum{flex:none;width:64px;height:64px;border-radius:18px;background:var(--cl);color:var(--c);display:grid;place-items:center;font-family:'Jua',sans-serif;font-size:40px;line-height:1}
+.gtxt b{display:block;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(26px,4.6vw,34px);color:var(--c);line-height:1.15}
+.gtxt small{color:var(--sub);font-size:14px;font-weight:500}
+.grade.on{background:var(--c);border-color:var(--c);box-shadow:0 10px 22px rgba(29,43,83,.16)}
+.grade.on .gnum{background:#fff}
+.grade.on .gtxt b,.grade.on .gtxt small{color:#fff}
+.grades.picked .grade:not(.on){opacity:.55}
+.grades.picked .grade:not(.on):hover{opacity:1}
+.pick-hint{text-align:center;color:var(--sub);font-weight:700;margin:22px 0 40px}
+.panel{display:none}.panel.on{display:block}
+.gtag{font-style:normal;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:900;color:#fff;border-radius:999px;padding:3px 12px;vertical-align:middle;margin-right:4px}
+@media (max-width:560px){.grades{gap:10px}.grade{padding:14px;gap:10px}.gnum{width:48px;height:48px;font-size:30px;border-radius:14px}}
 </style>
 </head>
 <body>
@@ -64,11 +80,23 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 
 <main class="wrap">
   <div class="title-row">
-    <h2>오늘의 수업을 골라요</h2>
-    <span>선생님이 안내한 번호를 눌러 시작해요</span>
+    <h2>학년을 골라요</h2>
+    <span>내 학년을 누르면 수업 목록이 나와요</span>
   </div>
 
-  <div class="cards">
+  <div class="grades" role="tablist" aria-label="학년 선택">
+    <a class="grade g1" href="#g1" data-g="1" role="tab"><span class="gnum">1</span><span class="gtxt"><b>1학년</b><small>학습 설계</small></span></a>
+    <a class="grade g3" href="#g3" data-g="3" role="tab"><span class="gnum">3</span><span class="gtxt"><b>3학년</b><small>고입 준비</small></span></a>
+  </div>
+
+  <p class="pick-hint" id="pickHint">↑ 위에서 학년을 먼저 골라 주세요</p>
+
+  <section class="panel" id="g1" data-g="1">
+    <div class="title-row">
+      <h2><em class="gtag" style="background:var(--orange)">1학년</em> 오늘의 수업을 골라요</h2>
+      <span>선생님이 안내한 번호를 눌러 시작해요</span>
+    </div>
+    <div class="cards">
     <div class="card">
       <div class="in">
         <span class="badge">수업 01</span>
@@ -82,9 +110,24 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
         </ul>
       </div>
     </div>
+    <div class="card soon">
+      <div class="in">
+        <span class="badge">수업 02</span>
+        <p>다음 수업이 곧 열려요</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="panel" id="g3" data-g="3">
+    <div class="title-row">
+      <h2><em class="gtag" style="background:var(--green)">3학년</em> 오늘의 수업을 골라요</h2>
+      <span>선생님이 안내한 번호를 눌러 시작해요</span>
+    </div>
+    <div class="cards">
     <div class="card" style="--c:var(--green);--cl:#e6f6ef">
       <div class="in">
-        <span class="badge">수업 02 · 3학년</span>
+        <span class="badge">수업 01</span>
         <svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6-9 6z"/><path d="M7 12.5V17c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/><path d="M21 10v5"/></svg>
         <h3>고입 배정 안내</h3>
         <p>평준화학군 학생배정방안 설명회</p>
@@ -98,12 +141,25 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
     </div>
     <div class="card soon">
       <div class="in">
-        <span class="badge">수업 03</span>
+        <span class="badge">수업 02</span>
         <p>다음 수업이 곧 열려요</p>
       </div>
     </div>
-  </div>
+    </div>
+  </section>
 </main>
 <footer>꿈it(잇)다 진로 수업 · 매탄중학교 진로상담실</footer>
+<script>
+(function(){
+  const grades=document.querySelector('.grades'),hint=document.getElementById('pickHint');
+  function show(){
+    const g=(location.hash.match(/^#g([13])$/)||[])[1]||'';
+    document.querySelectorAll('.grade').forEach(a=>{const on=a.dataset.g===g;a.classList.toggle('on',on);a.setAttribute('aria-selected',on)});
+    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.dataset.g===g));
+    grades.classList.toggle('picked',!!g);hint.style.display=g?'none':'block';
+  }
+  window.addEventListener('hashchange',show);show();
+})();
+</script>
 </body>
 </html>
