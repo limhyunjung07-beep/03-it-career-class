@@ -171,6 +171,19 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 .qrzoom-in{background:#fff;border-radius:24px;padding:24px;text-align:center;cursor:default;max-width:92vw}
 .qrzoom-in img{display:block;width:min(70vh,80vw,560px);height:auto;margin:0 auto}
 .qrzoom-in p{margin:10px 0 14px;font-family:'Jua',sans-serif;font-size:clamp(20px,3.4vw,28px);color:var(--navy)}
+
+/* 홈 버튼 (모든 페이지 공통) */
+.hd-btns{margin-left:auto;flex:none;display:flex;gap:8px;align-items:center}
+.hd-btns .home-btn{margin-left:0}
+.go-home{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#fff;color:var(--navy);font-weight:900;font-size:14px;border-radius:999px;padding:7px 14px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.go-home:hover,.go-home:focus-visible{background:var(--yellow);outline:none}
+.go-home svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fab-home{position:fixed;left:16px;bottom:16px;z-index:50;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;text-decoration:none;box-shadow:0 6px 16px rgba(29,43,83,.3);border:3px solid #fff}
+.fab-home:hover{background:var(--yellow);color:var(--navy)}
+.fab-home svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fab-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:560px){.go-home span{display:none}.go-home{padding:8px}}
+@media print{.go-home,.fab-home{display:none}}
 </style>
 </head>
 <body>
@@ -191,7 +204,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
       <h1>꿈it(잇)다 <b>학습 설계</b></h1>
       <p>CLS 학습코칭검사 · 매탄중학교 진로상담실</p>
     </div>
-    <a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>교사 보관함</span></a>
+    <div class="hd-btns"><a class="go-home" href="index.html#g1" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a><a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>교사 보관함</span></a></div>
   </div>
   <div class="bar"></div>
 </header>
@@ -476,5 +489,6 @@ route();
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
+<a class="fab-home" href="index.html#g1" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
 </body>
 </html>
