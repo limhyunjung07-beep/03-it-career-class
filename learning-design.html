@@ -68,6 +68,7 @@ header{background:var(--navy);color:#fff}
 .note{background:var(--orange-l);border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px;font-size:14px}
 .next{display:inline-block;margin-top:6px;background:var(--navy);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 18px}
 .box h3.big-h{font-size:clamp(20px,2.4vw,24px)}
+.hn{display:inline-grid;place-items:center;min-width:1.55em;height:1.55em;margin-right:.45em;border-radius:50%;background:var(--orange);color:#fff;font-size:.85em;font-weight:900;vertical-align:.08em;font-variant-numeric:tabular-nums}
 .sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
 .sbtn{--bc:#7a8bb5;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:92px;padding:12px 6px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--navy);transition:transform .12s,border-color .12s,background .12s}
 .sbtn:hover{transform:translateY(-2px);border-color:var(--bc)}
@@ -215,6 +216,13 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 .go-home{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#fff;color:var(--navy);font-weight:900;font-size:14px;border-radius:999px;padding:7px 14px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .go-home:hover,.go-home:focus-visible{background:var(--yellow);outline:none}
 .go-home svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+[hidden]{display:none!important}
+.fab-scale{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;font:inherit;font-weight:800;font-size:17px;display:inline-flex;align-items:center;gap:2px;padding:12px 18px 12px 12px;border-radius:999px;border:3px solid #fff;background:var(--orange);color:#fff;cursor:pointer;box-shadow:0 6px 16px rgba(29,43,83,.3)}
+.fab-scale .hn{background:#fff;color:var(--orange)}
+.fab-scale:hover{filter:brightness(1.05)}
+.fab-scale:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+@media print{.fab-scale{display:none!important}}
+#scales{scroll-margin-top:16px}
 .fab-home{position:fixed;left:16px;bottom:16px;z-index:50;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;text-decoration:none;box-shadow:0 6px 16px rgba(29,43,83,.3);border:3px solid #fff}
 .fab-home:hover{background:var(--yellow);color:var(--navy)}
 .fab-home svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
@@ -361,13 +369,13 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   </div>
 
   <div class="box">
-    <h3 class="big-h">학습전략 12개 척도 <small>버튼을 눌러 뜻과 전략 보기</small></h3>
+    <h3 class="big-h" id="scales"><span class="hn">1</span>학습전략 12개 척도 <small>버튼을 눌러 뜻과 전략 보기</small></h3>
     <div class="sgrid" id="scaleList" role="tablist" aria-label="학습전략 12개 척도"></div>
     <div class="spanel" id="scalePanel" role="tabpanel" aria-live="polite"></div>
   </div>
 
   <div class="box">
-    <h3>나에게 맞는 학습스타일 4가지</h3>
+    <h3><span class="hn">2</span>나에게 맞는 학습스타일 4가지</h3>
     <div class="styles big">
       <div class="style"><b>체험선호형</b><p class="trait"><strong class="kd">직접 해 보고 움직이며</strong> 배울 때 잘 익혀요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">직접 풀어 보기</strong> · <strong class="kt">소리 내어 설명하기</strong> · <strong class="kt">만들며 익히기</strong></p></div>
       <div class="style"><b>분석선호형</b><p class="trait"><strong class="kd">체계적이고 꼼꼼하게 정리</strong>하는 걸 좋아해요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">표·도식 정리</strong> · <strong class="kt">단계별 계획표</strong> · <strong class="kt">개념 비교표</strong></p></div>
@@ -377,7 +385,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   </div>
 
   <div class="box">
-    <h3>해석할 때 우리의 약속</h3>
+    <h3><span class="hn">3</span>해석할 때 우리의 약속</h3>
     <ul class="ok big">
       <li><strong class="kt">강점부터</strong> 먼저 찾아요.</li>
       <li>낮은 점수는 '문제'가 아니라 <strong class="kt">성장 포인트</strong>라고 불러요.</li>
@@ -460,6 +468,25 @@ const SCALES=[
  {a:'실행',c:'area-act',n:'실천력',d:'세운 계획을 [[실제로 지키는]] 정도',low:'계획은 세우는데 [[잘 지키지 못해요]].',tip:'계획을 [[15분 단위로 잘게 쪼개고]], 끝낼 때마다 [[✓ 표시]]하기'},
  {a:'실행',c:'area-act',n:'집중력',d:'공부하는 동안 [[흐트러지지 않고 몰입]]하는 정도',low:'[[10분도 앉아 있기 어렵고]] 자꾸 [[휴대폰]]을 봐요.',tip:'[[25분 집중 + 5분 휴식]], 휴대폰은 [[다른 방]]에 두기'}
 ];
+
+/* back to the 12 scales (1-2) */
+function initScaleFab(){
+  const btn=document.getElementById('toScales'), target=document.getElementById('scales');
+  if(!btn||!target) return;
+  const box=target.closest('.box');
+  let visible=false;
+  function update(){btn.hidden=!(location.hash==='#1-2' && !visible)}
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(es=>{visible=es[0].isIntersecting;update()},{threshold:0.15}).observe(box);
+  }
+  btn.addEventListener('click',()=>{
+    box.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    const sel=document.querySelector('.sbtn[aria-selected="true"]'); if(sel) setTimeout(()=>sel.focus({preventScroll:true}),400);
+  });
+  window.addEventListener('hashchange',()=>setTimeout(update,50));
+  setTimeout(update,50);
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initScaleFab); else setTimeout(initScaleFab,0);
 
 /* scale list (1-2) */
 const hl=t=>t.replace(/\[\[(.+?)\]\]/g,'<strong class="key">$1</strong>');
@@ -546,6 +573,7 @@ route();
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 })();
 </script>
+<button class="fab-scale" type="button" id="toScales" hidden><span class="hn">1</span>12개 척도로</button>
 <a class="fab-home" href="index.html#g1" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
 </body>
 </html>
