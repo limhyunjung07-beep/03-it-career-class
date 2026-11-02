@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>꿈it(잇)다 진로 업무</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1d2b53;--bg:#f4f6fb;--ink:#1f2433;--sub:#5b6275;--line:#e3e6ee;
+  --red:#e63946;--orange:#f57c00;--green:#1f9d74;--blue:#2f6fd6;--yellow:#ffc928}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{background:var(--navy);color:#fff}
+.hd{display:flex;align-items:center;gap:16px;padding:18px 16px}
+.logo{width:72px;height:56px;background:#fff;border-radius:14px;display:grid;place-items:center;flex:none;text-decoration:none}
+.hd h1{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(22px,4.4vw,34px);line-height:1.2}
+.hd h1 b{color:var(--yellow);font-weight:400}
+.hd p{margin:2px 0 0;opacity:.85;font-size:clamp(13px,2.4vw,16px)}
+.bar{height:8px;background:linear-gradient(90deg,var(--red) 0 25%,var(--orange) 25% 50%,var(--green) 50% 75%,var(--blue) 75%)}
+.title-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:28px 0 18px}
+.title-row h2{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(24px,4.6vw,34px);color:var(--navy)}
+.title-row span{color:var(--sub);font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:36px}
+.card{--c:var(--blue);--cl:#e8f0fc;--cb:#c6d8f5;background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.card::before{content:"";height:12px;background:var(--c)}
+.in{padding:22px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{background:var(--c);color:#fff;font-weight:900;letter-spacing:.04em;border-radius:999px;padding:3px 14px;font-size:13px}
+.tag{background:var(--cl);color:var(--c);font-weight:700;border-radius:999px;padding:3px 12px;font-size:13px}
+.card h3{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:30px;color:var(--c);line-height:1.25}
+.card p{margin:0;color:var(--sub);font-size:14px}
+.sch{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:4px;font-size:14px}
+.sch li{display:flex;gap:10px}
+.sch time{flex:none;width:118px;font-weight:700;color:var(--navy)}
+.items{list-style:none;margin:8px 0 0;padding:14px 0 0;border-top:1.5px dashed var(--cb);display:grid;gap:8px}
+.items a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;background:var(--cl);border:1px solid var(--cb);border-radius:12px;padding:10px 12px;transition:transform .12s}
+.items a:hover{transform:translateX(3px)}
+.items b{background:var(--c);color:#fff;border-radius:7px;padding:1px 7px;font-size:13px;flex:none}
+.items small{margin-left:auto;color:var(--sub);font-weight:500;font-size:12px}
+.soon{--c:#a9b0c2;border-style:dashed}
+.soon .in{justify-content:center;align-items:center;color:var(--sub)}
+footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
+.hd-btns{margin-left:auto;flex:none;display:flex;gap:8px;align-items:center}
+.go-home,.home-btn{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:900;font-size:14px;border-radius:999px;padding:7px 14px;white-space:nowrap}
+.go-home{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.go-home:hover,.go-home:focus-visible{background:var(--yellow);outline:none}
+.home-btn{color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);padding:6px 12px}
+.home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
+.go-home svg,.home-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fab-home{position:fixed;left:16px;bottom:16px;z-index:50;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;text-decoration:none;box-shadow:0 6px 16px rgba(29,43,83,.3);border:3px solid #fff}
+.fab-home:hover{background:var(--yellow);color:var(--navy)}
+.fab-home svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fab-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:560px){.logo{width:60px;height:48px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}.sch time{width:100px}.items a{flex-wrap:wrap;gap:4px 10px}.items small{margin-left:34px;width:100%}}
+@media print{.go-home,.home-btn,.fab-home{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <a class="logo" href="index.html" title="처음으로">
+      <svg width="54" height="34" viewBox="0 0 54 34" aria-hidden="true"><g fill="none" stroke-width="4.2" stroke-linecap="round">
+        <path d="M5 30a22 22 0 0 1 44 0" stroke="#e63946"/><path d="M9.5 30a17.5 17.5 0 0 1 35 0" stroke="#f57c00"/>
+        <path d="M14 30a13 13 0 0 1 26 0" stroke="#ffc928"/><path d="M18.5 30a8.5 8.5 0 0 1 17 0" stroke="#1f9d74"/>
+        <path d="M23 30a4 4 0 0 1 8 0" stroke="#2f6fd6"/></g></svg>
+    </a>
+    <div>
+      <h1>꿈it(잇)다 <b>진로 업무</b></h1>
+      <p>대회·행사 운영 자료 바로가기 · 매탄중학교 진로상담실</p>
+    </div>
+    <div class="hd-btns"><a class="go-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a><a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>교사 보관함</span></a></div>
+  </div>
+  <div class="bar"></div>
+</header>
+
+<main class="wrap">
+  <div class="title-row">
+    <h2>진행 중인 업무</h2>
+    <span>업무를 골라 운영 자료를 열어요</span>
+  </div>
+
+  <div class="cards">
+    <section class="card" id="career-design">
+      <div class="in">
+        <div class="top"><span class="badge">업무 01</span><span class="tag">1학년</span><span class="tag">교내상</span></div>
+        <h3>진로설계하기대회</h3>
+        <p>100세 인생을 6단계로 설계해 진로설계도 한 장으로 표현하기</p>
+        <ul class="sch">
+          <li><time>11. 4.(수)</time>가정통신문 발송</li>
+          <li><time>11월 2~3주</time>꿈it(잇)다 탐색, 제작계획서 작성·제출</li>
+          <li><time>11. 23.~12. 4.</time>대회 (2주간, 각 학급 진로시간)</li>
+          <li><time>대회 후 1주</time>담임 1차 채점, 학급 우수작 제출</li>
+          <li><time>12월 중</time>2차 채점, 시상(20% 이내), 우수작 전시</li>
+        </ul>
+        <ul class="items">
+          <li><a href="https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq" target="_blank" rel="noopener"><b>1</b>운영 자료<small>운영 계획·제작계획서·채점표·가정통신문</small></a></li>
+          <li><a href="https://claude.ai/artifact/2Nipuk2tuvSjLXqs158h2U" target="_blank" rel="noopener"><b>2</b>학생 안내 슬라이드<small>수업용</small></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="card soon">
+      <div class="in">
+        <span class="badge">업무 02</span>
+        <p>다음 업무가 곧 추가돼요</p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>꿈it(잇)다 진로 업무 · 매탄중학교 진로상담실</footer>
+<a class="fab-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
+</body>
+</html>
