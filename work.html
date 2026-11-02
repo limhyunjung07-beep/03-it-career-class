@@ -54,6 +54,44 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .fab-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:560px){.logo{width:60px;height:48px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}.sch time{width:100px}.items a{flex-wrap:wrap;gap:4px 10px}.items small{margin-left:34px;width:100%}}
 @media print{.go-home,.home-btn,.fab-home{display:none}}
+/* 업무 흐름 체크리스트 */
+.prog{display:grid;gap:6px;text-decoration:none;color:var(--ink);background:var(--cl);border:1px solid var(--cb);border-radius:14px;padding:12px 14px;margin-top:4px}
+.prog:hover{border-color:var(--c)}
+.pt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pt b{color:var(--c)}
+.pt em,.flow-head em{font-style:normal;font-weight:700;color:var(--navy);font-size:14px}
+.pbar{display:block;height:10px;background:#fff;border-radius:999px;overflow:hidden;border:1px solid var(--cb)}
+.pbar i{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+.pbar.big{flex:1;height:14px;background:#eef1f7;border-color:#dfe4ee}
+.pnext{font-size:13px;color:var(--sub)}
+.pnext b{color:var(--red)}
+.flow{margin-bottom:40px;scroll-margin-top:12px}
+.flow-box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px}
+.flow-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.reset{flex:none;border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}
+.reset:hover{border-color:var(--red);color:var(--red)}
+.phase{margin:18px 0 6px;font-family:'Jua',sans-serif;font-weight:400;font-size:21px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.phase small{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--sub);font-weight:500}
+.step{display:grid;grid-template-columns:28px 34px 1fr auto;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;margin-bottom:6px;cursor:pointer;transition:background .15s}
+.step:hover{background:#f8f9fc}
+.step input{width:22px;height:22px;accent-color:var(--green);cursor:pointer;margin:0}
+.num{width:30px;height:30px;border-radius:9px;background:#eef1f7;color:var(--navy);font-weight:900;display:grid;place-items:center;font-size:14px}
+.txt b{display:block;font-weight:700}
+.txt small{display:block;color:var(--sub);font-size:13px}
+.when{text-align:right;font-size:13px;white-space:nowrap}
+.when time{display:block;font-weight:700;color:var(--navy)}
+.st{display:inline-block;margin-top:2px;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:700;background:#eef1f7;color:var(--sub)}
+.step.today{border-color:var(--orange);background:#fff8ef}
+.step.today .st{background:var(--orange);color:#fff}
+.step.late{border-color:var(--red);background:#fff4f5}
+.step.late .st{background:var(--red);color:#fff}
+.step.done{background:#f1faf6;border-color:#bfe6d6}
+.step.done .num{background:var(--green);color:#fff}
+.step.done .txt b{text-decoration:line-through;color:var(--sub)}
+.step.done .st{background:var(--green);color:#fff}
+.note{margin:12px 0 0;color:var(--sub);font-size:12px}
+@media (max-width:560px){.step{grid-template-columns:24px 1fr;gap:8px}.num{display:none}.when{grid-column:2;text-align:left}.when time{display:inline;margin-right:6px}.flow-head{flex-wrap:wrap}}
+@media print{.reset,.note{display:none}.step{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -86,13 +124,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
         <div class="top"><span class="badge">업무 01</span><span class="tag">1학년</span><span class="tag">교내상</span></div>
         <h3>진로설계하기대회</h3>
         <p>100세 인생을 6단계로 설계해 진로설계도 한 장으로 표현하기</p>
-        <ul class="sch">
-          <li><time>11. 4.(수)</time>가정통신문 발송</li>
-          <li><time>11월 2~3주</time>꿈it(잇)다 탐색, 제작계획서 작성·제출</li>
-          <li><time>11. 23.~12. 4.</time>대회 (2주간, 각 학급 진로시간)</li>
-          <li><time>대회 후 1주</time>담임 1차 채점, 학급 우수작 제출</li>
-          <li><time>12월 중</time>2차 채점, 시상(20% 이내), 우수작 전시</li>
-        </ul>
+        <a class="prog" href="#flow-career-design"><span class="pt"><b>업무 흐름</b><em data-count="career-design">0 / 0 완료</em></span><span class="pbar"><i data-bar="career-design"></i></span><span class="pnext" data-next="career-design"></span></a>
         <ul class="items">
           <li><a href="https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq" target="_blank" rel="noopener"><b>1</b>운영 자료<small>운영 계획·제작계획서·채점표·가정통신문</small></a></li>
           <li><a href="https://claude.ai/artifact/2Nipuk2tuvSjLXqs158h2U" target="_blank" rel="noopener"><b>2</b>학생 안내 슬라이드<small>수업용</small></a></li>
@@ -107,8 +139,93 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
       </div>
     </div>
   </div>
+
+  <section class="flow" id="flow-career-design" data-flow="career-design">
+    <div class="title-row">
+      <h2>진로설계하기대회 업무 흐름</h2>
+      <span>끝낸 일은 체크해요 · 완료 날짜가 자동으로 남아요</span>
+    </div>
+    <div class="flow-box">
+      <div class="flow-head">
+        <span class="pbar big"><i data-bar="career-design"></i></span>
+        <em data-count="career-design">0 / 0 완료</em>
+        <button type="button" class="reset" data-reset="career-design">체크 모두 지우기</button>
+      </div>
+      <div class="flow-list" data-list="career-design"></div>
+      <p class="note">체크 기록은 이 브라우저에만 저장돼요. 다른 컴퓨터에서는 따로 체크해야 해요.</p>
+    </div>
+  </section>
 </main>
 <footer>꿈it(잇)다 진로 업무 · 매탄중학교 진로상담실</footer>
+<script>
+/* 업무별 흐름: 새 업무를 추가할 때는 FLOWS에 항목만 더하면 됨.
+   due = 마감일(지남/오늘 표시 기준), from = 시작일(없으면 due 하루) */
+const FLOWS={
+  'career-design':[
+    {phase:'준비',note:'결재 전',steps:[
+      {t:'운영 계획 작성',d:'목적·방침·세부 추진 계획·심사기준',w:'11. 2.(월)',due:'2026-11-02'},
+      {t:'가정통신문 작성',d:'일시·진행 방법·제작 방법·시상 계획',w:'11. 2.(월)',due:'2026-11-02'},
+      {t:'교내상 시상 계획 점검',d:'대회명·대상·수상 비율·시행 시기(10월 → 11~12월) 확인',w:'11. 2.(월)',due:'2026-11-02'},
+      {t:'업무포털 상신 (1학년부 협조)',d:'붙임: 운영 계획, 가정통신문 · 1학년 부장님께 협조 메시지',w:'11. 2.~11. 3.',from:'2026-11-02',due:'2026-11-03'},
+      {t:'결재 완료 후 홈페이지 업로드',d:'가정통신문 게시판 탑재',w:'11. 4.(수)',due:'2026-11-04'},
+      {t:'가정통신문 발송',d:'학부모 안내',w:'11. 4.(수)',due:'2026-11-04'}
+    ]},
+    {phase:'운영',note:'사전 준비 · 대회',steps:[
+      {t:'학생 안내 수업',d:'학생 안내 슬라이드로 대회 소개',w:'11월 2주',from:'2026-11-09',due:'2026-11-13'},
+      {t:'제작계획서 작성·제출 확인',d:'꿈it(잇)다 탐색 후 반별 제출 여부 점검',w:'11. 9.~11. 20.',from:'2026-11-09',due:'2026-11-20'},
+      {t:'대회 준비물 준비',d:'대회 양식 인쇄, 제작계획서 반별 정리, 그리기 용품',w:'~11. 20.(금)',from:'2026-11-16',due:'2026-11-20'},
+      {t:'대회 실시 (2주간)',d:'각 학급 진로시간, 작품 반별 수합',w:'11. 23.~12. 4.',from:'2026-11-23',due:'2026-12-04'}
+    ]},
+    {phase:'심사·시상',note:'대회 후',steps:[
+      {t:'담임 1차 채점, 학급 우수작 취합',d:'심사기준표 배부, 반별 우수작 제출',w:'~12. 11.(금)',from:'2026-12-07',due:'2026-12-11'},
+      {t:'2차 채점, 수상자 확정',d:'진로상담부·학년부 심사, 20% 이내',w:'12. 14.~12. 18.',from:'2026-12-14',due:'2026-12-18'},
+      {t:'시상 결재 및 상장 출력',d:'수상자 명단 내부결재',w:'12월 중',from:'2026-12-14',due:'2026-12-23'},
+      {t:'학교생활기록부 수상경력 입력',d:'교내상 반영',w:'시상 후',from:'2026-12-14',due:'2026-12-31'},
+      {t:'우수작 교내 전시',d:'수상작·우수작 게시',w:'12월 중',from:'2026-12-14',due:'2026-12-31'}
+    ]}
+  ]
+};
+(function(){
+  const pad=n=>String(n).padStart(2,'0');
+  const now=new Date(),today=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  const fmt=s=>{const [y,m,d]=s.split('-');return (+m)+'. '+(+d)+'.'};
+  const load=k=>{try{return JSON.parse(localStorage.getItem('flow:'+k))||{}}catch(e){return {}}};
+  const save=(k,v)=>{try{localStorage.setItem('flow:'+k,JSON.stringify(v))}catch(e){}};
+  function render(k){
+    const flow=FLOWS[k],st=load(k),list=document.querySelector('[data-list="'+k+'"]');
+    let n=0,done=0,next=null,html='';
+    flow.forEach(ph=>{
+      html+='<div class="phase">'+ph.phase+' <small>'+ph.note+'</small></div>';
+      ph.steps.forEach(s=>{
+        n++;const id=k+'-'+n,rec=st[n],isDone=!!rec;if(isDone)done++;
+        let cls='',label='예정';
+        if(isDone){cls='done';label=fmt(rec)+' 완료'}
+        else if(today>s.due){cls='late';label='지남'}
+        else if(today>=(s.from||s.due)){cls='today';label='진행할 때'}
+        if(!isDone&&!next)next={n,t:s.t,late:cls==='late'};
+        html+='<label class="step '+cls+'" for="'+id+'"><input type="checkbox" id="'+id+'" data-k="'+k+'" data-n="'+n+'"'+(isDone?' checked':'')+'>'
+          +'<span class="num">'+n+'</span><span class="txt"><b>'+s.t+'</b><small>'+s.d+'</small></span>'
+          +'<span class="when"><time>'+s.w+'</time><span class="st">'+label+'</span></span></label>';
+      });
+    });
+    list.innerHTML=html;
+    document.querySelectorAll('[data-count="'+k+'"]').forEach(e=>e.textContent=done+' / '+n+' 완료');
+    document.querySelectorAll('[data-bar="'+k+'"]').forEach(e=>e.style.width=(n?done/n*100:0)+'%');
+    document.querySelectorAll('[data-next="'+k+'"]').forEach(e=>e.innerHTML=next?'다음 할 일: '+(next.late?'<b>[지남]</b> ':'')+next.n+'. '+next.t:'모든 업무 완료');
+  }
+  document.addEventListener('change',e=>{
+    const c=e.target;if(!c.dataset||!c.dataset.k)return;
+    const k=c.dataset.k,st=load(k);
+    if(c.checked)st[c.dataset.n]=today;else delete st[c.dataset.n];
+    save(k,st);render(k);
+  });
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-reset]');if(!b)return;
+    if(confirm('이 업무의 체크를 모두 지울까요?')){save(b.dataset.reset,{});render(b.dataset.reset)}
+  });
+  Object.keys(FLOWS).forEach(render);
+})();
+</script>
 <a class="fab-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
 </body>
 </html>
