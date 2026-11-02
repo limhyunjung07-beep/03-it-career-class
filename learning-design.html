@@ -67,17 +67,34 @@ header{background:var(--navy);color:#fff}
 .ok li::before{content:"✓";position:absolute;left:4px;top:0;color:var(--green);font-weight:900}
 .note{background:var(--orange-l);border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px;font-size:14px}
 .next{display:inline-block;margin-top:6px;background:var(--navy);color:#fff;text-decoration:none;font-weight:700;border-radius:12px;padding:10px 18px}
-details{border:1.5px solid var(--line);border-radius:14px;margin-bottom:10px;background:#fff}
-details[open]{border-color:#b9c4dc;box-shadow:0 4px 14px rgba(29,43,83,.08)}
-summary{cursor:pointer;padding:16px 18px;font-weight:700;font-size:clamp(20px,2.4vw,24px);list-style:none;display:flex;gap:12px;align-items:center;color:var(--navy)}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";margin-left:auto;font-size:1.1em;color:var(--sub);font-weight:400}
-details[open] summary::after{content:"−"}
-summary .tag{font-size:clamp(14px,1.6vw,16px);font-weight:700;color:#fff;border-radius:8px;padding:3px 10px}
-details > div{padding:2px 20px 20px;font-size:clamp(18px,2.1vw,22px);line-height:1.7;display:grid;gap:10px}
-details > div p{margin:0;display:grid;grid-template-columns:8em minmax(0,1fr);gap:4px 16px}
-details > div b{color:var(--navy)}
-@media (max-width:560px){details > div p{grid-template-columns:1fr}}
+.box h3.big-h{font-size:clamp(20px,2.4vw,24px)}
+.sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+.sbtn{--bc:#7a8bb5;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:92px;padding:12px 6px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--navy);transition:transform .12s,border-color .12s,background .12s}
+.sbtn:hover{transform:translateY(-2px);border-color:var(--bc)}
+.sbtn:focus-visible{outline:3px solid var(--bc);outline-offset:2px}
+.sbtn .tag{font-size:clamp(13px,1.4vw,15px);font-weight:700;color:#fff;border-radius:7px;padding:2px 9px}
+.sbtn .sn{font-weight:800;font-size:clamp(18px,2vw,22px);line-height:1.2;text-align:center;word-break:keep-all}
+.sbtn[aria-selected="true"]{background:var(--bc);border-color:var(--bc);color:#fff}
+.sbtn[aria-selected="true"] .tag{background:rgba(255,255,255,.25)!important}
+.b-env{--bc:#6f80ad}.b-mind{--bc:var(--red)}.b-att{--bc:var(--orange)}.b-skill{--bc:var(--green)}.b-act{--bc:var(--blue)}
+.spanel{--pc:#6f80ad;border:2px solid var(--pc);border-top-width:8px;border-radius:16px;padding:20px 24px;background:#fff;display:grid;gap:14px}
+.p-env{--pc:#6f80ad}.p-mind{--pc:var(--red)}.p-att{--pc:var(--orange)}.p-skill{--pc:var(--green)}.p-act{--pc:var(--blue)}
+.spanel .ph{display:flex;align-items:center;gap:12px}
+.spanel .ph .tag{font-size:clamp(14px,1.6vw,16px);font-weight:700;color:#fff;border-radius:8px;padding:3px 10px}
+.spanel h4{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(28px,3.4vw,38px);color:var(--navy)}
+.spanel .pn{margin-left:auto;color:var(--sub);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.spanel p{margin:0;display:grid;grid-template-columns:8em minmax(0,1fr);gap:4px 16px;font-size:clamp(19px,2.2vw,24px);line-height:1.65}
+.spanel p b{color:var(--navy)}
+.spanel .key{font-weight:800}
+.spanel .r-def .key{color:#2f6fd6}
+.spanel .r-low .key{color:#d62839}
+.spanel .r-tip .key{color:#14855f}
+.pnav{display:flex;justify-content:space-between;gap:10px;margin-top:4px}
+.pnav button{font:inherit;font-weight:700;font-size:16px;border:1.5px solid var(--line);background:var(--bg);color:var(--navy);border-radius:10px;padding:8px 14px;cursor:pointer}
+.pnav button:disabled{opacity:.35;cursor:default}
+@media (max-width:900px){.sgrid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:560px){.sgrid{grid-template-columns:repeat(3,1fr);gap:8px}.sbtn{min-height:76px}.spanel{padding:16px}.spanel p{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.sbtn{transition:none}}
 .area-env{background:#7a8bb5}.area-mind{background:var(--red)}.area-att{background:var(--orange)}.area-skill{background:var(--green)}.area-act{background:var(--blue)}
 
 .tscore{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -106,6 +123,21 @@ details > div b{color:var(--navy)}
 .style{border:2px solid var(--line);border-radius:14px;padding:14px}
 .style b{font-family:'Jua',sans-serif;font-weight:400;font-size:20px;color:var(--navy)}
 .style p{margin:4px 0 0;font-size:14px;color:var(--sub)}
+.box h3:has(+ .styles.big),.box h3:has(+ .ok.big){font-size:clamp(20px,2.4vw,24px)}
+.styles.big{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.styles.big .style{padding:18px 20px;display:grid;gap:10px;align-content:start}
+.styles.big .style b{font-size:clamp(26px,3vw,32px)}
+.styles.big .trait{margin:0;font-size:clamp(18px,2.1vw,22px);line-height:1.6;color:var(--ink)}
+.styles.big .how{margin:0;font-size:clamp(18px,2.1vw,22px);line-height:1.7;color:var(--ink)}
+.styles.big .how span{display:block;font-size:max(15px,.72em);font-weight:700;color:var(--sub);letter-spacing:.02em}
+.styles.big .how .kt{white-space:nowrap}
+.box h3:has(+ .styles.big),.box h3:has(+ .ok.big){font-size:clamp(20px,2.4vw,24px)!important}
+.ok.big{gap:12px}
+.ok.big li{font-size:clamp(18px,2.1vw,22px);line-height:1.6;padding-left:34px}
+.ok.big li::before{font-size:1.1em}
+.kd{color:#2f6fd6;font-weight:800}
+.kt{color:#14855f;font-weight:800}
+.kl{color:#d62839;font-weight:800}
 
 /* forms */
 .who{display:grid;grid-template-columns:1fr 1fr 2fr;gap:10px}
@@ -329,26 +361,27 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
   </div>
 
   <div class="box">
-    <h3>학습전략 12개 척도 <small>눌러서 뜻과 전략 보기</small></h3>
-    <div id="scaleList"></div>
+    <h3 class="big-h">학습전략 12개 척도 <small>버튼을 눌러 뜻과 전략 보기</small></h3>
+    <div class="sgrid" id="scaleList" role="tablist" aria-label="학습전략 12개 척도"></div>
+    <div class="spanel" id="scalePanel" role="tabpanel" aria-live="polite"></div>
   </div>
 
   <div class="box">
     <h3>나에게 맞는 학습스타일 4가지</h3>
-    <div class="styles">
-      <div class="style"><b>체험선호형</b><p>직접 해 보고 움직이며 배울 때 잘 익혀요. → 직접 풀어 보기, 소리 내어 설명하기, 만들며 익히기</p></div>
-      <div class="style"><b>분석선호형</b><p>체계적이고 꼼꼼하게 정리하는 걸 좋아해요. → 표·도식 정리, 단계별 계획표, 개념 비교표</p></div>
-      <div class="style"><b>창의선호형</b><p>새로운 아이디어와 자유로운 방식을 좋아해요. → 마인드맵, 그림 노트, 나만의 암기 이야기</p></div>
-      <div class="style"><b>원리선호형</b><p>왜 그런지 이해해야 받아들여요. → "왜?" 질문하기, 원리 설명하기, 응용 문제 도전</p></div>
+    <div class="styles big">
+      <div class="style"><b>체험선호형</b><p class="trait"><strong class="kd">직접 해 보고 움직이며</strong> 배울 때 잘 익혀요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">직접 풀어 보기</strong> · <strong class="kt">소리 내어 설명하기</strong> · <strong class="kt">만들며 익히기</strong></p></div>
+      <div class="style"><b>분석선호형</b><p class="trait"><strong class="kd">체계적이고 꼼꼼하게 정리</strong>하는 걸 좋아해요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">표·도식 정리</strong> · <strong class="kt">단계별 계획표</strong> · <strong class="kt">개념 비교표</strong></p></div>
+      <div class="style"><b>창의선호형</b><p class="trait"><strong class="kd">새로운 아이디어</strong>와 <strong class="kd">자유로운 방식</strong>을 좋아해요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">마인드맵</strong> · <strong class="kt">그림 노트</strong> · <strong class="kt">나만의 암기 이야기</strong></p></div>
+      <div class="style"><b>원리선호형</b><p class="trait"><strong class="kd">왜 그런지 이해해야</strong> 받아들여요.</p><p class="how"><span>이렇게 공부해요</span><strong class="kt">"왜?" 질문하기</strong> · <strong class="kt">원리 설명하기</strong> · <strong class="kt">응용 문제 도전</strong></p></div>
     </div>
   </div>
 
   <div class="box">
     <h3>해석할 때 우리의 약속</h3>
-    <ul class="ok">
-      <li>강점부터 먼저 찾아요.</li>
-      <li>낮은 점수는 '문제'가 아니라 <b>성장 포인트</b>라고 불러요.</li>
-      <li>친구의 점수를 묻거나 비교하지 않아요. 나누고 싶은 만큼만 나눠요.</li>
+    <ul class="ok big">
+      <li><strong class="kt">강점부터</strong> 먼저 찾아요.</li>
+      <li>낮은 점수는 '문제'가 아니라 <strong class="kt">성장 포인트</strong>라고 불러요.</li>
+      <li>친구의 점수를 <strong class="kl">묻거나 비교하지 않아요</strong>. <strong class="kd">나누고 싶은 만큼만</strong> 나눠요.</li>
     </ul>
   </div>
   <a class="next" href="#1-3">다음: 1-3 나의 학습 전략과 다짐 ›</a>
@@ -414,27 +447,46 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 36px}
 const FORM_URL='https://docs.google.com/forms/d/1Qcpfu1xtl89ogx55q4A1Gyz-w0T4ozo38vu571cMNp4/viewform';
 
 const SCALES=[
- {a:'환경',c:'area-env',n:'학습환경',d:'공부에 집중할 수 있는 장소와 분위기를 갖추고 있는 정도',low:'책상에 물건이 많고 공부 장소가 매번 바뀌어요.',tip:'공부 자리 한 곳을 정하고, 책상 위에는 그 과목 책만 두기'},
- {a:'환경',c:'area-env',n:'학습지원',d:'공부할 때 도움을 받을 수 있는 사람과 자원이 있는 정도',low:'모르는 걸 물어볼 사람이 없다고 느껴요.',tip:'과목별 질문 친구·선생님 1명 정하기, 질문 노트 만들기'},
- {a:'마음',c:'area-mind',n:'학습효능감',d:'나도 공부를 잘 해낼 수 있다고 믿는 정도',low:'"난 해도 안 돼"라는 생각이 먼저 들어요.',tip:'문제 5개처럼 작은 목표를 세우고 성공을 기록하기, 하루 "해낸 일" 1줄 쓰기'},
- {a:'마음',c:'area-mind',n:'자기주도성',d:'누가 시키지 않아도 스스로 공부를 시작하고 이끄는 정도',low:'누군가 시켜야 공부를 시작해요.',tip:'오늘 공부할 과목을 스스로 고르고 시작 시각을 적어 두기'},
- {a:'태도',c:'area-att',n:'수업태도',d:'수업에 집중하고 적극적으로 참여하는 정도',low:'수업 중 딴생각을 하거나 질문을 하지 않아요.',tip:'수업마다 궁금한 점 1개 메모하기, 앞쪽 자리에 앉기'},
- {a:'태도',c:'area-att',n:'시험준비',d:'시험을 미리 계획하고 준비하는 정도',low:'시험 직전에 몰아서 공부해요.',tip:'시험 2주 전 과목별 거꾸로 계획표 만들기, 오답노트 쓰기'},
- {a:'기술',c:'area-skill',n:'내용이해',d:'배운 내용의 핵심을 이해하고 연결하는 정도',low:'읽긴 했는데 설명은 잘 못 해요.',tip:'배운 내용을 친구나 가족에게 1분 동안 설명해 보기'},
- {a:'기술',c:'area-skill',n:'암기기억',d:'배운 내용을 오래 기억하는 방법을 쓰는 정도',low:'외워도 금방 잊어버려요.',tip:'1일·3일·7일 간격으로 복습하기, 백지에 떠올려 써 보기'},
- {a:'기술',c:'area-skill',n:'노트필기',d:'수업 내용을 정리하고 다시 활용하는 정도',low:'칠판을 베끼기만 하고 다시 보지 않아요.',tip:'코넬 노트(필기·키워드·3줄 요약), 쉬는 시간 3분 요약'},
- {a:'실행',c:'area-act',n:'계획성',d:'목표와 할 일을 정해 계획을 세우는 정도',low:'무엇부터 할지 몰라 시간이 그냥 흘러가요.',tip:'하루 할 일을 3개만 적고 우선순위 번호 매기기'},
- {a:'실행',c:'area-act',n:'실천력',d:'세운 계획을 실제로 지키는 정도',low:'계획은 세우는데 잘 지키지 못해요.',tip:'계획을 15분 단위로 잘게 쪼개고, 끝낼 때마다 ✓ 표시하기'},
- {a:'실행',c:'area-act',n:'집중력',d:'공부하는 동안 흐트러지지 않고 몰입하는 정도',low:'10분도 앉아 있기 어렵고 자꾸 휴대폰을 봐요.',tip:'25분 집중 + 5분 휴식, 휴대폰은 다른 방에 두기'}
+ {a:'환경',c:'area-env',n:'학습환경',d:'공부에 집중할 수 있는 [[장소와 분위기]]를 갖추고 있는 정도',low:'책상에 [[물건이 많고]] 공부 장소가 [[매번 바뀌어요]].',tip:'[[공부 자리 한 곳]]을 정하고, 책상 위에는 [[그 과목 책만]] 두기'},
+ {a:'환경',c:'area-env',n:'학습지원',d:'공부할 때 [[도움을 받을 수 있는 사람]]과 자원이 있는 정도',low:'모르는 걸 [[물어볼 사람이 없다]]고 느껴요.',tip:'과목별 [[질문 친구·선생님 1명]] 정하기, [[질문 노트]] 만들기'},
+ {a:'마음',c:'area-mind',n:'학습효능감',d:'나도 공부를 [[잘 해낼 수 있다고 믿는]] 정도',low:'[["난 해도 안 돼"]]라는 생각이 먼저 들어요.',tip:'문제 5개처럼 [[작은 목표]]를 세우고 [[성공을 기록]]하기, 하루 "해낸 일" 1줄 쓰기'},
+ {a:'마음',c:'area-mind',n:'자기주도성',d:'누가 시키지 않아도 [[스스로 공부를 시작]]하고 이끄는 정도',low:'[[누군가 시켜야]] 공부를 시작해요.',tip:'오늘 공부할 과목을 [[스스로 고르고]] [[시작 시각]]을 적어 두기'},
+ {a:'태도',c:'area-att',n:'수업태도',d:'수업에 [[집중하고 적극적으로 참여]]하는 정도',low:'수업 중 [[딴생각]]을 하거나 [[질문을 하지 않아요]].',tip:'수업마다 [[궁금한 점 1개 메모]]하기, [[앞쪽 자리]]에 앉기'},
+ {a:'태도',c:'area-att',n:'시험준비',d:'시험을 [[미리 계획하고 준비]]하는 정도',low:'[[시험 직전에 몰아서]] 공부해요.',tip:'[[시험 2주 전]] 과목별 [[거꾸로 계획표]] 만들기, [[오답노트]] 쓰기'},
+ {a:'기술',c:'area-skill',n:'내용이해',d:'배운 내용의 [[핵심을 이해하고 연결]]하는 정도',low:'읽긴 했는데 [[설명은 잘 못 해요]].',tip:'배운 내용을 친구나 가족에게 [[1분 동안 설명]]해 보기'},
+ {a:'기술',c:'area-skill',n:'암기기억',d:'배운 내용을 [[오래 기억하는 방법]]을 쓰는 정도',low:'외워도 [[금방 잊어버려요]].',tip:'[[1일·3일·7일 간격]]으로 복습하기, [[백지에 떠올려 써 보기]]'},
+ {a:'기술',c:'area-skill',n:'노트필기',d:'수업 내용을 [[정리하고 다시 활용]]하는 정도',low:'칠판을 [[베끼기만]] 하고 [[다시 보지 않아요]].',tip:'[[코넬 노트]](필기·키워드·3줄 요약), [[쉬는 시간 3분 요약]]'},
+ {a:'실행',c:'area-act',n:'계획성',d:'[[목표와 할 일]]을 정해 [[계획을 세우는]] 정도',low:'[[무엇부터 할지 몰라]] 시간이 그냥 흘러가요.',tip:'하루 할 일을 [[3개만]] 적고 [[우선순위 번호]] 매기기'},
+ {a:'실행',c:'area-act',n:'실천력',d:'세운 계획을 [[실제로 지키는]] 정도',low:'계획은 세우는데 [[잘 지키지 못해요]].',tip:'계획을 [[15분 단위로 잘게 쪼개고]], 끝낼 때마다 [[✓ 표시]]하기'},
+ {a:'실행',c:'area-act',n:'집중력',d:'공부하는 동안 [[흐트러지지 않고 몰입]]하는 정도',low:'[[10분도 앉아 있기 어렵고]] 자꾸 [[휴대폰]]을 봐요.',tip:'[[25분 집중 + 5분 휴식]], 휴대폰은 [[다른 방]]에 두기'}
 ];
 
 /* scale list (1-2) */
+const hl=t=>t.replace(/\[\[(.+?)\]\]/g,'<strong class="key">$1</strong>');
+const plain=t=>t.replace(/\[\[|\]\]/g,'');
 const list=document.getElementById('scaleList');
-SCALES.forEach(s=>{
-  const d=document.createElement('details');
-  d.innerHTML=`<summary><span class="tag ${s.c}">${s.a}</span>${s.n}</summary><div><p><b>뜻</b>${s.d}</p><p><b>낮을 때 모습</b>${s.low}</p><p><b>이렇게 해 봐요</b>${s.tip}</p></div>`;
-  list.appendChild(d);
+const panel=document.getElementById('scalePanel');
+function showScale(i){
+  const s=SCALES[i];
+  list.querySelectorAll('button').forEach((b,j)=>{b.setAttribute('aria-selected',j===i);b.tabIndex=j===i?0:-1});
+  panel.className='spanel '+s.c.replace('area-','p-');
+  panel.innerHTML=`<div class="ph"><span class="tag ${s.c}">${s.a}</span><h4>${s.n}</h4><span class="pn">${i+1} / 12</span></div>
+    <p class="r-def"><b>뜻</b><span>${hl(s.d)}</span></p>
+    <p class="r-low"><b>낮을 때 모습</b><span>${hl(s.low)}</span></p>
+    <p class="r-tip"><b>이렇게 해 봐요</b><span>${hl(s.tip)}</span></p>
+    <div class="pnav"><button type="button" class="pv" ${i===0?'disabled':''}>‹ 이전 척도</button><button type="button" class="nx" ${i===11?'disabled':''}>다음 척도 ›</button></div>`;
+  panel.querySelector('.pv').onclick=()=>showScale(i-1);
+  panel.querySelector('.nx').onclick=()=>showScale(i+1);
+}
+SCALES.forEach((s,i)=>{
+  const b=document.createElement('button');
+  b.type='button';b.className='sbtn '+s.c.replace('area-','b-');b.setAttribute('role','tab');
+  b.innerHTML=`<span class="tag ${s.c}">${s.a}</span><span class="sn">${s.n}</span>`;
+  b.onclick=()=>showScale(i);
+  b.onkeydown=e=>{const k={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(k){e.preventDefault();const n=(i+k+12)%12;showScale(n);list.children[n].focus()}};
+  list.appendChild(b);
 });
+showScale(0);
 
 /* T score */
 const tIn=document.getElementById('tIn'),tOut=document.getElementById('tOut'),tPin=document.getElementById('tPin');
@@ -454,7 +506,7 @@ SCALES.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.text
 pick.addEventListener('change',()=>{
   if(pick.value===''){tipOut.classList.remove('show');return}
   const s=SCALES[pick.value];
-  tipOut.innerHTML=`<b>${s.n}</b>이(가) 낮을 때: ${s.low}<br><b>전략</b> · ${s.tip}`;
+  tipOut.innerHTML=`<b>${s.n}</b>이(가) 낮을 때: ${plain(s.low)}<br><b>전략</b> · ${plain(s.tip)}`;
   tipOut.classList.add('show');
 });
 
