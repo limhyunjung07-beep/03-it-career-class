@@ -49,10 +49,10 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .quick h3 svg{width:18px;height:18px;stroke:var(--navy);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .qlist{list-style:none;margin:0;padding:0;display:grid;gap:5px}
 .qlist li,.qlist a{min-width:0}
-.qlist a{--qc:var(--blue);display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:5px 8px;transition:border-color .12s,transform .12s}
+.qlist a{--qc:var(--blue);display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:5px 8px;transition:border-color .12s,transform .12s}
 .qlist a:hover,.qlist a:focus-visible{border-color:var(--qc);transform:translateX(2px);outline:none}
 .qlist .qi{flex:none;width:24px;height:24px;border-radius:7px;background:var(--qc);color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px}
-.qlist b{min-width:0;font-size:14px;line-height:1.3;font-weight:700;word-break:keep-all;overflow-wrap:anywhere}
+.qlist b{min-width:0;font-size:14px;line-height:1.3;font-weight:700;letter-spacing:-.07em;white-space:nowrap;overflow:hidden;text-overflow:clip}
 .qlist .ar{margin-left:auto;color:var(--sub);font-size:12px}
 @media (max-width:860px){.layout{grid-template-columns:1fr}.quick{order:0;position:static;max-height:none}.qlist{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 @media (max-width:560px){.logo{width:60px;height:48px}.picks{gap:10px}.pick{padding:24px 12px}.icon{width:64px;height:64px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}}
@@ -112,6 +112,7 @@ const QUICK_LINKS=[
   {name:'매탄중학교', desc:'학교 홈페이지', url:'https://maetan-m.goesw.kr/maetan-m/main.do', mark:'학', color:'green'},
   {name:'진로진학 로드맵(내부용)', desc:'꿈it(잇)다 진로·진학 로드맵 내부용', url:'https://limhyunjung07-beep.github.io/01-it-manual-mt/', mark:'로', color:'blue'},
   {name:'꿈it(잇)다 사용자 매뉴얼', desc:'꿈it(잇)다 사용자 매뉴얼', url:'https://limhyunjung07-beep.github.io/02-it-manual/', mark:'매', color:'red'},
+  {name:'매탄중 패들렛(수업용)', desc:'수업용 패들렛 모음', url:'https://padlet.com/dashboard?mobile_page=Collection&folder_id=2237762', mark:'패', color:'green'},
 ];
 (function(){
   const C={blue:'var(--blue)',green:'var(--green)',orange:'var(--orange)',red:'var(--red)',navy:'var(--navy)'};
