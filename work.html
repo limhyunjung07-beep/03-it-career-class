@@ -92,6 +92,52 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .note{margin:12px 0 0;color:var(--sub);font-size:12px}
 @media (max-width:560px){.step{grid-template-columns:24px 1fr;gap:8px}.num{display:none}.when{grid-column:2;text-align:left}.when time{display:inline;margin-right:6px}.flow-head{flex-wrap:wrap}}
 @media print{.reset,.note{display:none}.step{break-inside:avoid}}
+/* 탭 */
+[hidden]{display:none!important}
+.tabs{display:flex;gap:8px;margin:24px 0 0;border-bottom:2px solid var(--line)}
+.tabs button{font:inherit;font-weight:900;font-size:17px;color:var(--sub);background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tabs button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--orange)}
+.tabs button:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
+.tabs .cnt{background:#eef1f7;color:var(--navy);border-radius:999px;padding:0 9px;font-size:13px}
+/* 품의 */
+.pm-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.pm-sum div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.pm-sum span{display:block;color:var(--sub);font-size:13px;font-weight:700}
+.pm-sum b{font-size:24px;color:var(--navy);font-variant-numeric:tabular-nums}
+.pm-form{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;display:grid;grid-template-columns:2fr 1fr 1.4fr auto;gap:10px;align-items:end;margin-bottom:18px}
+.pm-form label{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--navy)}
+.pm-form input{font:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;background:#fbfcfe;color:var(--ink);width:100%}
+.pm-form input:focus{outline:none;border-color:var(--navy);background:#fff}
+.pm-form .full{grid-column:1/-2}
+.btn{font:inherit;font-weight:900;font-size:15px;border:0;border-radius:12px;padding:11px 18px;cursor:pointer;background:var(--navy);color:#fff;white-space:nowrap}
+.btn:hover{background:#2a3b6e}
+.pm-msg{grid-column:1/-1;margin:0;font-size:13px;color:var(--red);min-height:1em}
+.pm-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pm-filter button{font:inherit;font-weight:700;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;padding:5px 14px;cursor:pointer}
+.pm-filter button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.pm-list{display:grid;gap:12px;margin-bottom:12px}
+.pm{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;gap:12px}
+.pm.done{background:#f6fbf8;border-color:#bfe6d6}
+.pm-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.pm-top h3{margin:0;font-size:19px;color:var(--navy);flex:1 1 220px;min-width:0;overflow-wrap:anywhere}
+.pm-amt{font-weight:900;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+.pm-meta{width:100%;font-size:13px;color:var(--sub)}
+.pm-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;list-style:none;margin:0;padding:0}
+.pm-steps button{font:inherit;width:100%;display:grid;gap:2px;justify-items:center;text-align:center;border:1.5px solid var(--line);background:#f7f8fb;color:var(--sub);border-radius:12px;padding:8px 4px;cursor:pointer;font-size:13px;font-weight:700}
+.pm-steps button i{font-style:normal;font-size:12px;font-weight:500;font-variant-numeric:tabular-nums}
+.pm-steps button.on{background:var(--green);border-color:var(--green);color:#fff}
+.pm-steps button.now{border-color:var(--orange);background:#fff8ef;color:var(--orange)}
+.pm-steps button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+.pm-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;font-size:13px;color:var(--sub)}
+.pm-del{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;padding:4px 12px;cursor:pointer}
+.pm-del:hover{border-color:var(--red);color:var(--red)}
+.pm-del.sure{background:var(--red);border-color:var(--red);color:#fff}
+.pm-empty{background:#fff;border:1.5px dashed #c9cfdc;border-radius:18px;padding:28px 16px;text-align:center;color:var(--sub)}
+.pm-guide{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 18px;margin-bottom:18px;font-size:14px;color:var(--sub)}
+.pm-guide b{color:var(--navy)}
+@media (max-width:760px){.pm-form{grid-template-columns:1fr 1fr}.pm-form label[for="pmName"],.pm-form label[for="pmBudget"],.pm-form .full{grid-column:1/-1}.pm-form label[for="pmBudget"]{grid-column:2/3}.pm-form label[for="pmName"]{grid-column:1/-1}.pm-form .full{order:4}.pm-form .btn{grid-column:1/-1;order:5}.pm-form .pm-msg{order:6}.pm-sum b{font-size:20px}}
+@media (max-width:560px){.pm-steps{grid-template-columns:repeat(3,1fr)}.pm-sum{grid-template-columns:1fr 1fr}.pm-sum div:last-child{grid-column:1/-1}}
+@media print{.tabs,.pm-form,.pm-filter,.pm-del{display:none}}
 </style>
 </head>
 <body>
@@ -113,6 +159,12 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 </header>
 
 <main class="wrap">
+  <div class="tabs" role="tablist" aria-label="업무 구분">
+    <button type="button" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="true">진행 중인 업무</button>
+    <button type="button" role="tab" id="tab-pumui" aria-controls="panel-pumui" aria-selected="false">품의 <span class="cnt" id="pmTabCnt">0</span></button>
+  </div>
+
+  <div id="panel-work" role="tabpanel" aria-labelledby="tab-work">
   <div class="title-row">
     <h2>진행 중인 업무</h2>
     <span>업무를 골라 운영 자료를 열어요</span>
@@ -155,6 +207,34 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
       <p class="note">체크 기록은 이 브라우저에만 저장돼요. 다른 컴퓨터에서는 따로 체크해야 해요.</p>
     </div>
   </section>
+  </div>
+
+  <div id="panel-pumui" role="tabpanel" aria-labelledby="tab-pumui" hidden>
+    <div class="title-row">
+      <h2>품의</h2>
+      <span>구입·지출 품의를 적어 두고 단계별로 체크해요</span>
+    </div>
+    <div class="pm-sum">
+      <div><span>진행 중</span><b id="pmIng">0건</b></div>
+      <div><span>완료</span><b id="pmDone">0건</b></div>
+      <div><span>품의 금액 합계</span><b id="pmTotal">0원</b></div>
+    </div>
+    <form class="pm-form" id="pmForm" autocomplete="off">
+      <label for="pmName">품의명<input id="pmName" placeholder="예) 진로설계하기대회 시상품 구입" required></label>
+      <label for="pmAmt">금액(원)<input id="pmAmt" inputmode="numeric" placeholder="예) 300,000"></label>
+      <label for="pmBudget">예산(사업명)<input id="pmBudget" placeholder="예) 진로교육 운영비"></label>
+      <button class="btn" type="submit">품의 추가</button>
+      <label class="full" for="pmMemo">메모 (선택)<input id="pmMemo" placeholder="예) 업체 견적 2곳 비교, 11. 20.까지 납품"></label>
+      <p class="pm-msg" id="pmMsg" role="status"></p>
+    </form>
+    <div class="pm-filter" role="group" aria-label="보기">
+      <button type="button" data-f="ing" aria-pressed="true">진행 중</button>
+      <button type="button" data-f="done" aria-pressed="false">완료</button>
+      <button type="button" data-f="all" aria-pressed="false">전체</button>
+    </div>
+    <div class="pm-list" id="pmList"></div>
+    <p class="note">단계 버튼을 누르면 그 단계까지 완료로 표시되고 날짜가 남아요. 다시 누르면 취소돼요. 기록은 이 브라우저에만 저장돼요.</p>
+  </div>
 </main>
 <footer>꿈it(잇)다 진로 업무 · 매탄중학교 진로상담실</footer>
 <script>
@@ -224,6 +304,93 @@ const FLOWS={
     if(confirm('이 업무의 체크를 모두 지울까요?')){save(b.dataset.reset,{});render(b.dataset.reset)}
   });
   Object.keys(FLOWS).forEach(render);
+})();
+
+/* ===== 품의 ===== */
+(function(){
+  const STEPS=['품의 작성','결재 완료','구매·계약','검수','지출 완료'];
+  const KEY='pumui:list';
+  const pad=n=>String(n).padStart(2,'0');
+  const now=new Date(),today=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  const fmt=s=>{if(!s)return'';const [y,m,d]=s.split('-');return (+m)+'. '+(+d)+'.'};
+  const won=n=>(n||0).toLocaleString('ko-KR')+'원';
+  const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let list=[]; try{list=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){list=[]}
+  let filter='ing', sureId=null;
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(list))}catch(e){}};
+  const level=p=>p.dates.filter(Boolean).length;           // 완료한 단계 수
+  const isDone=p=>level(p)===STEPS.length;
+
+  function render(){
+    const ing=list.filter(p=>!isDone(p)).length, done=list.length-ing;
+    document.getElementById('pmIng').textContent=ing+'건';
+    document.getElementById('pmDone').textContent=done+'건';
+    document.getElementById('pmTotal').textContent=won(list.reduce((a,p)=>a+(p.amt||0),0));
+    document.getElementById('pmTabCnt').textContent=ing;
+    document.querySelectorAll('.pm-filter button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===filter));
+    const shown=list.filter(p=>filter==='all'||(filter==='done'?isDone(p):!isDone(p)));
+    const el=document.getElementById('pmList');
+    if(!shown.length){
+      el.innerHTML='<div class="pm-empty">'+(list.length?(filter==='done'?'아직 완료된 품의가 없어요.':'진행 중인 품의가 없어요.'):'아직 등록한 품의가 없어요. 위에 품의명을 적고 <b>품의 추가</b>를 눌러 주세요.')+'</div>';
+      return;
+    }
+    el.innerHTML=shown.map(p=>{
+      const lv=level(p);
+      const steps=STEPS.map((s,i)=>{
+        const cls=p.dates[i]?'on':(i===lv?'now':'');
+        return '<li><button type="button" class="'+cls+'" data-id="'+p.id+'" data-s="'+i+'">'+s+'<i>'+(p.dates[i]?fmt(p.dates[i]):(i===lv?'다음 단계':'·'))+'</i></button></li>';
+      }).join('');
+      const meta=[p.budget&&('예산: '+esc(p.budget)),p.memo&&esc(p.memo)].filter(Boolean).join(' · ');
+      return '<article class="pm'+(isDone(p)?' done':'')+'"><div class="pm-top"><h3>'+esc(p.name)+'</h3>'+(p.amt?'<span class="pm-amt">'+won(p.amt)+'</span>':'')+(meta?'<span class="pm-meta">'+meta+'</span>':'')+'</div>'
+        +'<ol class="pm-steps" aria-label="진행 단계">'+steps+'</ol>'
+        +'<div class="pm-foot"><span>'+(isDone(p)?'모든 단계 완료':'다음: <b>'+STEPS[lv]+'</b>')+' · 등록 '+fmt(p.created)+'</span>'
+        +'<button type="button" class="pm-del'+(sureId===p.id?' sure':'')+'" data-del="'+p.id+'">'+(sureId===p.id?'한 번 더 누르면 삭제':'삭제')+'</button></div></article>';
+    }).join('');
+  }
+
+  document.getElementById('pmForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=document.getElementById('pmName').value.trim();
+    const amtRaw=document.getElementById('pmAmt').value.replace(/[^0-9]/g,'');
+    if(!name){document.getElementById('pmMsg').textContent='품의명을 적어 주세요.';return}
+    list.unshift({id:Date.now().toString(36),name,amt:amtRaw?parseInt(amtRaw,10):0,
+      budget:document.getElementById('pmBudget').value.trim(),memo:document.getElementById('pmMemo').value.trim(),
+      created:today,dates:[today,'','','','']});
+    save(); e.target.reset(); document.getElementById('pmMsg').textContent=''; filter='ing'; render();
+    document.getElementById('pmName').focus();
+  });
+  document.getElementById('pmAmt').addEventListener('input',e=>{
+    const v=e.target.value.replace(/[^0-9]/g,''); e.target.value=v?parseInt(v,10).toLocaleString('ko-KR'):'';
+  });
+  document.addEventListener('click',e=>{
+    const f=e.target.closest('.pm-filter button'); if(f){filter=f.dataset.f;sureId=null;render();return}
+    const st=e.target.closest('.pm-steps button');
+    if(st){
+      const p=list.find(x=>x.id===st.dataset.id), i=+st.dataset.s; if(!p)return;
+      if(p.dates[i]){ for(let j=i;j<STEPS.length;j++) p.dates[j]=''; }       // 이 단계부터 취소
+      else { for(let j=0;j<=i;j++) if(!p.dates[j]) p.dates[j]=today; }        // 이 단계까지 완료
+      sureId=null; save(); render(); return;
+    }
+    const d=e.target.closest('[data-del]');
+    if(d){ if(sureId===d.dataset.del){list=list.filter(x=>x.id!==sureId);sureId=null;save()} else sureId=d.dataset.del; render(); return }
+    if(sureId){sureId=null;render()}
+  });
+
+  /* 탭 */
+  const tabs=[['work','tab-work','panel-work'],['pumui','tab-pumui','panel-pumui']];
+  function show(name){
+    tabs.forEach(([n,t,pn])=>{const on=n===name;document.getElementById(t).setAttribute('aria-selected',on);document.getElementById(t).tabIndex=on?0:-1;document.getElementById(pn).hidden=!on});
+  }
+  function route(){ show(location.hash==='#pumui'?'pumui':'work') }
+  document.getElementById('tab-work').onclick=()=>{ if(location.hash==='#pumui') history.replaceState(null,'',location.pathname); route() };
+  document.getElementById('tab-pumui').onclick=()=>{ location.hash='pumui' };
+  document.querySelector('.tabs').addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    const next=document.getElementById('tab-work').getAttribute('aria-selected')==='true'?'tab-pumui':'tab-work';
+    document.getElementById(next).click(); document.getElementById(next).focus();
+  });
+  window.addEventListener('hashchange',()=>{ if(location.hash==='#pumui'||location.hash==='') route(); else show('work') });
+  render(); route();
 })();
 </script>
 <a class="fab-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
