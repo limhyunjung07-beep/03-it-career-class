@@ -138,15 +138,30 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
   const pad=n=>String(n).padStart(2,'0'),W='일월화수목금토';
   const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const toMin=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+  /* 일정의 시간 글자에서 시작 시각(분) 찾기: '5교시' → 그 교시 시작, '15:00' → 15시 */
+  function evMin(t){
+    t=t||'';let m=t.match(/(\d+)\s*교시/);
+    if(m&&PERIODS[m[1]-1])return toMin(PERIODS[m[1]-1]);
+    m=t.match(/(\d{1,2}):(\d{2})/);if(m)return +m[1]*60+ +m[2];
+    return 24*60;
+  }
   function render(){
     const d=new Date(),ds=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),now=d.getHours()*60+d.getMinutes();
     const info=scheduleDay(ds),act=info.classes.filter(c=>!c.blocked).length;
-    let h='<div class="th">오늘 '+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')<small>'+(info.holiday?esc(info.holiday):'수업 '+act+'시간')+'</small></div>';
-    h+='<div class="cols"><div><h4><i>1</i>수업</h4><ul>'+(info.classes.length?info.classes.map(c=>{
+    const isCS=e=>e.cat==='class'||e.cat==='counsel';
+    const cs=info.events.filter(isCS),others=info.events.filter(e=>!isCS(e));
+    /* 1. 수업·상담: 시간표 수업 + 수업·상담 분류 일정을 시간 순서로 */
+    const rows=info.classes.map(c=>({m:toMin(c.start),html:(()=>{
       const on=!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
       return '<li class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+'</b>'
-        +(c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'}).join(''):'<li class="none">오늘은 수업이 없어요</li>')+'</ul>';
-    h+='</div><div><h4><i>2</i>일정</h4><ul>'+(info.events.length?info.events.map(e=>
+        +(c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
+      .concat(cs.map(e=>({m:evMin(e.time),html:'<li><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
+      .sort((a,b)=>a.m-b.m);
+    const nC=cs.filter(e=>e.cat==='counsel').length;
+    const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
+    let h='<div class="th">오늘 '+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')<small>'+sum+'</small></div>';
+    h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">오늘은 수업·상담이 없어요</li>')+'</ul>';
+    h+='</div><div><h4><i>2</i>일정</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
       '<li><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">오늘 일정이 없어요</li>')+'</ul></div></div>';
     box.innerHTML=h;
   }
