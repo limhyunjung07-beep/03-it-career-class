@@ -42,6 +42,20 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .home-btn{color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);padding:6px 12px}
 .home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
 .go-home svg,.home-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:22px;align-items:start;margin-bottom:40px}
+.layout .picks{margin-bottom:0}
+.quick{background:#fff;border:2px solid var(--line);border-radius:20px;padding:18px 16px;display:grid;gap:10px;position:sticky;top:16px}
+.quick h3{margin:0 0 2px;font-family:'Jua',sans-serif;font-weight:400;font-size:24px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.quick h3 svg{width:22px;height:22px;stroke:var(--navy);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.qlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.qlist a{--qc:var(--blue);display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;transition:border-color .12s,transform .12s}
+.qlist a:hover,.qlist a:focus-visible{border-color:var(--qc);transform:translateX(3px);outline:none}
+.qlist .qi{flex:none;width:38px;height:38px;border-radius:11px;background:var(--qc);color:#fff;display:grid;place-items:center;font-weight:900;font-size:15px}
+.qlist .qt{min-width:0;display:grid}
+.qlist b{font-size:16px;line-height:1.3}
+.qlist small{color:var(--sub);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qlist .ar{margin-left:auto;color:var(--sub);font-size:15px}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.quick{position:static}.qlist{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
 @media (max-width:560px){.logo{width:60px;height:48px}.picks{gap:10px}.pick{padding:24px 12px}.icon{width:64px;height:64px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}}
 </style>
 </head>
@@ -68,6 +82,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
     <h2>어디로 갈까요?</h2>
     <span>학생은 '수업'을 눌러요</span>
   </div>
+  <div class="layout">
   <div class="picks">
     <a class="pick work" href="work.html">
       <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></span>
@@ -82,7 +97,33 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
       <span class="who">학생</span>
     </a>
   </div>
+  <aside class="quick" aria-label="자주 쓰는 바로가기">
+    <h3><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>바로가기</h3>
+    <ul class="qlist" id="qlist"></ul>
+  </aside>
+  </div>
 </main>
 <footer>꿈it(잇)다 진로상담실 · 매탄중학교</footer>
+<script>
+/* ▼ 바로가기 목록: 줄을 복사해서 이름·설명·주소·글자·색만 바꾸면 추가돼요.
+   색: blue, green, orange, red, navy */
+const QUICK_LINKS=[
+  {name:'업무포털', desc:'경기도교육청 업무포털', url:'https://goe.eduptl.kr/bpm_lgn_lg00_001.do?noEpSession', mark:'업', color:'navy'},
+  {name:'매탄중 업무포털', desc:'매탄중 업무 바로가기 모음', url:'https://jbot.kr/%EB%A7%A4%ED%83%84%EC%A4%91', mark:'매', color:'orange'},
+  {name:'매탄중학교', desc:'학교 홈페이지', url:'https://maetan-m.goesw.kr/maetan-m/main.do', mark:'학', color:'green'},
+];
+(function(){
+  const C={blue:'var(--blue)',green:'var(--green)',orange:'var(--orange)',red:'var(--red)',navy:'var(--navy)'};
+  const ul=document.getElementById('qlist');
+  QUICK_LINKS.forEach(l=>{
+    const li=document.createElement('li');const a=document.createElement('a');
+    a.href=l.url;a.target='_blank';a.rel='noopener';a.style.setProperty('--qc',C[l.color]||C.blue);
+    a.innerHTML='<span class="qi"></span><span class="qt"><b></b><small></small></span><span class="ar">↗</span>';
+    a.querySelector('.qi').textContent=l.mark||l.name.slice(0,1);
+    a.querySelector('b').textContent=l.name;a.querySelector('small').textContent=l.desc||'';
+    li.appendChild(a);ul.appendChild(li);
+  });
+})();
+</script>
 </body>
 </html>
