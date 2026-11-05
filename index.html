@@ -42,20 +42,18 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .home-btn{color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);padding:6px 12px}
 .home-btn:hover,.home-btn:focus-visible{background:rgba(255,255,255,.14);outline:none}
 .go-home svg,.home-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:22px;align-items:start;margin-bottom:40px}
+.layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:22px;align-items:start;margin-bottom:40px}
 .layout .picks{margin-bottom:0}
-.quick{background:#fff;border:2px solid var(--line);border-radius:20px;padding:18px 16px;display:grid;gap:10px;position:sticky;top:16px}
-.quick h3{margin:0 0 2px;font-family:'Jua',sans-serif;font-weight:400;font-size:24px;color:var(--navy);display:flex;align-items:center;gap:8px}
-.quick h3 svg{width:22px;height:22px;stroke:var(--navy);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.qlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.qlist a{--qc:var(--blue);display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;transition:border-color .12s,transform .12s}
-.qlist a:hover,.qlist a:focus-visible{border-color:var(--qc);transform:translateX(3px);outline:none}
-.qlist .qi{flex:none;width:38px;height:38px;border-radius:11px;background:var(--qc);color:#fff;display:grid;place-items:center;font-weight:900;font-size:15px}
-.qlist .qt{min-width:0;display:grid}
-.qlist b{font-size:16px;line-height:1.3}
-.qlist small{color:var(--sub);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qlist .ar{margin-left:auto;color:var(--sub);font-size:15px}
-@media (max-width:860px){.layout{grid-template-columns:1fr}.quick{position:static}.qlist{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}}
+.quick{order:-1;background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 12px;display:grid;gap:8px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto}
+.quick h3{margin:0 0 2px;font-family:'Jua',sans-serif;font-weight:400;font-size:20px;color:var(--navy);display:flex;align-items:center;gap:6px}
+.quick h3 svg{width:18px;height:18px;stroke:var(--navy);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.qlist{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.qlist a{--qc:var(--blue);display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:5px 8px;transition:border-color .12s,transform .12s}
+.qlist a:hover,.qlist a:focus-visible{border-color:var(--qc);transform:translateX(2px);outline:none}
+.qlist .qi{flex:none;width:24px;height:24px;border-radius:7px;background:var(--qc);color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px}
+.qlist b{min-width:0;font-size:14px;line-height:1.3;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qlist .ar{margin-left:auto;color:var(--sub);font-size:12px}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.quick{order:0;position:static;max-height:none}.qlist{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 @media (max-width:560px){.logo{width:60px;height:48px}.picks{gap:10px}.pick{padding:24px 12px}.icon{width:64px;height:64px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}}
 </style>
 </head>
@@ -118,9 +116,10 @@ const QUICK_LINKS=[
   QUICK_LINKS.forEach(l=>{
     const li=document.createElement('li');const a=document.createElement('a');
     a.href=l.url;a.target='_blank';a.rel='noopener';a.style.setProperty('--qc',C[l.color]||C.blue);
-    a.innerHTML='<span class="qi"></span><span class="qt"><b></b><small></small></span><span class="ar">↗</span>';
+    a.title=l.desc?l.name+' · '+l.desc:l.name;
+    a.innerHTML='<span class="qi"></span><b></b><span class="ar">↗</span>';
     a.querySelector('.qi').textContent=l.mark||l.name.slice(0,1);
-    a.querySelector('b').textContent=l.name;a.querySelector('small').textContent=l.desc||'';
+    a.querySelector('b').textContent=l.name;
     li.appendChild(a);ul.appendChild(li);
   });
 })();
