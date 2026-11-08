@@ -276,6 +276,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
         <div class="tools">
           <button type="button" class="btn" id="exportBtn">내보내기</button>
           <button type="button" class="btn" id="importBtn">가져오기</button>
+          <button type="button" class="btn" id="restoreFixed">고정 일정 되돌리기</button>
           <input type="file" id="importFile" accept=".json,application/json" hidden>
         </div>
         <p class="note">직접 추가한 일정은 이 브라우저에만 저장돼요. 다른 컴퓨터에서 쓰려면 '내보내기'로 파일을 받아 그 컴퓨터에서 '가져오기' 하세요.</p>
@@ -297,6 +298,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   <label class="fld"><span>메모 (선택)</span><textarea name="memo" rows="3" maxlength="500" placeholder="장소, 준비물, 링크 등"></textarea></label>
   <div class="dlg-btns">
     <button type="button" class="btn danger" id="delBtn">삭제</button>
+    <button type="button" class="btn" id="origBtn" hidden>원래대로</button>
     <span class="sp"></span>
     <button type="button" class="btn" id="cancelBtn">취소</button>
     <button type="submit" class="btn main">저장</button>
@@ -411,7 +413,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   $('#cpDef').onclick=()=>{const d=defSlot(cpCur.c,cpCur.st);cpForm.date.value=d.date;cpForm.p.value=d.p;cpCheck()};
   $('#cpReset').onclick=()=>{if(confirm('반별 날짜·교시·완료 표시를 모두 처음 일정으로 되돌릴까요?')){cp={};save(CPKEY,cp);renderAll()}};
 
-  const all=()=>FIXED.map((e,i)=>({...e,id:'f'+i,fixed:true})).concat(planEvents(),mine)
+  const all=()=>FIXED.map(e=>({...e,id:e.fid,fixed:true})).concat(planEvents(),mine)
     .filter(e=>!hidden.has(e.cat))
     .sort((a,b)=>a.start.localeCompare(b.start)||(a.time||'').localeCompare(b.time||''));
   const onDay=(e,d)=>d>=e.start&&d<=(e.end||e.start);
@@ -488,13 +490,8 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   /* 보기·편집 */
   function open(id){
     if(id.startsWith('cp-')){const [,c,k]=id.split('-');openPlan(c,k);return}
-    if(id.startsWith('f')){
-      const e=FIXED[+id.slice(1)];
-      $('#vTitle').innerHTML=esc(e.title)+'<span class="lock">고정 일정</span>';
-      $('#vMeta').textContent=range(e)+' · '+(CATS[e.cat]||CATS.etc).name;
-      $('#vMemo').textContent=e.memo||'메모 없음';
-      $('#viewDlg').showModal();
-    }else{openForm(mine.find(x=>x.id===id))}
+    if(id.startsWith('f:')){const e=FIXED.find(x=>x.fid===id);if(e)openForm(e)}
+    else{openForm(mine.find(x=>x.id===id))}
   }
   $('#vClose').onclick=()=>$('#viewDlg').close();
 
@@ -502,8 +499,9 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   $('#formCats').innerHTML=Object.entries(CATS).map(([k,v])=>'<label style="--c:'+v.c+'"><input type="radio" name="cat" value="'+k+'">'+v.name+'</label>').join('');
   function openForm(ev,date){
     editing=ev||null;form.reset();
-    $('#formTitle').textContent=ev?'일정 고치기':'일정 추가';
+    $('#formTitle').innerHTML=ev?'일정 고치기'+(ev.fid?'<span class="lock">고정 일정</span>':''):'일정 추가';
     $('#delBtn').style.visibility=ev?'visible':'hidden';
+    $('#origBtn').hidden=!(ev&&ev.fid&&ev.edited);
     const v=ev||{start:date||sel,cat:'school'};
     form.title.value=v.title||'';form.start.value=v.start;form.end.value=v.end||'';
     form.time.value=v.time||'';form.memo.value=v.memo||'';
@@ -518,7 +516,8 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
     if(end===start)end='';
     const data={title:f.get('title').trim(),start,end,time:f.get('time').trim(),cat:f.get('cat')||'etc',memo:f.get('memo').trim()};
     if(!data.title)return;
-    if(editing)Object.assign(editing,data);
+    if(editing&&editing.fid){SCHED.saveEvent(editing,data)}
+    else if(editing)Object.assign(editing,data);
     else mine.push({id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...data});
     save(KEY,mine);$('#dlg').close();
     sel=start;const d=parse(start);view=new Date(d.getFullYear(),d.getMonth(),1);
@@ -527,14 +526,18 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   $('#cancelBtn').onclick=()=>$('#dlg').close();
   $('#delBtn').onclick=()=>{
     if(!editing||!confirm('이 일정을 지울까요?'))return;
-    mine=mine.filter(x=>x!==editing);save(KEY,mine);$('#dlg').close();renderAll();
+    if(editing.fid)SCHED.deleteEvent(editing);else{mine=mine.filter(x=>x!==editing);save(KEY,mine)}
+    $('#dlg').close();renderAll();
   };
+  $('#origBtn').onclick=()=>{if(!editing||!editing.fid)return;SCHED.resetFixed(editing.fid);$('#dlg').close();renderAll()};
+  $('#restoreFixed').onclick=()=>{const n=Object.keys(SCHED.edits()).length;if(!n){alert('고치거나 지운 고정 일정이 없어요.');return}
+    if(confirm('고치거나 지운 고정 일정 '+n+'개를 모두 원래대로 되돌릴까요?')){SCHED.save('schedule:fixedEdits',{});SCHED.refresh();renderAll()}};
   $('#addBtn').onclick=()=>openForm(null,sel);
   $('#addSel').onclick=()=>openForm(null,sel);
 
   /* 백업 */
   $('#exportBtn').onclick=()=>{
-    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,fixedEdits:SCHED.edits(),plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='일정관리-백업-'+today+'.json';
     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   };
@@ -547,6 +550,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
       const ok=list.filter(x=>x&&x.title&&/^\d{4}-\d{2}-\d{2}$/.test(x.start));
       const have=new Set(mine.map(x=>x.id));let n=0;
       ok.forEach(x=>{if(!x.id||!have.has(x.id)){mine.push({...x,id:x.id||'u'+Math.random().toString(36).slice(2,10)});n++}});
+      if(j.fixedEdits&&typeof j.fixedEdits==='object'){SCHED.save('schedule:fixedEdits',j.fixedEdits);SCHED.refresh()}
       if(j.plans&&j.plans[CLASS_PLAN.key]){cp=j.plans[CLASS_PLAN.key];save(CPKEY,cp)}
       save(KEY,mine);renderAll();alert(n+'개 일정을 가져왔어요.'+(j.plans?' 반별 일정도 불러왔어요.':''));
     }catch(err){alert('백업 파일을 읽지 못했어요.')}

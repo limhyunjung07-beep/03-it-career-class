@@ -84,6 +84,42 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 @media (max-width:860px){.layout{grid-template-columns:1fr}.quick{order:0;position:static;max-height:none}.qlist{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 @media (max-width:560px){.logo{width:60px;height:48px}.picks{gap:10px}.pick{padding:24px 12px}.picks{grid-template-columns:repeat(2,1fr)}.pick.sched{grid-column:1/-1}.icon{width:64px;height:64px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}}
 
+/* 오늘·내일 목록: 한 줄로, 글자 가볍게 (넘치면 … 으로 줄이고 마우스를 올리면 전체가 보여요) */
+.today li{flex-wrap:nowrap;align-items:center;gap:6px;white-space:nowrap;min-width:0;padding:3px 8px}
+.today li b{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
+.today li .pn{font-weight:700;font-size:12.5px}
+.today li em,.today li small{flex:none;font-weight:500;white-space:nowrap}
+.today li em{overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0}
+.today li small{margin-left:auto}
+.today .th{font-weight:700}
+.today h4{font-weight:700}
+.today .cols>div{min-width:0}
+/* 일정 고치기 */
+.sid{text-decoration:none;border-radius:18px}
+.sid:focus-visible{outline:3px solid var(--green);outline-offset:4px}
+.pick.sched:hover{transform:none}
+.today li.ed{cursor:pointer}
+.today li.ed:hover{outline:1.5px solid var(--green)}
+.today li a{color:inherit;text-decoration:none;display:contents}
+.today .add{flex:none;border:1.5px solid var(--green);background:#fff;color:var(--green);font:inherit;font-size:12px;font-weight:700;border-radius:999px;padding:0 9px;line-height:20px;cursor:pointer;margin-left:6px}
+.today .add:hover{background:var(--green);color:#fff}
+.today .th>span:last-child{display:flex;align-items:center}
+dialog.ev{border:0;border-radius:20px;padding:0;width:min(440px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3)}
+dialog.ev::backdrop{background:rgba(29,43,83,.45)}
+.ev form{padding:18px 18px 16px}
+.ev h3{margin:0 0 10px;font-family:'Jua',sans-serif;font-weight:400;font-size:24px;color:var(--navy)}
+.ev h3 small{font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;color:var(--sub);background:var(--bg);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:middle}
+.ev label{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:var(--sub)}
+.ev input,.ev select,.ev textarea{font:inherit;font-size:15px;font-weight:400;border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;width:100%;color:var(--ink);background:#fff}
+.ev input:focus,.ev select:focus,.ev textarea:focus{outline:none;border-color:var(--green)}
+.ev .r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ev .bt{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.ev .bt .sp{flex:1}
+.ev button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 14px;border:1.5px solid var(--line);background:#fff;color:var(--navy);cursor:pointer}
+.ev button.main{background:var(--green);border-color:var(--green);color:#fff}
+.ev button.del{color:var(--red)}
+.ev .more{font-size:12px;color:var(--sub);margin:6px 0 0}
+.ev .more a{color:var(--green);font-weight:700}
 /* ===== 반응형: 노트북·태블릿·휴대폰 ===== */
 .wrap{max-width:1240px}
 .hd{padding:12px 16px}
@@ -168,13 +204,13 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 <main class="wrap">
   <div class="layout">
   <div class="picks">
-    <a class="pick sched" href="schedule.html">
-      <span class="sid"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3v3H8z"/></svg></span>
+    <div class="pick sched">
+      <a class="sid" href="schedule.html" title="일정관리 열기"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h3v3H8z"/></svg></span>
       <b>일정관리</b>
       <small>업무·수업 일정 달력</small>
-      <span class="who">선생님</span></span>
+      <span class="who">선생님</span></a>
       <div class="today" id="todayBox" aria-live="polite"></div>
-    </a>
+    </div>
     <a class="pick work" href="work.html">
       <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></span>
       <b>업무</b>
@@ -194,6 +230,15 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
   </aside>
   </div>
 </main>
+<dialog class="ev" id="evDlg"><form id="evForm">
+  <h3 id="evTitle">일정 고치기</h3>
+  <label>제목<input name="title" required maxlength="60"></label>
+  <div class="r2"><label>시작일<input type="date" name="start" required></label><label>종료일 (여러 날)<input type="date" name="end"></label></div>
+  <div class="r2"><label>시간<input name="time" maxlength="30" placeholder="예) 15:00 / 5교시"></label><label>분류<select name="cat" id="evCat"></select></label></div>
+  <label>메모<textarea name="memo" rows="2" maxlength="500"></textarea></label>
+  <div class="bt"><button type="button" class="del" id="evDel">삭제</button><button type="button" id="evOrig" hidden>원래대로</button><span class="sp"></span><button type="button" id="evCancel">취소</button><button type="submit" class="main">저장</button></div>
+  <p class="more">달력·반별 수업 일정은 <a href="schedule.html">일정관리</a>에서 고쳐요.</p>
+</form></dialog>
 <footer>꿈it(잇)다 진로상담실 · 매탄중학교</footer>
 <script src="schedule-data.js"></script>
 <script>
@@ -219,22 +264,49 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
     /* 1. 수업·상담: 시간표 수업 + 수업·상담 분류 일정을 시간 순서로 */
     const rows=info.classes.map(c=>({m:toMin(c.start),html:(()=>{
       const on=isToday&&!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
-      return '<li class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+'</b>'
+      return '<li class="ed" data-cls="1" title="'+esc(c.p+'교시 '+c.start+' '+c.name+(c.plan?' · '+c.plan:'')+(c.blocked?' · 수업 없음 '+c.blocked:''))+'" class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+'</b>'
         +(c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
-      .concat(cs.map(e=>({m:evMin(e.time),html:'<li><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
+      .concat(cs.map(e=>({m:evMin(e.time),html:'<li class="ed" data-k="'+esc(e.key)+'" title="'+esc((e.time?e.time+' ':'')+e.title)+' · 눌러서 고치기"><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
-    let h='<div class="day'+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><small>'+sum+'</small></div>';
+    let h='<div class="day'+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
     h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">수업·상담이 없어요</li>')+'</ul>';
     h+='</div><div><h4><i>2</i>일정</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
-      '<li><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
+      '<li class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
     return h;
   }
   function render(){
     const d=new Date(),t=new Date(d);t.setDate(d.getDate()+1);
     box.innerHTML=dayBlock(d,'오늘',true)+dayBlock(t,'내일',false);
   }
+  /* 일정 고치기·추가 */
+  const dlg=document.getElementById('evDlg'),f=document.getElementById('evForm');let cur=null;
+  document.getElementById('evCat').innerHTML=Object.entries(CATS).map(([k,v])=>'<option value="'+k+'">'+v.name+'</option>').join('');
+  function openEv(ev,date){
+    cur=ev;f.reset();
+    document.getElementById('evTitle').innerHTML=ev?'일정 고치기'+(ev.fid?'<small>고정 일정</small>':''):'일정 추가';
+    const v=ev||{start:date,cat:'school'};
+    f.title.value=v.title||'';f.start.value=v.start;f.end.value=v.end||'';f.time.value=v.time||'';f.memo.value=v.memo||'';f.cat.value=CATS[v.cat]?v.cat:'etc';
+    document.getElementById('evDel').hidden=!ev;document.getElementById('evOrig').hidden=!(ev&&ev.fid&&ev.edited);
+    dlg.showModal();f.title.focus();
+  }
+  box.addEventListener('click',e=>{
+    const a=e.target.closest('[data-add]');if(a){openEv(null,a.dataset.add);return}
+    const li=e.target.closest('li.ed');if(!li)return;
+    if(li.dataset.cls){location.href='schedule.html';return}
+    const ev=SCHED.find(li.dataset.k);if(ev)openEv(ev);
+  });
+  f.addEventListener('submit',e=>{
+    e.preventDefault();let st=f.start.value,en=f.end.value;
+    if(en&&en<st)[st,en]=[en,st];if(en===st)en='';
+    const data={title:f.title.value.trim(),start:st,end:en,time:f.time.value.trim(),cat:f.cat.value,memo:f.memo.value.trim()};
+    if(!data.title)return;SCHED.saveEvent(cur,data);dlg.close();render();
+  });
+  document.getElementById('evCancel').onclick=()=>dlg.close();
+  document.getElementById('evDel').onclick=()=>{if(cur&&confirm('이 일정을 지울까요?')){SCHED.deleteEvent(cur);dlg.close();render()}};
+  document.getElementById('evOrig').onclick=()=>{if(cur&&cur.fid){SCHED.resetFixed(cur.fid);dlg.close();render()}};
+  window.addEventListener('storage',e=>{if(e.key&&e.key.startsWith('schedule:')){SCHED.refresh();render()}});
   render();setInterval(render,60000);
 })();
 </script>

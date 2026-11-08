@@ -29,6 +29,34 @@ const FIXED=[
   {title:'고입 배정 학교 발표 (예정)',start:'2027-01-22',cat:'school',memo:'3학년'},
   {title:'고입 합격자 등록 기간',start:'2027-01-25',end:'2027-01-27',cat:'school',memo:'3학년'}
 ];
+
+/* ===== 일정 고치기·지우기 (첫 화면과 일정관리 페이지가 함께 써요) =====
+   고정 일정을 고치거나 지우면 이 브라우저에 따로 저장돼 위 목록 위에 덮어써요. '원래대로'로 되돌릴 수 있어요. */
+const FIXED_BASE=FIXED.map(e=>({...e,fid:'f:'+e.start+':'+e.title}));
+const SCHED={
+  load(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+  mine(){return this.load('schedule:events',[])},
+  edits(){return this.load('schedule:fixedEdits',{})},
+  refresh(){const ed=this.edits();FIXED.length=0;
+    FIXED_BASE.forEach(b=>{const o=ed[b.fid];if(o&&o.deleted)return;FIXED.push(o?{...b,...o,fid:b.fid,edited:true}:{...b})})},
+  find(key){return FIXED.find(e=>e.fid===key)||this.mine().find(e=>e.id===key)||null},
+  saveEvent(ev,data){
+    if(ev&&ev.fid){const ed=this.edits();ed[ev.fid]=data;this.save('schedule:fixedEdits',ed)}
+    else{const m=this.mine(),x=ev&&m.find(y=>y.id===ev.id);
+      if(x)Object.assign(x,data);else m.push({id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...data});
+      this.save('schedule:events',m)}
+    this.refresh();
+  },
+  deleteEvent(ev){
+    if(ev.fid){const ed=this.edits();ed[ev.fid]={deleted:true};this.save('schedule:fixedEdits',ed)}
+    else this.save('schedule:events',this.mine().filter(y=>y.id!==ev.id));
+    this.refresh();
+  },
+  resetFixed(fid){const ed=this.edits();delete ed[fid];this.save('schedule:fixedEdits',ed);this.refresh()}
+};
+SCHED.refresh();
+
 /* ▼ 내 시간표: 요일(월~금)마다 교시 번호: '수업 이름'. 'x' = 수업 불가(비움 표시) */
 const PERIODS=['09:15','10:10','11:05','12:00','13:40','14:35','15:30']; /* 1~7교시 시작 시각, 수업 45분 */
 const TIMETABLE={
@@ -84,6 +112,6 @@ function scheduleDay(ds){
   /* 시간표와 다른 교시로 옮긴 반별 수업도 수업에 포함 */
   plans.filter(x=>x.date===ds&&!classes.some(k=>k.p===x.p)).forEach(x=>classes.push({p:x.p,start:PERIODS[x.p-1],name:x.c+'진로',blocked:'',plan:CLASS_PLAN.title+' '+x.name+(x.done?' ✓':''),moved:true}));
   classes.sort((a,b)=>a.p-b.p);
-  const events=evs.filter(e=>onDay(e,ds)).map(e=>({title:e.title,time:e.time||'',cat:e.cat,memo:e.memo||''}));
+  const events=evs.filter(e=>onDay(e,ds)).map(e=>({key:e.fid||e.id,title:e.title,time:e.time||'',cat:e.cat,memo:e.memo||''}));
   return {date:ds,holiday:HOL[ds.slice(5)]||'',classes,events};
 }
