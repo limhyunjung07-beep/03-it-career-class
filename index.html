@@ -83,6 +83,68 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .today .none{color:var(--sub);background:none;padding:2px 4px}
 @media (max-width:860px){.layout{grid-template-columns:1fr}.quick{order:0;position:static;max-height:none}.qlist{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 @media (max-width:560px){.logo{width:60px;height:48px}.picks{gap:10px}.pick{padding:24px 12px}.picks{grid-template-columns:repeat(2,1fr)}.pick.sched{grid-column:1/-1}.icon{width:64px;height:64px}.go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}}
+
+/* ===== 반응형: 노트북·태블릿·휴대폰 ===== */
+.wrap{max-width:1240px}
+.hd{padding:12px 16px}
+.logo{width:62px;height:48px}
+.layout{margin:18px 0 26px;gap:18px}
+.picks{gap:14px}
+/* 업무·수업: 아이콘 왼쪽 + 글자 오른쪽(낮은 가로형) */
+.pick.work,.pick.class{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i t" "i s" "i w";justify-items:start;align-items:center;text-align:left;column-gap:18px;row-gap:3px;padding:18px 22px}
+.pick.work .icon,.pick.class .icon{grid-area:i;width:70px;height:70px;border-radius:20px}
+.pick.work>b,.pick.class>b{grid-area:t;font-size:34px;line-height:1.1}
+.pick.work>small,.pick.class>small{grid-area:s}
+.pick.work .who,.pick.class .who{grid-area:w}
+/* 일정관리 */
+.pick.sched{padding:18px 20px;gap:18px}
+.sid{width:170px;gap:8px}
+.sid .icon{width:66px;height:66px;border-radius:20px}
+.sid .icon svg,.pick.work .icon svg,.pick.class .icon svg{width:36px;height:36px}
+.sid>b{font-size:34px}
+.quick{top:12px}
+
+/* 넓은 노트북·모니터: 바로가기 조금 넓게 */
+@media (min-width:1200px){.layout{grid-template-columns:260px minmax(0,1fr)}}
+/* 낮은 노트북 화면: 한 화면에 들어오게 더 촘촘히 */
+@media (min-width:861px) and (max-height:820px){
+  .hd{padding:8px 16px}.hd h1{font-size:28px}.hd p{font-size:14px}.bar{height:6px}
+  .layout{margin:14px 0 18px}.pick.sched{padding:14px 18px}.today li{padding:3px 8px}
+  .pick.work,.pick.class{padding:12px 20px}.pick.work .icon,.pick.class .icon{width:58px;height:58px}
+  .qlist a{padding:4px 8px}.qlist{gap:4px}}
+/* 태블릿 */
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  .quick{order:0}
+  .qlist{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .qlist b{letter-spacing:-.03em}}
+/* 작은 태블릿: 일정관리 제목도 가로형으로 */
+@media (max-width:700px){
+  .pick.sched{flex-direction:column;align-items:stretch;padding:16px}
+  .sid{width:auto;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i t" "i s" "i w";justify-items:start;align-items:center;column-gap:14px;row-gap:2px}
+  .sid .icon{grid-area:i;width:56px;height:56px}.sid>b{grid-area:t;font-size:30px}.sid>small{grid-area:s}.sid .who{grid-area:w}
+  .pick.sched .today{width:100%}
+  .today .cols{grid-template-columns:1fr}}
+/* 휴대폰 */
+@media (max-width:560px){
+  .wrap{padding:0 10px}
+  .hd{gap:10px;padding:10px 10px}.logo{width:50px;height:40px;border-radius:12px}.logo svg{width:42px}
+  .hd h1{font-size:22px}.hd p{font-size:12px}
+  .layout{margin:12px 0 18px;gap:12px}
+  .picks{gap:10px}
+  .pick.work,.pick.class{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:16px 8px}
+  .pick.work .icon,.pick.class .icon{width:54px;height:54px;border-radius:16px}
+  .pick.work .icon svg,.pick.class .icon svg{width:30px;height:30px}
+  .pick.work>b,.pick.class>b{font-size:28px}
+  .pick.work>small,.pick.class>small{font-size:13px}
+  .pick.sched{padding:14px 12px}
+  .today{padding:8px}.today li{font-size:13.5px}
+  .qlist{grid-template-columns:1fr 1fr}
+  .qlist a{padding:7px 8px}
+  .qlist b{font-size:13px;white-space:normal;word-break:keep-all;letter-spacing:-.04em}
+  .hd>div:nth-child(2){min-width:0}.hd p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qlist .ar{display:none}}
+@media (max-width:360px){.qlist{grid-template-columns:1fr}.hd p{display:none}}
 </style>
 </head>
 <body>
