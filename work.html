@@ -71,6 +71,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .reset{flex:none;border:1px solid var(--line);background:#fff;color:var(--sub);border-radius:999px;padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}
 .reset:hover{border-color:var(--red);color:var(--red)}
 .phase{margin:18px 0 6px;font-family:'Jua',sans-serif;font-weight:400;font-size:21px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.ph-tag{display:inline-block;background:var(--navy);color:#fff;border-radius:8px;padding:1px 12px;font-size:17px}
 .phase small{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--sub);font-weight:500}
 .step{display:grid;grid-template-columns:28px 34px 1fr auto;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;margin-bottom:6px;cursor:pointer;transition:background .15s}
 .step:hover{background:#f8f9fc}
@@ -94,7 +95,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 @media print{.reset,.note{display:none}.step{break-inside:avoid}}
 /* 탭 */
 [hidden]{display:none!important}
-.tabs{display:flex;gap:8px;margin:24px 0 0;border-bottom:2px solid var(--line)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px 8px;margin:24px 0 0;border-bottom:2px solid var(--line)}
 .tabs button{font:inherit;font-weight:900;font-size:17px;color:var(--sub);background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .tabs button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--orange)}
 .tabs button:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
@@ -171,6 +172,105 @@ input{font:inherit}
 @media (max-width:860px){.doc-grid{grid-template-columns:1fr}.doc-out{position:static}}
 @media (max-width:560px){.shops{grid-template-columns:1fr 1fr;gap:6px}.shops a{padding:9px 8px;gap:8px}.shops .si{width:28px;height:28px;font-size:14px}.shops small{display:none}.shop-add{grid-template-columns:1fr}.two{grid-template-columns:1fr}.irow{grid-template-columns:1fr 1fr 1fr 28px;padding-bottom:8px;border-bottom:1px dashed var(--line)}.irow input:nth-child(1){grid-area:1/1/2/4}.irow input:nth-child(2){grid-area:2/1/3/4}.irow input:nth-child(3){grid-area:3/1/4/2}.irow input:nth-child(4){grid-area:3/2/4/3}.irow input:nth-child(5){grid-area:3/3/4/4}.irow .del{grid-area:1/4/2/5}.irow-h{display:none}.pq{padding:16px}}
 @media print{.tabs,.shop-add,.doc-form,.row-btns,.saved{display:none}}
+/* 업무 플랫폼 */
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
+.sum-box{font:inherit;cursor:pointer;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:14px 16px;display:grid;gap:2px}
+.sum-box b{font-family:'Jua',sans-serif;font-weight:400;font-size:36px;line-height:1.1;color:var(--navy)}
+.sum-box span{color:var(--sub);font-weight:700;font-size:14px}
+.sum-box.warn b{color:var(--red)}.sum-box.now b{color:var(--orange)}.sum-box.ok b{color:var(--green)}
+.sum-box:hover{border-color:var(--navy)}
+.ag-box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:8px 20px 16px;margin-bottom:12px}
+.ag-g{margin:14px 0 6px;font-family:'Jua',sans-serif;font-weight:400;font-size:20px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.ag-g small{font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--sub);font-weight:500}
+.ag-g.late{color:var(--red)}
+.step .wk{display:inline-block;margin-right:6px;background:var(--cl,#e8f0fc);color:var(--c,var(--blue));border-radius:7px;padding:0 7px;font-size:12px;font-weight:900}
+.ag-empty{color:var(--sub);font-size:14px;margin:12px 0 4px}
+.card.pick{cursor:pointer;transition:transform .12s,box-shadow .12s}
+.card.pick:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(29,43,83,.08)}
+.card.sel{outline:3px solid var(--c);outline-offset:-1px}
+.card .prog{cursor:pointer}
+.add-card{font:inherit;cursor:pointer;background:#fff;border:2px dashed #c3c9d8;border-radius:22px;min-height:220px;display:grid;place-items:center;color:var(--sub);font-weight:900;font-size:17px}
+.add-card:hover{border-color:var(--navy);color:var(--navy)}
+.add-card span{display:block;font-size:40px;line-height:1;margin-bottom:6px;text-align:center}
+.step .lk{margin-left:6px;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;white-space:nowrap}
+.step .lk:hover{text-decoration:underline}
+.ed-box{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:12px}
+.ed-box label{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--navy)}
+.ed-box input,.ed-box textarea{font:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;background:#fbfcfe;color:var(--ink);width:100%;min-width:0;resize:vertical}
+.ed-box input:focus,.ed-box textarea:focus{outline:none;border-color:var(--navy);background:#fff}
+.ed-steps{display:grid;gap:6px}
+.erow{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr 28px;gap:6px;align-items:center}
+.erow input{padding:8px 9px;font-size:14px}
+.erow .del{width:28px;height:28px;border-radius:50%;border:0;background:#f1f3f8;color:var(--sub);cursor:pointer}
+.erow .del:hover{background:#fdecee;color:var(--red)}
+.erow-h{font-size:12px;color:var(--sub);font-weight:700}
+.btn.danger{border-color:var(--red);color:var(--red)}
+.btn.danger.sure{background:var(--red);color:#fff}
+.file-btn{display:inline-block}
+.backup{margin-top:8px}
+.fbox{margin:0 0 18px}
+.fbox .drive{margin:0}
+.fbox .pm-msg:empty{display:none}
+.fb-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.fb-h .pq-h{margin-bottom:10px}
+.drop{display:flex;align-items:center;gap:14px;border:2px dashed #c9c5b8;border-radius:16px;padding:16px 18px;cursor:pointer;background:#faf9f6;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--blue);background:#f1f6fe}
+.drop-i{font-size:30px}
+.drop b{display:block;color:var(--navy)}
+.drop small{display:block;color:var(--sub);font-size:13px}
+.drive{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px}
+.drive-btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#1a73e8;color:#fff;font-weight:900;border-radius:14px;padding:12px 18px;font-size:15px}
+.drive-btn:hover{background:#1558b0}
+.drive .gd{width:22px;height:22px;flex:none}
+.drive input{flex:1 1 320px;min-width:0;font:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbfcfe}
+.drive input:focus{outline:none;border-color:#1a73e8;background:#fff}
+.drive .lb{font-weight:700;color:var(--navy);font-size:14px;width:100%}
+.drive .link-btn{font-size:13px}
+.flist{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.flist li.ft{position:relative;background:#fff;border:1px solid #dddbd3;border-radius:12px;transition:box-shadow .15s,border-color .15s}
+.flist li.ft:hover{border-color:#bdb9ad;box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.ft-go{display:flex;align-items:center;gap:9px;padding:9px 10px 30px;text-decoration:none;color:var(--ink);min-height:62px}
+.ft-go:focus-visible{outline:3px solid var(--blue);outline-offset:-3px;border-radius:12px}
+.fi{flex:none;width:32px;height:32px;border-radius:9px;background:#f3f1ea;display:grid;place-items:center;font-size:17px}
+.fn{min-width:0}
+.fn b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;font-weight:900;line-height:1.35;word-break:keep-all;overflow-wrap:anywhere}
+.fn small{position:absolute;left:10px;bottom:8px;color:#6b6f7a;font-size:11.5px}
+.fa{position:absolute;right:6px;bottom:4px;display:flex;gap:2px}
+.fa a,.fa button{width:26px;height:26px;border-radius:7px;border:0;background:none;display:grid;place-items:center;font-size:13px;text-decoration:none;cursor:pointer;color:var(--navy)}
+.fa a:hover,.fa button:hover{background:#f3f1ea}
+.fa .sure,.fa .sure:hover{background:var(--red);color:#fff;width:auto;padding:0 8px;font-size:11px;font-weight:900}
+.flist .f-empty{grid-column:1/-1;background:#fff;border:1px dashed #dddbd3;border-radius:12px;padding:12px 14px;font-size:14px}
+@media (max-width:900px){.flist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.flist{grid-template-columns:1fr}}
+.f-empty{color:var(--sub);font-size:14px;margin:10px 2px 0}
+
+body{background:#f4f3ef}
+.home{padding-bottom:24px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{position:relative;background:#fff;border:1px solid #dddbd3;border-radius:16px;transition:box-shadow .15s,border-color .15s}
+.tile:hover{border-color:#bdb9ad;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.tile-go{display:flex;align-items:center;gap:14px;padding:16px 52px 16px 16px;text-decoration:none;color:var(--ink);min-height:78px}
+.tile-go:focus-visible{outline:3px solid var(--blue);outline-offset:-3px;border-radius:16px}
+.ti{flex:none;width:42px;height:42px;border-radius:11px;background:#f3f1ea;display:grid;place-items:center;font-size:22px}
+.tx{min-width:0}
+.tx b{display:block;font-size:16px;font-weight:900;line-height:1.35}
+.tx b em{font-style:normal;font-size:12px;font-weight:900;color:#fff;background:var(--orange);border-radius:999px;padding:0 7px;margin-left:4px;vertical-align:2px}
+.tx small{display:block;color:#6b6f7a;font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pin{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;border-radius:10px;background:none;cursor:pointer;font-size:18px;filter:grayscale(1);opacity:.35}
+.tile.pinned .pin{filter:none;opacity:1}
+.pin:hover{background:#f3f1ea;opacity:1}
+.backbar{display:flex;align-items:center;gap:12px;margin:22px 0 0}
+.back-btn{font:inherit;font-weight:900;font-size:14px;color:var(--navy);background:#fff;border:1px solid #dddbd3;border-radius:999px;padding:7px 16px;cursor:pointer}
+.back-btn:hover{border-color:var(--navy)}
+.backbar .cur{font-weight:900;color:var(--navy);font-size:16px}
+@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.tiles{grid-template-columns:1fr}}
+.flow-btn{font:inherit;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--cl);color:var(--c);border:1px solid var(--cb);border-radius:12px;padding:10px 14px;font-weight:900;font-size:15px;margin-top:4px}
+.flow-btn:hover,.flow-btn.on{background:var(--c);color:#fff;border-color:var(--c)}
+.card .items a{flex-wrap:wrap;gap:2px 10px}.card .items small{margin-left:34px;width:100%}
+@media (max-width:760px){.sum{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.erow{grid-template-columns:1fr 1fr 28px;padding-bottom:8px;border-bottom:1px dashed var(--line)}.erow input:nth-child(1){grid-column:1/3}.erow input:nth-child(4){grid-column:1/3}.erow .del{grid-row:1;grid-column:3}.erow-h{display:none}.sum-box b{font-size:30px}}
+@media print{.sum,.editor,.backup,.add-card,.reset{display:none}}
 </style>
 </head>
 <body>
@@ -184,7 +284,7 @@ input{font:inherit}
     </a>
     <div>
       <h1>꿈it(잇)다 <b>진로 업무</b></h1>
-      <p>대회·행사 운영 자료 바로가기 · 매탄중학교 진로상담실</p>
+      <p>업무 메뉴 바로가기 · 매탄중학교 진로상담실</p>
     </div>
     <div class="hd-btns"><a class="go-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a><a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>교사 보관함</span></a></div>
   </div>
@@ -192,57 +292,70 @@ input{font:inherit}
 </header>
 
 <main class="wrap">
-  <div class="tabs" role="tablist" aria-label="업무 구분">
-    <button type="button" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="true">진행 중인 업무</button>
-    <button type="button" role="tab" id="tab-pumui" aria-controls="panel-pumui" aria-selected="false">품의 <span class="cnt" id="pmTabCnt">0</span></button>
+  <section class="home" id="homeView">
+    <div class="title-row"><h2>업무 메뉴</h2><span>눌러서 들어가요 · 📌을 누르면 자주 쓰는 메뉴를 앞에 고정해요</span></div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+  <div class="backbar" id="backBar" hidden>
+    <button type="button" class="back-btn" id="backHome">← 업무 메뉴</button>
+    <span class="cur" id="curName"></span>
   </div>
+  <span id="pmTabCnt" hidden></span>
 
-  <div id="panel-work" role="tabpanel" aria-labelledby="tab-work">
+  <div id="panel-work" role="region" hidden>
   <div class="title-row">
-    <h2>진행 중인 업무</h2>
-    <span>업무를 골라 운영 자료를 열어요</span>
+    <h2 id="tabTitle">업무</h2>
+    <span id="tabSub"></span>
   </div>
+  <section class="fbox" id="fileBox">
+    <div class="drive" id="driveRow"></div>
+    <span class="pm-msg" id="fbMsg" role="status"></span>
+  </section>
+  <div class="cards" id="workCards"></div>
 
-  <div class="cards">
-    <section class="card" id="career-design">
-      <div class="in">
-        <div class="top"><span class="badge">업무 01</span><span class="tag">1학년</span><span class="tag">교내상</span></div>
-        <h3>진로설계하기대회</h3>
-        <p>100세 인생을 6단계로 설계해 진로설계도 한 장으로 표현하기</p>
-        <a class="prog" href="#flow-career-design"><span class="pt"><b>업무 흐름</b><em data-count="career-design">0 / 0 완료</em></span><span class="pbar"><i data-bar="career-design"></i></span><span class="pnext" data-next="career-design"></span></a>
-        <ul class="items">
-          <li><a href="https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq" target="_blank" rel="noopener"><b>1</b>운영 자료<small>운영 계획·제작계획서·채점표·가정통신문</small></a></li>
-          <li><a href="https://claude.ai/artifact/2Nipuk2tuvSjLXqs158h2U" target="_blank" rel="noopener"><b>2</b>학생 안내 슬라이드<small>수업용</small></a></li>
-        </ul>
-      </div>
-    </section>
-
-    <div class="card soon">
-      <div class="in">
-        <span class="badge">업무 02</span>
-        <p>다음 업무가 곧 추가돼요</p>
-      </div>
-    </div>
-  </div>
-
-  <section class="flow" id="flow-career-design" data-flow="career-design">
-    <div class="title-row">
-      <h2>진로설계하기대회 업무 흐름</h2>
-      <span>끝낸 일은 체크해요 · 완료 날짜가 자동으로 남아요</span>
-    </div>
+  <section class="flow" id="flowView" hidden>
+    <div class="title-row"><h2 id="flowTitle"></h2><span>끝낸 일은 체크해요 · 완료 날짜가 자동으로 남아요</span></div>
     <div class="flow-box">
-      <div class="flow-head">
-        <span class="pbar big"><i data-bar="career-design"></i></span>
-        <em data-count="career-design">0 / 0 완료</em>
-        <button type="button" class="reset" data-reset="career-design">체크 모두 지우기</button>
+      <div class="flow-head" style="justify-content:flex-end">
+        <button type="button" class="reset" id="flowEdit" hidden>업무 수정</button>
+        <button type="button" class="reset" id="flowReset">체크 모두 지우기</button>
       </div>
-      <div class="flow-list" data-list="career-design"></div>
-      <p class="note">체크 기록은 이 브라우저에만 저장돼요. 다른 컴퓨터에서는 따로 체크해야 해요.</p>
+      <div class="flow-list" id="flowList"></div>
     </div>
+  </section>
+
+  <section class="editor" id="editor" hidden>
+    <div class="title-row"><h2 id="edTitle">새 업무 추가</h2><span id="edSub"></span></div>
+    <form class="ed-box" id="edForm" autocomplete="off">
+      <div class="two">
+        <label>업무 이름<input id="edName" placeholder="예) 진로체험의 날"></label>
+        <label>구분 태그 <span class="hint">쉼표로 나눠요</span><input id="edTags" placeholder="예) 현장체험, 학년 전체"></label>
+      </div>
+      <label>한 줄 설명<input id="edDesc" placeholder="예) 학년 전체 현장 직업체험 운영"></label>
+      <label>자료 링크 <span class="hint">한 줄에 하나씩: 이름 | 주소</span><textarea id="edLinks" rows="2" placeholder="운영 계획 | https://..."></textarea></label>
+      <div class="items-h"><b>업무 흐름 (단계)</b><button type="button" class="link-btn" id="edAddStep">+ 단계 추가</button></div>
+      <div class="ed-steps" id="edSteps"></div>
+      <div class="row-btns">
+        <span class="pm-msg" id="edMsg" role="status"></span>
+        <button type="button" class="btn ghost sm" id="edDelete" hidden>업무 삭제</button>
+        <button type="button" class="btn ghost sm" id="edCancel">취소</button>
+        <button type="submit" class="btn sm">저장</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="pq backup">
+    <h3 class="pq-h">기록 백업 <small>다른 컴퓨터로 옮길 때 써요</small></h3>
+    <div class="row-btns" style="justify-content:flex-start">
+      <button type="button" class="btn ghost sm" id="bkOut">백업 파일 내려받기</button>
+      <label class="btn ghost sm file-btn">백업 파일 불러오기<input type="file" id="bkIn" accept=".json,application/json" hidden></label>
+      <span class="pm-msg" id="bkMsg" role="status"></span>
+    </div>
+    <p class="note">체크 기록, 직접 추가한 업무, 품의 내용은 이 브라우저에만 저장돼요. 백업 파일로 다른 컴퓨터에 옮길 수 있어요.</p>
   </section>
   </div>
 
-  <div id="panel-pumui" role="tabpanel" aria-labelledby="tab-pumui" hidden>
+  <div id="panel-pumui" role="region" hidden>
     <div class="title-row">
       <h2>품의</h2>
       <span>구입처를 열어 보고, 품의 문서를 만들어 복사해요</span>
@@ -313,73 +426,262 @@ input{font:inherit}
 </main>
 <footer>꿈it(잇)다 진로 업무 · 매탄중학교 진로상담실</footer>
 <script>
-/* 업무별 흐름: 새 업무를 추가할 때는 FLOWS에 항목만 더하면 됨.
-   due = 마감일(지남/오늘 표시 기준), from = 시작일(없으면 due 하루) */
-const FLOWS={
-  'career-design':[
-    {phase:'준비',note:'결재 전',steps:[
-      {t:'운영 계획 작성',d:'목적·방침·세부 추진 계획·심사기준',w:'11. 2.(월)',due:'2026-11-02'},
+/* ===== 업무 =====
+   기본 업무는 BUILTIN에 (tab: 들어갈 탭 id) 적어 두고, 화면의 '새 업무 추가'로 만든 업무는 이 브라우저에 저장돼요.
+   단계: t=단계명, d=설명, from=시작일, due=마감일(YYYY-MM-DD), w=날짜 표시(없으면 자동), link=자료 주소 */
+const BUILTIN=[
+  {id:'career-design',tab:'contest',title:'진로설계하기대회',tags:['1학년','교내상'],
+   desc:'100세 인생을 6단계로 설계해 진로설계도 한 장으로 표현하기',
+   links:[
+     {t:'운영 자료',s:'운영 계획·제작계획서·채점표·가정통신문',u:'https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq'},
+     {t:'학생 안내 슬라이드',s:'수업용',u:'https://claude.ai/artifact/2Nipuk2tuvSjLXqs158h2U'},
+     {t:'제작계획서 양식',s:'PDF · 구글 드라이브',u:'https://drive.google.com/file/d/1Q9qd2sry8NQMfK7C9xMjZqGwUnnbdaKm/view'},
+     {t:'대회 양식 (전체 영역)',s:'PDF · 구글 드라이브',u:'https://drive.google.com/file/d/1Qdz1MVIRoJtRMhscg4vl0QBQI5PdASVG/view'},
+     {t:'대회 표지',s:'PDF · 구글 드라이브',u:'https://drive.google.com/file/d/1FTjtCfxvzU2y4As4lBDeelX2OZSIqLVv/view'}
+   ],
+   phases:[
+    {phase:'사전계획',note:'운영 계획 · 가정통신문',steps:[
+      {t:'운영 계획 작성',d:'목적·방침·세부 추진 계획·심사기준',w:'11. 2.(월)',due:'2026-11-02',link:'https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq'},
       {t:'가정통신문 작성',d:'일시·진행 방법·제작 방법·시상 계획',w:'11. 2.(월)',due:'2026-11-02'},
       {t:'교내상 시상 계획 점검',d:'대회명·대상·수상 비율·시행 시기(10월 → 11~12월) 확인',w:'11. 2.(월)',due:'2026-11-02'},
       {t:'업무포털 상신 (1학년부 협조)',d:'붙임: 운영 계획, 가정통신문 · 1학년 부장님께 협조 메시지',w:'11. 2.~11. 3.',from:'2026-11-02',due:'2026-11-03'},
       {t:'결재 완료 후 홈페이지 업로드',d:'가정통신문 게시판 탑재',w:'11. 4.(수)',due:'2026-11-04'},
       {t:'가정통신문 발송',d:'학부모 안내',w:'11. 4.(수)',due:'2026-11-04'}
     ]},
-    {phase:'운영',note:'사전 준비 · 대회',steps:[
-      {t:'학생 안내 수업',d:'학생 안내 슬라이드로 대회 소개',w:'11월 2주',from:'2026-11-09',due:'2026-11-13'},
-      {t:'제작계획서 작성·제출 확인',d:'꿈it(잇)다 탐색 후 반별 제출 여부 점검',w:'11. 9.~11. 20.',from:'2026-11-09',due:'2026-11-20'},
-      {t:'대회 준비물 준비',d:'대회 양식 인쇄, 제작계획서 반별 정리, 그리기 용품',w:'~11. 20.(금)',from:'2026-11-16',due:'2026-11-20'},
+    {phase:'수업',note:'대회 안내 · 제작계획서',steps:[
+      {t:'대회 안내 수업',d:'학생 안내 슬라이드로 대회 소개',w:'11월 2주',from:'2026-11-09',due:'2026-11-13',link:'https://claude.ai/artifact/2Nipuk2tuvSjLXqs158h2U'},
+      {t:'제작계획서 작성·제출',d:'꿈it(잇)다 탐색 후 작성, 반별 제출 여부 점검',w:'11. 9.~11. 20.',from:'2026-11-09',due:'2026-11-20',link:'https://drive.google.com/file/d/1Q9qd2sry8NQMfK7C9xMjZqGwUnnbdaKm/view'}
+    ]},
+    {phase:'대회',note:'대회 양식',steps:[
+      {t:'대회 양식 인쇄·준비물 준비',d:'대회 양식·표지 인쇄, 제작계획서 반별 정리, 그리기 용품',w:'~11. 20.(금)',from:'2026-11-16',due:'2026-11-20',link:'https://drive.google.com/file/d/1Qdz1MVIRoJtRMhscg4vl0QBQI5PdASVG/view'},
       {t:'대회 실시 (2주간)',d:'각 학급 진로시간, 작품 반별 수합',w:'11. 23.~12. 4.',from:'2026-11-23',due:'2026-12-04'}
     ]},
-    {phase:'심사·시상',note:'대회 후',steps:[
-      {t:'담임 1차 채점, 학급 우수작 취합',d:'심사기준표 배부, 반별 우수작 제출',w:'~12. 11.(금)',from:'2026-12-07',due:'2026-12-11'},
-      {t:'2차 채점, 수상자 확정',d:'진로상담부·학년부 심사, 20% 이내',w:'12. 14.~12. 18.',from:'2026-12-14',due:'2026-12-18'},
-      {t:'시상 결재 및 상장 출력',d:'수상자 명단 내부결재',w:'12월 중',from:'2026-12-14',due:'2026-12-23'},
-      {t:'학교생활기록부 수상경력 입력',d:'교내상 반영',w:'시상 후',from:'2026-12-14',due:'2026-12-31'},
+    {phase:'결과',note:'채점 · 결과 입력 · 담임 확인 · 대회 결과 기안',steps:[
+      {t:'채점표 배부, 담임 1차 채점',d:'심사기준표에 따라 채점, 학급 우수작 취합',w:'~12. 11.(금)',from:'2026-12-07',due:'2026-12-11',link:'https://claude.ai/artifact/13EgWro3o3b8eVGJF2JcAq'},
+      {t:'2차 채점, 수상자 확정',d:'진로상담부·학년부 심사, 학년별 20% 이내',w:'12. 14.~12. 15.',from:'2026-12-14',due:'2026-12-15'},
+      {t:'대회 결과 입력',d:'「2026 진로설계하기대회 결과」에 재적·참가·시상 인원, 영역별 점수, 합계, 수상 등급 입력',w:'12. 15.~12. 16.',from:'2026-12-15',due:'2026-12-16',link:'https://drive.google.com/drive/folders/1eBwytj29Tw_6nmPY-twUYk05AO3Kklmi'},
+      {t:'수상자 명단 작성',d:'「2026 진로설계하기대회 수상자 명단」에 반별(1-1~1-8) 수상자 입력',w:'12. 16.(수)',due:'2026-12-16',link:'https://drive.google.com/drive/folders/1eBwytj29Tw_6nmPY-twUYk05AO3Kklmi'},
+      {t:'담임교사 수상자 명단 확인',d:'반별 명단을 담임 선생님께 보내 반·번호·이름 확인, 수정 사항 반영',w:'12. 17.~12. 18.',from:'2026-12-17',due:'2026-12-18'},
+      {t:'대회 결과 기안',d:'붙임: 대회 결과, 수상자 명단 · 시상 내부결재',w:'12. 21.~12. 22.',from:'2026-12-21',due:'2026-12-22'},
+      {t:'상장 출력 및 시상',d:'결재 완료 후 상장 출력, 반별 전달',w:'12월 중',from:'2026-12-22',due:'2026-12-24'},
+      {t:'학교생활기록부 수상경력 입력',d:'교내상 반영',w:'시상 후',from:'2026-12-22',due:'2026-12-31'},
       {t:'우수작 교내 전시',d:'수상작·우수작 게시',w:'12월 중',from:'2026-12-14',due:'2026-12-31'}
     ]}
-  ]
-};
+  ]}
+];
+/* ▼ 업무 메뉴: 새 메뉴는 여기에 한 줄만 추가하면 타일이 생겨요 (icon=이모지)
+   drive:'구글 드라이브 폴더 주소'를 적어 두면 어느 컴퓨터에서나 같은 폴더가 열려요 */
+const TABS=[
+  {id:'exp1',icon:'🌱',name:'체험(1학년)',sub:'1학년 진로체험 업무'},
+  {id:'exp2',icon:'🔎',name:'체험(2학년)',sub:'2학년 진로체험 업무'},
+  {id:'exp3',icon:'🎯',name:'체험(3학년)',sub:'3학년 진로체험 업무'},
+  {id:'contest',icon:'🏆',name:'대회',sub:'교내 대회 운영 업무',drive:'https://drive.google.com/drive/folders/1eBwytj29Tw_6nmPY-twUYk05AO3Kklmi'}
+];
+/* 메뉴 타일에만 있는 항목 (업무 탭이 아닌 화면) */
+const EXTRA_TILES=[{id:'pumui',icon:'🧾',name:'품의',sub:'구입처·품의 문서 작성'}];
 (function(){
+  const $=id=>document.getElementById(id);
+  const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+  const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}};
+  const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
   const pad=n=>String(n).padStart(2,'0');
-  const now=new Date(),today=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
-  const fmt=s=>{const [y,m,d]=s.split('-');return (+m)+'. '+(+d)+'.'};
-  const load=k=>{try{return JSON.parse(localStorage.getItem('flow:'+k))||{}}catch(e){return {}}};
-  const save=(k,v)=>{try{localStorage.setItem('flow:'+k,JSON.stringify(v))}catch(e){}};
-  function render(k){
-    const flow=FLOWS[k],st=load(k),list=document.querySelector('[data-list="'+k+'"]');
-    let n=0,done=0,next=null,html='';
-    flow.forEach(ph=>{
-      html+='<div class="phase">'+ph.phase+' <small>'+ph.note+'</small></div>';
-      ph.steps.forEach(s=>{
-        n++;const id=k+'-'+n,rec=st[n],isDone=!!rec;if(isDone)done++;
-        let cls='',label='예정';
-        if(isDone){cls='done';label=fmt(rec)+' 완료'}
-        else if(today>s.due){cls='late';label='지남'}
-        else if(today>=(s.from||s.due)){cls='today';label='진행할 때'}
-        if(!isDone&&!next)next={n,t:s.t,late:cls==='late'};
-        html+='<label class="step '+cls+'" for="'+id+'"><input type="checkbox" id="'+id+'" data-k="'+k+'" data-n="'+n+'"'+(isDone?' checked':'')+'>'
-          +'<span class="num">'+n+'</span><span class="txt"><b>'+s.t+'</b><small>'+s.d+'</small></span>'
-          +'<span class="when"><time>'+s.w+'</time><span class="st">'+label+'</span></span></label>';
-      });
-    });
-    list.innerHTML=html;
-    document.querySelectorAll('[data-count="'+k+'"]').forEach(e=>e.textContent=done+' / '+n+' 완료');
-    document.querySelectorAll('[data-bar="'+k+'"]').forEach(e=>e.style.width=(n?done/n*100:0)+'%');
-    document.querySelectorAll('[data-next="'+k+'"]').forEach(e=>e.innerHTML=next?'다음 할 일: '+(next.late?'<b>[지남]</b> ':'')+next.n+'. '+next.t:'모든 업무 완료');
+  const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+  const DOW='일월화수목금토';
+  const md=s=>{const d=parse(s);return (d.getMonth()+1)+'. '+d.getDate()+'.'};
+  const mdw=s=>md(s)+'('+DOW[parse(s).getDay()]+')';
+  const today=iso(new Date());
+  const COLORS=[['#2f6fd6','#e8f0fc','#c6d8f5'],['#1f9d74','#e6f6ef','#bfe6d6'],['#f57c00','#fff3e3','#fbd9b0'],['#7b4fd6','#efe9fb','#d7cbf3'],['#d6336c','#fdebf1','#f5c2d3']];
+
+  let custom=load('work:custom',[]);
+  let tab=TABS[0].id, sel=null, editing=null, sureDel=false;
+  const works=()=>BUILTIN.map(w=>({...w,builtin:true})).concat(custom.map(w=>({...w,builtin:false})));
+  const inTab=t=>works().filter(w=>(w.tab||'contest')===t);
+  const cvars=i=>{const c=COLORS[i%COLORS.length];return '--c:'+c[0]+';--cl:'+c[1]+';--cb:'+c[2]};
+  const stepsOf=w=>{let n=0;const out=[];(w.phases||[]).forEach(ph=>(ph.steps||[]).forEach(s=>{n++;out.push({...s,n,phase:ph.phase,note:ph.note||''})}));return out};
+  const checks=id=>load('flow:'+id,{});
+  const wlabel=s=>s.w||((s.from&&s.from!==s.due)?md(s.from)+'~'+md(s.due):mdw(s.due));
+
+  function renderTab(){
+    const t=TABS.find(x=>x.id===tab),list=inTab(tab);
+    $('tabTitle').textContent=t.name;$('tabSub').textContent=t.sub;
+    $('workCards').innerHTML=list.map((w,i)=>{
+      const tags=(w.tags||[]).map(x=>'<span class="tag">'+esc(x)+'</span>').join('');
+      const links=(w.links||[]).filter(l=>safeUrl(l.u)).map((l,k)=>'<li><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(k+1)+'</b>'+esc(l.t)+(l.s?'<small>'+esc(l.s)+'</small>':'')+'</a></li>').join('');
+      return '<section class="card" style="'+cvars(i)+'"><div class="in">'
+        +'<div class="top"><span class="badge">업무 '+pad(i+1)+'</span>'+tags+'</div>'
+        +'<h3>'+esc(w.title)+'</h3>'+(w.desc?'<p>'+esc(w.desc)+'</p>':'')
+        +(stepsOf(w).length?'<button type="button" class="flow-btn'+(sel===w.id?' on':'')+'" data-pick="'+esc(w.id)+'">업무 흐름 보기 <span>'+(sel===w.id?'▴':'▾')+'</span></button>':'')
+        +(links?'<ul class="items">'+links+'</ul>':'')+'</div></section>';
+    }).join('')+'<button type="button" class="add-card" id="addWork"><div><span>+</span>새 업무 추가</div></button>';
+    renderFlow();
   }
+
+  function renderFlow(){
+    const list=inTab(tab),i=list.findIndex(w=>w.id===sel);
+    if(i<0){$('flowView').hidden=true;return}
+    const w=list[i],ck=checks(w.id);let html='',ph=null;
+    stepsOf(w).forEach(s=>{
+      if(s.phase!==ph){ph=s.phase;html+='<div class="phase"><span class="ph-tag">['+esc(ph)+']</span>'+(s.note?' <small>'+esc(s.note)+'</small>':'')+'</div>'}
+      const rec=ck[s.n],id='c-'+w.id+'-'+s.n;
+      const link=safeUrl(s.link)?' <a class="lk" href="'+esc(s.link)+'" target="_blank" rel="noopener">자료 열기 ↗</a>':'';
+      html+='<label class="step'+(rec?' done':'')+'" for="'+id+'" style="'+cvars(i)+'"><input type="checkbox" id="'+id+'" data-w="'+esc(w.id)+'" data-n="'+s.n+'"'+(rec?' checked':'')+'>'
+        +'<span class="num">'+s.n+'</span><span class="txt"><b>'+esc(s.t)+'</b><small>'+esc(s.d||'')+link+'</small></span>'
+        +'<span class="when"><time>'+esc(wlabel(s))+'</time>'+(rec?'<span class="st">'+md(rec)+' 완료</span>':'')+'</span></label>';
+    });
+    $('flowTitle').textContent=w.title+' 업무 흐름';
+    $('flowList').innerHTML=html;$('flowEdit').hidden=w.builtin;$('flowView').hidden=false;
+  }
+
+  const fbMsg=(t,err)=>{const m=document.getElementById('fbMsg');if(m){m.textContent=t;m.className='pm-msg'+(err?' err':'')}};
+
+  /* ===== 구글 드라이브 폴더 링크 ===== */
+  const GD='<svg class="gd" viewBox="0 0 87.3 78" aria-hidden="true"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3L27.5 53H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="M43.65 25 29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44A9.06 9.06 0 0 0 0 53h27.5z" fill="#00ac47"/><path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l5.85 11.5z" fill="#ea4335"/><path d="M43.65 25 57.4 1.2C56.05.4 54.5 0 52.9 0H34.4c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>';
+  let driveEdit=false;
+  const driveOf=t=>{const v=load('work:drive:'+t,'');if(v)return v;const m=TABS.find(x=>x.id===t);return m&&m.drive||''};
+  function renderDrive(){
+    const u=safeUrl(driveOf(tab)),name=(TABS.find(x=>x.id===tab)||{}).name||'';
+    if(u&&!driveEdit){
+      $('driveRow').innerHTML='<a class="drive-btn" href="'+esc(u)+'" target="_blank" rel="noopener">'+GD+name+' 구글 드라이브 폴더 열기 ↗</a><button type="button" class="link-btn" id="driveChange">폴더 주소 바꾸기</button>';
+    }else{
+      $('driveRow').innerHTML='<span class="lb">'+GD.replace('class="gd"','class="gd" style="vertical-align:-5px;margin-right:6px"')+'구글 드라이브 폴더 연결 <span class="hint">드라이브에서 폴더를 열고 주소창의 주소를 복사해 붙여 넣어요</span></span>'
+        +'<input id="driveIn" inputmode="url" placeholder="https://drive.google.com/drive/folders/..." value="'+esc(u)+'" aria-label="구글 드라이브 폴더 주소"><button type="button" class="btn sm" id="driveSave">연결</button>'
+        +(u?'<button type="button" class="btn ghost sm" id="driveCancel">취소</button><button type="button" class="link-btn" id="driveClear">연결 끊기</button>':'');
+    }
+  }
+  $('driveRow').addEventListener('click',e=>{
+    const id=e.target.id;
+    if(id==='driveChange'){driveEdit=true;renderDrive();$('driveIn').focus();return}
+    if(id==='driveCancel'){driveEdit=false;renderDrive();return}
+    if(id==='driveClear'){try{localStorage.removeItem('work:drive:'+tab)}catch(err){}driveEdit=false;renderDrive();fbMsg('폴더 연결을 끊었어요.');return}
+    if(id==='driveSave'){
+      let u=$('driveIn').value.trim();if(u&&!/^https?:\/\//i.test(u))u='https://'+u;
+      if(!safeUrl(u)){fbMsg('폴더 주소를 다시 확인해 주세요.',true);return}
+      if(!/(^|\.)google\.com$/i.test((()=>{try{return new URL(u).hostname}catch(err){return ''}})())){fbMsg('구글 드라이브 주소가 아닌 것 같아요. 그래도 연결했어요.',true)}else fbMsg('폴더를 연결했어요.');
+      store('work:drive:'+tab,u);driveEdit=false;renderDrive();
+    }
+  });
+  $('driveRow').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='driveIn'){e.preventDefault();$('driveSave').click()}});
+
+  /* 메뉴 타일 · 화면 이동 */
+  const allTiles=()=>TABS.concat(EXTRA_TILES);
+  let pins=load('work:pins',null);if(!Array.isArray(pins))pins=allTiles().map(t=>t.id);
+  function renderTiles(){
+    const pmN=(load('pumui:docs',[])||[]).length;
+    const list=allTiles().slice().sort((a,b)=>(pins.includes(a.id)?0:1)-(pins.includes(b.id)?0:1));
+    $('tiles').innerHTML=list.map(t=>{
+      const n=t.id==='pumui'?pmN:inTab(t.id).length,on=pins.includes(t.id);
+      return '<div class="tile'+(on?' pinned':'')+'"><a href="#'+(t.id==='pumui'?'pumui':'t-'+t.id)+'" class="tile-go"><span class="ti">'+t.icon+'</span><span class="tx"><b>'+esc(t.name)+(n?' <em>'+n+'</em>':'')+'</b><small>'+esc(t.sub)+'</small></span></a>'
+        +'<button type="button" class="pin" data-pin="'+t.id+'" aria-pressed="'+on+'" title="'+(on?'고정 풀기':'앞에 고정')+'" aria-label="'+esc(t.name)+' '+(on?'고정 풀기':'앞에 고정')+'">📌</button></div>';
+    }).join('');
+  }
+  function show(t){
+    const home=t==='home',isP=t==='pumui';
+    $('homeView').hidden=!home;$('backBar').hidden=home;
+    $('panel-work').hidden=home||isP;$('panel-pumui').hidden=!isP;
+    const meta=allTiles().find(x=>x.id===t);$('curName').textContent=meta?meta.icon+' '+meta.name:'';
+    if(home){renderTiles();return}
+    if(!isP){if(tab!==t){tab=t;sel=null}$('editor').hidden=true;renderTab();driveEdit=false;renderDrive()}
+    window.scrollTo(0,0);
+  }
+  function route(){
+    const h=decodeURIComponent(location.hash.slice(1));
+    if(h==='pumui')return show('pumui');
+    let m=h.match(/^t-(.+)$/);if(m&&TABS.some(x=>x.id===m[1]))return show(m[1]);
+    m=h.match(/^(?:w|flow)-(.+)$/);
+    if(m){const w=works().find(x=>x.id===m[1]);if(w){tab=w.tab||'contest';sel=w.id;show(tab);setTimeout(()=>$('flowView').scrollIntoView({block:'start'}),0);return}}
+    show('home');
+  }
+  $('backHome').onclick=()=>{location.hash='menu'};
+  $('tiles').addEventListener('click',e=>{const p=e.target.closest('[data-pin]');if(!p)return;const id=p.dataset.pin;pins=pins.includes(id)?pins.filter(x=>x!==id):pins.concat(id);store('work:pins',pins);renderTiles()});
+  window.addEventListener('hashchange',route);
+
+  /* 체크 */
   document.addEventListener('change',e=>{
-    const c=e.target;if(!c.dataset||!c.dataset.k)return;
-    const k=c.dataset.k,st=load(k);
+    const c=e.target;if(!c.dataset||!c.dataset.w)return;
+    const k='flow:'+c.dataset.w,st=load(k,{});
     if(c.checked)st[c.dataset.n]=today;else delete st[c.dataset.n];
-    save(k,st);render(k);
+    store(k,st);renderFlow();
   });
+  let sureReset=false;$('flowReset').onclick=()=>{if(!sel)return;if(!sureReset){sureReset=true;$('flowReset').textContent='한 번 더 누르면 지워져요';setTimeout(()=>{sureReset=false;$('flowReset').textContent='체크 모두 지우기'},3000);return}sureReset=false;$('flowReset').textContent='체크 모두 지우기';store('flow:'+sel,{});renderFlow()};
   document.addEventListener('click',e=>{
-    const b=e.target.closest('[data-reset]');if(!b)return;
-    if(confirm('이 업무의 체크를 모두 지울까요?')){save(b.dataset.reset,{});render(b.dataset.reset)}
+    if(e.target.closest('a'))return;
+    if(e.target.closest('#addWork')){openEditor(null);return}
+    const p=e.target.closest('[data-pick]');
+    if(p){sel=sel===p.dataset.pick?null:p.dataset.pick;history.replaceState(null,'','#'+(sel?'w-'+sel:'t-'+tab));renderTab();if(sel)$('flowView').scrollIntoView({behavior:'smooth',block:'start'})}
   });
-  Object.keys(FLOWS).forEach(render);
+
+  /* 업무 추가·수정 */
+  function stepInput(s){
+    const r=document.createElement('div');r.className='erow';
+    r.innerHTML='<input placeholder="단계 이름" aria-label="단계 이름"><input type="date" aria-label="시작일"><input type="date" aria-label="마감일"><input placeholder="메모 (선택)" aria-label="메모"><button type="button" class="del" aria-label="단계 삭제">×</button>';
+    const x=r.querySelectorAll('input');if(s){x[0].value=s.t||'';x[1].value=s.from||'';x[2].value=s.due||'';x[3].value=s.d||''}
+    $('edSteps').appendChild(r);
+  }
+  function openEditor(id){
+    editing=id;sureDel=false;
+    const w=id?custom.find(x=>x.id===id):null;
+    $('edTitle').textContent=w?'업무 수정':'새 업무 추가';
+    $('edSub').textContent=(TABS.find(x=>x.id===tab)||{}).name+' 탭에 들어가요';
+    $('edName').value=w?w.title:'';$('edTags').value=w?(w.tags||[]).join(', '):'';$('edDesc').value=w?w.desc||'':'';
+    $('edLinks').value=w?(w.links||[]).map(l=>l.t+' | '+l.u).join('\n'):'';
+    $('edSteps').innerHTML='<div class="erow erow-h"><span>단계 이름</span><span>시작일</span><span>마감일</span><span>메모</span><span></span></div>';
+    const ss=w?stepsOf(w):[];(ss.length?ss:[null,null,null]).forEach(stepInput);
+    $('edDelete').hidden=!w;$('edDelete').className='btn ghost sm danger';$('edDelete').textContent='업무 삭제';$('edMsg').textContent='';
+    $('editor').hidden=false;$('editor').scrollIntoView({behavior:'smooth',block:'start'});$('edName').focus({preventScroll:true});
+  }
+  $('flowEdit').onclick=()=>openEditor(sel);
+  $('edAddStep').onclick=()=>{stepInput();$('edSteps').lastElementChild.querySelector('input').focus()};
+  $('edSteps').addEventListener('click',e=>{const b=e.target.closest('.del');if(b)b.parentElement.remove()});
+  $('edCancel').onclick=()=>{$('editor').hidden=true;editing=null};
+  $('edDelete').onclick=()=>{
+    if(!sureDel){sureDel=true;$('edDelete').classList.add('sure');$('edDelete').textContent='한 번 더 누르면 삭제';return}
+    custom=custom.filter(x=>x.id!==editing);store('work:custom',custom);try{localStorage.removeItem('flow:'+editing)}catch(e){}
+    if(sel===editing)sel=null;editing=null;$('editor').hidden=true;renderTab();
+  };
+  $('edForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const msg=t=>{$('edMsg').textContent=t;$('edMsg').className='pm-msg err'};
+    const title=$('edName').value.trim();if(!title){msg('업무 이름을 적어 주세요.');$('edName').focus();return}
+    const steps=[];let bad=false;
+    $('edSteps').querySelectorAll('.erow:not(.erow-h)').forEach(r=>{const x=r.querySelectorAll('input');const t=x[0].value.trim();if(!t)return;
+      let from=x[1].value,due=x[2].value||from;if(!due){bad=true;return}if(from&&from>due){const z=from;from=due;due=z}
+      steps.push({t,d:x[3].value.trim(),from:from||undefined,due})});
+    if(bad){msg('단계마다 마감일(또는 시작일)을 적어 주세요.');return}
+    steps.sort((a,b)=>(a.from||a.due)<(b.from||b.due)?-1:1);
+    const links=$('edLinks').value.split('\n').map(l=>{const k=l.lastIndexOf('|');if(k<0)return null;let u=l.slice(k+1).trim();if(u&&!/^https?:\/\//i.test(u))u='https://'+u;return {t:l.slice(0,k).trim()||'자료',u}}).filter(l=>l&&safeUrl(l.u));
+    const old=editing?custom.find(x=>x.id===editing):null;
+    const w={id:editing||('c'+Date.now().toString(36)),tab:old?old.tab:tab,title,tags:$('edTags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:$('edDesc').value.trim(),links,phases:steps.length?[{phase:'업무 흐름',note:'',steps}]:[]};
+    if(old){ // 단계 이름이 같으면 체크 기록 유지
+      const ck=checks(editing),byT={};stepsOf(old).forEach(s=>{if(ck[s.n])byT[s.t]=ck[s.n]});
+      const nc={};steps.forEach((s,k)=>{if(byT[s.t])nc[k+1]=byT[s.t]});store('flow:'+editing,nc);
+      custom=custom.map(x=>x.id===editing?w:x);
+    }else custom.push(w);
+    store('work:custom',custom);$('editor').hidden=true;editing=null;sel=steps.length?w.id:null;renderTab();
+    if(sel)$('flowView').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  /* 백업 */
+  const PREFIX=['flow:','work:','pumui:'];
+  $('bkOut').onclick=()=>{
+    const data={};for(let k=0;k<localStorage.length;k++){const key=localStorage.key(k);if(PREFIX.some(p=>key.startsWith(p)))data[key]=localStorage.getItem(key)}
+    const blob=new Blob([JSON.stringify({app:'it-work',v:1,at:today,data},null,1)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='업무백업-'+today+'.json';document.body.appendChild(a);a.click();a.remove();
+    $('bkMsg').textContent='백업 파일을 내려받았어요.';$('bkMsg').className='pm-msg';
+  };
+  $('bkIn').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{const o=JSON.parse(r.result);if(o.app!=='it-work'||!o.data)throw 0;
+        Object.entries(o.data).forEach(([k,v])=>{if(PREFIX.some(p=>k.startsWith(p)))localStorage.setItem(k,v)});
+        $('bkMsg').textContent='불러왔어요. 화면을 새로 고칩니다.';$('bkMsg').className='pm-msg';setTimeout(()=>location.reload(),600);
+      }catch(err){$('bkMsg').textContent='이 파일은 업무 백업 파일이 아니에요.';$('bkMsg').className='pm-msg err'}};
+    r.readAsText(f);e.target.value='';
+  };
+
+  route();
 })();
+
 
 /* ===== 품의 ===== */
 (function(){
@@ -524,22 +826,10 @@ const FLOWS={
   });
   function renderCount(){$('pmTabCnt').textContent=docs.length;$('pmTabCnt').hidden=!docs.length}
 
-  /* 탭 */
-  const tabs=[['work','tab-work','panel-work'],['pumui','tab-pumui','panel-pumui']];
-  function show(name){tabs.forEach(([n,t,pn])=>{const on=n===name;$(t).setAttribute('aria-selected',on);$(t).tabIndex=on?0:-1;$(pn).hidden=!on})}
-  function route(){show(location.hash==='#pumui'?'pumui':'work')}
-  $('tab-work').onclick=()=>{if(location.hash==='#pumui')history.replaceState(null,'',location.pathname);route()};
-  $('tab-pumui').onclick=()=>{location.hash='pumui'};
-  document.querySelector('.tabs').addEventListener('keydown',e=>{
-    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
-    const next=$('tab-work').getAttribute('aria-selected')==='true'?'tab-pumui':'tab-work';$(next).click();$(next).focus();
-  });
-  window.addEventListener('hashchange',()=>{if(location.hash==='#pumui'||location.hash==='')route();else show('work')});
-
   /* 품목 머리글 */
   const h=document.createElement('div');h.className='irow irow-h';h.innerHTML='<span>내용</span><span>규격</span><span>수량</span><span>단위</span><span>예상단가</span><span>·</span>';
   $('rows').before(h);
-  renderShops();clearForm();renderCount();route();
+  renderShops();clearForm();renderCount();
 })();
 </script>
 <a class="fab-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
