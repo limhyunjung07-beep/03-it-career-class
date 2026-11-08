@@ -63,6 +63,10 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 @media (max-width:700px){.pick.sched{flex-direction:column;align-items:center}.sid{width:auto}.pick.sched .today{width:100%}.today .cols{grid-template-columns:1fr}}
 .today{width:100%;margin-top:6px;background:var(--bg);border:1.5px solid #cfeadf;border-radius:16px;padding:10px 10px 8px;text-align:left;display:grid;gap:6px}
 .today .th{display:flex;align-items:baseline;justify-content:space-between;font-weight:900;color:var(--navy);font-size:14px}
+.today .day{display:grid;gap:6px}
+.today .day.next{border-top:1.5px dashed #cfeadf;padding-top:8px;margin-top:2px}
+.today .tag{display:inline-block;background:var(--green);color:#fff;border-radius:999px;font-size:12px;padding:1px 9px;margin-right:6px;vertical-align:1px}
+.today .next .tag{background:#fff;color:var(--green);border:1.5px solid var(--green)}
 .today .th small{color:var(--sub);font-weight:700;font-size:12px}
 .today h4{margin:4px 0 0;font-size:13px;font-weight:900;color:var(--green);display:flex;align-items:center;gap:6px}
 .today h4 i{font-style:normal;width:18px;height:18px;border-radius:6px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:11px}
@@ -145,25 +149,29 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
     m=t.match(/(\d{1,2}):(\d{2})/);if(m)return +m[1]*60+ +m[2];
     return 24*60;
   }
-  function render(){
-    const d=new Date(),ds=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),now=d.getHours()*60+d.getMinutes();
+  function dayBlock(d,label,isToday){
+    const ds=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),nd=new Date(),now=nd.getHours()*60+nd.getMinutes();
     const info=scheduleDay(ds),act=info.classes.filter(c=>!c.blocked).length;
     const isCS=e=>e.cat==='class'||e.cat==='counsel';
     const cs=info.events.filter(isCS),others=info.events.filter(e=>!isCS(e));
     /* 1. 수업·상담: 시간표 수업 + 수업·상담 분류 일정을 시간 순서로 */
     const rows=info.classes.map(c=>({m:toMin(c.start),html:(()=>{
-      const on=!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
+      const on=isToday&&!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
       return '<li class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+'</b>'
         +(c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
       .concat(cs.map(e=>({m:evMin(e.time),html:'<li><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
-    let h='<div class="th">오늘 '+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')<small>'+sum+'</small></div>';
-    h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">오늘은 수업·상담이 없어요</li>')+'</ul>';
+    let h='<div class="day'+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><small>'+sum+'</small></div>';
+    h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">수업·상담이 없어요</li>')+'</ul>';
     h+='</div><div><h4><i>2</i>일정</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
-      '<li><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">오늘 일정이 없어요</li>')+'</ul></div></div>';
-    box.innerHTML=h;
+      '<li><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
+    return h;
+  }
+  function render(){
+    const d=new Date(),t=new Date(d);t.setDate(d.getDate()+1);
+    box.innerHTML=dayBlock(d,'오늘',true)+dayBlock(t,'내일',false);
   }
   render();setInterval(render,60000);
 })();
