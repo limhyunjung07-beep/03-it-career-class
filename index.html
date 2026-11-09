@@ -140,6 +140,13 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
 .today .none{font-size:12px;padding:0 4px}
 .pick.sched{padding:14px 18px}
 .sid{width:150px}
+/* 고칠 수 있는 항목: 연필 표시 */
+.today li.ed{position:relative;padding-right:26px}
+.today li.ed::after{content:"✏️";position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.35;transition:opacity .15s}
+.today li.ed:hover::after,.today li.ed:focus-visible::after{opacity:1}
+.today li.ed:hover,.today li.ed:focus-visible{background:#e3f5ee;outline:none}
+.today .hint{font-size:11px;color:var(--sub);font-weight:500;margin-left:6px}
+@media (max-width:560px){.today .hint{display:none}}
 /* ===== 반응형: 노트북·태블릿·휴대폰 ===== */
 .wrap{max-width:1240px}
 .hd{padding:12px 16px}
@@ -330,16 +337,16 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     /* 1. 수업·상담: 시간표 수업 + 수업·상담 분류 일정을 시간 순서로 */
     const rows=info.classes.map(c=>({m:toMin(c.start),html:(()=>{
       const on=isToday&&!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
-      return '<li class="ed" data-cd="'+ds+'" data-cp="'+c.p+'" title="'+esc(c.p+'교시 '+c.start+' '+c.name+(c.topic?' · 주제: '+c.topic:'')+(c.plan?' · '+c.plan:'')+(c.blocked?' · 수업 없음 '+c.blocked:''))+'" class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+(c.edited?' ✎':'')+'</b>'
+      return '<li tabindex="0" data-cd="'+ds+'" data-cp="'+c.p+'" title="'+esc(c.p+'교시 '+c.start+' '+c.name+(c.topic?' · 주제: '+c.topic:'')+(c.plan?' · '+c.plan:'')+(c.blocked?' · 수업 없음 '+c.blocked:''))+'" class="ed'+(c.blocked?' off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+(c.edited?' ✎':'')+'</b>'
         +(c.topic?'<em class="tp">'+esc(c.topic)+'</em>':c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':c.memo?'<em style="color:var(--sub)">'+esc(c.memo)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
-      .concat(cs.map(e=>({m:evMin(e.time),html:'<li class="ed" data-k="'+esc(e.key)+'" title="'+esc((e.time?e.time+' ':'')+e.title)+' · 눌러서 고치기"><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
+      .concat(cs.map(e=>({m:evMin(e.time),html:'<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc((e.time?e.time+' ':'')+e.title)+' · 눌러서 고치기"><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
-    let h='<div class="day d'+idx+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
+    let h='<div class="day d'+idx+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')'+(isToday?'<span class="hint">✏️ 누르면 고칠 수 있어요</span>':'')+'</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
     h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">수업·상담이 없어요</li>')+'</ul>';
     h+='</div><div><h4><i>2</i>일정</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
-      '<li class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
+      '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
     return h;
   }
   function render(){
@@ -367,6 +374,7 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   box.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
   box.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5&&getComputedStyle(box.querySelector('.dtabs')).display!=='none'){daySel=Math.max(0,Math.min(2,daySel+(dx<0?1:-1)));box.dataset.sel=daySel;box.querySelectorAll('.dtabs button').forEach(b=>b.setAttribute('aria-selected',+b.dataset.sel===daySel))}},{passive:true});
+  box.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches&&e.target.matches('li.ed'))e.target.click()});
   box.addEventListener('click',e=>{
     const a=e.target.closest('[data-add]');if(a){openEv(null,a.dataset.add);return}
     const li=e.target.closest('li.ed');if(!li)return;
