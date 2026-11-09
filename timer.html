@@ -102,6 +102,20 @@ body.tv .groups{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 body.tv .g .t{font-size:min(10vh,80px)}
 .exit-tv{display:none;position:fixed;right:14px;top:14px;z-index:60}
 body.tv .exit-tv{display:inline-flex}
+.music{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px 14px;margin-bottom:14px}
+.music b{font-family:'Jua',sans-serif;font-weight:400;font-size:19px;color:var(--purple);white-space:nowrap}
+.music .sp{flex:1}
+.music label{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--sub);cursor:pointer;white-space:nowrap}
+.music input[type=checkbox]{width:17px;height:17px;accent-color:var(--purple)}
+.music input[type=range]{width:110px;accent-color:var(--purple)}
+.music .btn.play{background:var(--purple);border-color:var(--purple);color:#fff}
+.music .st{font-size:13px;color:var(--sub);font-weight:700}
+.vid{width:100%;margin-top:4px;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9;max-width:520px}
+.vid iframe{width:100%;height:100%;border:0;display:block}
+.vid.mini{position:fixed;width:1px;height:1px;left:-9999px;top:0;opacity:0;pointer-events:none}
+.murl{display:flex;gap:6px;width:100%}
+.murl input{flex:1;font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;min-width:0}
+body.tv .music{position:fixed;left:-9999px;top:0;width:600px}
 footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
 [hidden]{display:none!important}
 
@@ -137,6 +151,19 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
     <button type="button" data-m="timer" class="on">⏱️ 타이머</button>
     <button type="button" data-m="group">👥 모둠 타이머</button>
     <button type="button" data-m="watch">⏲️ 스톱워치</button>
+  </div>
+
+  <!-- 집중 음악 -->
+  <div class="music" id="music">
+    <b>🎵 집중 음악</b>
+    <button type="button" class="btn sm play" id="mPlay">▶ 재생</button>
+    <label>소리 <input type="range" id="mVol" min="0" max="100" value="40"></label>
+    <label><input type="checkbox" id="mSync" checked>타이머와 함께 켜고 끄기</label>
+    <span class="sp"></span>
+    <label><input type="checkbox" id="mShow">영상 보기</label>
+    <button type="button" class="btn sm" id="mEdit">음악 바꾸기</button>
+    <div class="murl" id="mUrlRow" hidden><input id="mUrl" placeholder="유튜브 주소를 붙여 넣어요"><button type="button" class="btn sm" id="mSave">저장</button><button type="button" class="btn sm" id="mDef">기본 음악</button></div>
+    <div class="vid mini" id="mVid"></div>
   </div>
 
   <!-- 타이머 -->
@@ -243,14 +270,14 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
       if(total>90&&!flags.one&&left<=60){flags.one=1;speak('1분 남았어요!')}}
     {const c=Math.ceil(left);if($('optBeep').checked&&total>10&&c>=1&&c<=5&&flags.cd!==c){flags.cd=c;speak(CD[c],true)}}
     if(!flags.ten&&left<=10&&total>20){flags.ten=1;$('tLbl').textContent='곧 끝나요!'}
-    if(left<=0){left=0;stop();flags.done=1;$('tLbl').textContent='시간 끝!';
+    if(left<=0){left=0;stop();flags.done=1;window.__music&&__music.off();$('tLbl').textContent='시간 끝!';
       const t=$('tTitle').value.trim();speak('땡! 시간 끝!'+(t?' '+t+' 끝났어요!':''),true);}
     paint()}
-  function start(){if(left<=0){left=total;flags={}}run=true;endAt=Date.now()+left*1000;$('tLbl').textContent=$('tTitle').value.trim()||'진행 중';
+  function start(){window.__music&&__music.on();if(left<=0){left=total;flags={}}run=true;endAt=Date.now()+left*1000;$('tLbl').textContent=$('tTitle').value.trim()||'진행 중';
     if(left===total)speak(($('tTitle').value.trim()?$('tTitle').value.trim()+', ':'')+say(total)+' 시작합니다');
     clearInterval(tick);tick=setInterval(loop,200);paint()}
   function stop(){run=false;clearInterval(tick);tick=null;paint()}
-  $('tGo').onclick=()=>{if(run){stop();$('tLbl').textContent='멈춤'}else start()};
+  $('tGo').onclick=()=>{if(run){stop();$('tLbl').textContent='멈춤';window.__music&&__music.off()}else start()};
   $('tReset').onclick=()=>{stop();left=total;flags={};$('tLbl').textContent='준비';paint()};
   $('presets').onclick=e=>{const b=e.target.closest('[data-s]');if(b)setTotal(+b.dataset.s)};
   $('setApply').onclick=()=>setTotal((+$('setM').value||0)*60+(+$('setS').value||0));
@@ -276,7 +303,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
   let gTick=null;
   function gLoop(){let any=false;groups.forEach(g=>{if(!g.run)return;any=true;g.left=(g.endAt-Date.now())/1000;
       if(g.left<=0){g.left=0;g.run=false;g.done=true;speak(g.name+' 끝!')}});
-    paintG();if(!any){clearInterval(gTick);gTick=null}}
+    paintG();if(!any){clearInterval(gTick);gTick=null;window.__music&&__music.off()}}
   function gStart(g){if(g.done||g.left<=0){g.left=g.total;g.done=false}g.run=true;g.endAt=Date.now()+g.left*1000;if(!gTick)gTick=setInterval(gLoop,200)}
   $('groups').addEventListener('click',e=>{const t=e.target;
     if(t.dataset.go!=null){const g=groups[+t.dataset.go];if(g.run){g.run=false}else gStart(g);paintG()}
@@ -285,8 +312,8 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
   $('groups').addEventListener('input',e=>{if(e.target.dataset.i!=null){groups[+e.target.dataset.i].name=e.target.value||((+e.target.dataset.i+1)+'모둠');saveG()}});
   $('gApply').onclick=()=>{mkGroups(+$('gCount').value,Math.max(1,+$('gMin').value||5)*60);drawG()};
   $('gCount').onchange=$('gApply').onclick;
-  $('gAll').onclick=()=>{groups.forEach(g=>{if(!g.run)gStart(g)});speak('모둠 활동 시작합니다');paintG()};
-  $('gStop').onclick=()=>{groups.forEach(g=>g.run=false);paintG()};
+  $('gAll').onclick=()=>{window.__music&&__music.on();groups.forEach(g=>{if(!g.run)gStart(g)});speak('모둠 활동 시작합니다');paintG()};
+  $('gStop').onclick=()=>{groups.forEach(g=>g.run=false);paintG();window.__music&&__music.off()};
   $('gReset').onclick=()=>{groups.forEach(g=>{g.run=false;g.done=false;g.left=g.total});paintG()};
   drawG();
 
@@ -314,6 +341,28 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
     else if(e.key==='r'||e.key==='R'){(m==='watch'?$('wReset'):m==='group'?$('gReset'):$('tReset')).click()}
     else if(e.key==='f'||e.key==='F'){tv(!document.body.classList.contains('tv'))}
     else if(e.key==='Escape')tv(false)});
+
+  /* ===== 집중 음악 (유튜브) ===== */
+  const DEF_VID='nbHPY48rSYQ';
+  let vid=ld('musicId',DEF_VID),mFrame=null,mOn=false;
+  const vidId=u=>{u=(u||'').trim();const m=u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u)?u:'')};
+  function cmd(func,args){if(mFrame&&mFrame.contentWindow)mFrame.contentWindow.postMessage(JSON.stringify({event:'command',func,args:args||[]}),'*')}
+  function mLoad(){$('mVid').innerHTML='';mFrame=document.createElement('iframe');
+    mFrame.allow='autoplay; encrypted-media';mFrame.title='집중 음악';
+    mFrame.src='https://www.youtube.com/embed/'+vid+'?enablejsapi=1&autoplay=1&loop=1&playlist='+vid+'&rel=0&playsinline=1&modestbranding=1';
+    mFrame.onload=()=>setTimeout(()=>{cmd('setVolume',[+$('mVol').value]);if(!mOn)cmd('pauseVideo')},800);
+    $('mVid').appendChild(mFrame)}
+  function mPlay(){mOn=true;if(!mFrame)mLoad();else{cmd('playVideo');cmd('setVolume',[+$('mVol').value])}$('mPlay').textContent='⏸ 멈춤'}
+  function mPause(){mOn=false;cmd('pauseVideo');$('mPlay').textContent='▶ 재생'}
+  $('mPlay').onclick=()=>mOn?mPause():mPlay();
+  $('mVol').value=ld('musicVol',40);$('mVol').oninput=()=>{cmd('setVolume',[+$('mVol').value]);sv('musicVol',+$('mVol').value)};
+  $('mSync').checked=ld('musicSync',true);$('mSync').onchange=()=>sv('musicSync',$('mSync').checked);
+  $('mShow').onchange=()=>$('mVid').classList.toggle('mini',!$('mShow').checked);
+  $('mEdit').onclick=()=>{$('mUrlRow').hidden=!$('mUrlRow').hidden;$('mUrl').value='https://www.youtube.com/watch?v='+vid};
+  $('mSave').onclick=()=>{const id=vidId($('mUrl').value);if(!id){alert('유튜브 주소를 확인해 주세요.');return}vid=id;sv('musicId',id);$('mUrlRow').hidden=true;if(mFrame){mLoad();if(!mOn)mPlay()}};
+  $('mDef').onclick=()=>{vid=DEF_VID;sv('musicId',vid);$('mUrl').value='https://www.youtube.com/watch?v='+vid;if(mFrame)mLoad()};
+  /* 타이머와 함께 켜고 끄기 */
+  window.__music={on:()=>{if($('mSync').checked)mPlay()},off:()=>{if($('mSync').checked&&mOn)mPause()}};
 
   setTotal(total);setMode(ld('mode','timer'));wPaint();
 })();
