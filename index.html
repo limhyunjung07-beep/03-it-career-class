@@ -200,6 +200,33 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   .qlist b{font-size:13px;white-space:normal;word-break:keep-all;letter-spacing:-.04em}
   .hd>div:nth-child(2){min-width:0}.hd p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .qlist .ar{display:none}}
+.dtabs{display:none}
+/* 태블릿: 일정관리 제목을 위 한 줄로 → 일정 칸을 넓게 */
+@media (max-width:860px){
+  .pick.sched{flex-direction:column;align-items:stretch;gap:10px}
+  .sid{width:auto;display:grid;grid-template-columns:auto auto 1fr;grid-template-areas:"i t w";justify-items:start;align-items:center;column-gap:12px}
+  .sid .icon{grid-area:i;width:44px;height:44px;border-radius:14px}.sid .icon svg{width:26px;height:26px}
+  .sid>b{grid-area:t;font-size:26px}.sid>small{display:none}.sid .who{grid-area:w;justify-self:end}
+  .pick.sched .today{width:100%}}
+/* 휴대폰: 하루씩 탭으로 보기 */
+@media (max-width:560px){
+  .dtabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px}
+  .dtabs button{font:inherit;font-size:13px;font-weight:700;border:1.5px solid #cfeadf;background:#fff;color:var(--green);border-radius:10px;padding:5px 2px;cursor:pointer;line-height:1.25}
+  .dtabs button small{display:block;font-size:10.5px;font-weight:500;color:var(--sub)}
+  .dtabs button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+  .dtabs button[aria-selected="true"] small{color:#e3f5ee}
+  .today .day{display:none}
+  .today[data-sel="0"] .d0,.today[data-sel="1"] .d1,.today[data-sel="2"] .d2{display:grid}
+  .today .day.next{border-top:0;padding-top:0;margin-top:0}
+  .today .th .tag{display:none}
+  .today li{font-size:13.5px;padding:3px 8px}
+  /* 업무·수업: 낮은 가로형 */
+  .pick.work,.pick.class{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i t" "i w";text-align:left;justify-items:start;column-gap:10px;row-gap:2px;padding:12px}
+  .pick.work>small,.pick.class>small{display:none}
+  .pick.work .icon,.pick.class .icon{width:44px;height:44px;border-radius:13px}
+  .pick.work .icon svg,.pick.class .icon svg{width:24px;height:24px}
+  .pick.work>b,.pick.class>b{font-size:24px}
+  .pick.work .who,.pick.class .who{font-size:11px;padding:1px 9px}}
 @media (max-width:360px){.qlist{grid-template-columns:1fr}.hd p{display:none}}
 /* 휴대폰: 일정관리 카드(수업·상담 + 일정)가 한 화면에 들어오게 촘촘히 */
 @media (max-width:560px){
@@ -294,7 +321,8 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     m=t.match(/(\d{1,2}):(\d{2})/);if(m)return +m[1]*60+ +m[2];
     return 24*60;
   }
-  function dayBlock(d,label,isToday){
+  let daySel=0;
+  function dayBlock(d,label,isToday,idx){
     const ds=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),nd=new Date(),now=nd.getHours()*60+nd.getMinutes();
     const info=scheduleDay(ds),act=info.classes.filter(c=>!c.blocked).length;
     const isCS=e=>e.cat==='class'||e.cat==='counsel';
@@ -308,7 +336,7 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
-    let h='<div class="day'+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
+    let h='<div class="day d'+idx+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
     h+='<div class="cols"><div><h4><i>1</i>수업·상담</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">수업·상담이 없어요</li>')+'</ul>';
     h+='</div><div><h4><i>2</i>일정</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
       '<li class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">일정이 없어요</li>')+'</ul></div></div></div>';
@@ -317,7 +345,10 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   function render(){
     const d=new Date(),t=new Date(d);t.setDate(d.getDate()+1);
     const t2=new Date(d);t2.setDate(d.getDate()+2);
-    box.innerHTML=dayBlock(d,'오늘',true)+dayBlock(t,'내일',false)+dayBlock(t2,'모레',false);
+    const days=[[d,'오늘'],[t,'내일'],[t2,'모레']];
+    box.innerHTML='<div class="dtabs" role="tablist">'+days.map(([x,l],i)=>'<button type="button" role="tab" data-sel="'+i+'" aria-selected="'+(daySel===i)+'">'+l+' <small>'+(x.getMonth()+1)+'. '+x.getDate()+'.('+W[x.getDay()]+')</small></button>').join('')+'</div>'
+      +days.map(([x,l],i)=>dayBlock(x,l,i===0,i)).join('');
+    box.dataset.sel=daySel;
   }
   /* 일정 고치기·추가 */
   const dlg=document.getElementById('evDlg'),f=document.getElementById('evForm');let cur=null;
@@ -330,6 +361,12 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     document.getElementById('evDel').hidden=!ev;document.getElementById('evOrig').hidden=!(ev&&ev.fid&&ev.edited);
     dlg.showModal();f.title.focus();
   }
+  /* 휴대폰: 오늘·내일·모레 탭 + 옆으로 밀어 넘기기 */
+  box.addEventListener('click',e=>{const t=e.target.closest('[data-sel]');if(!t||t===box)return;daySel=+t.dataset.sel;box.dataset.sel=daySel;box.querySelectorAll('.dtabs button').forEach(b=>b.setAttribute('aria-selected',+b.dataset.sel===daySel))});
+  let sx=null,sy=0;
+  box.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  box.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5&&getComputedStyle(box.querySelector('.dtabs')).display!=='none'){daySel=Math.max(0,Math.min(2,daySel+(dx<0?1:-1)));box.dataset.sel=daySel;box.querySelectorAll('.dtabs button').forEach(b=>b.setAttribute('aria-selected',+b.dataset.sel===daySel))}},{passive:true});
   box.addEventListener('click',e=>{
     const a=e.target.closest('[data-add]');if(a){openEv(null,a.dataset.add);return}
     const li=e.target.closest('li.ed');if(!li)return;
