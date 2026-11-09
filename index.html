@@ -140,6 +140,18 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
 .today .none{font-size:12px;padding:0 4px}
 .pick.sched{padding:14px 18px}
 .sid{width:150px}
+/* 날짜별 옅은 색 구분: 오늘 초록 · 내일 파랑 · 모레 보라 */
+.today{background:#fff}
+.today .day{border-radius:12px;padding:7px 8px 8px;border:1px solid transparent}
+.today .day.d0{background:#eaf7f1;border-color:#cfeadf}
+.today .day.d1{background:#ecf2fc;border-color:#d4e2f7}
+.today .day.d2{background:#f4eefa;border-color:#e3d6f0}
+.today .day.next{border-top-style:solid;margin-top:5px;padding-top:7px}
+.today .d1 .tag{color:var(--blue);border-color:var(--blue)}.today .d1 .add{color:var(--blue);border-color:var(--blue)}.today .d1 h4{color:var(--blue)}.today .d1 h4 i{background:var(--blue)}
+.today .d2 .tag{color:#8e44ad;border-color:#8e44ad}.today .d2 .add{color:#8e44ad;border-color:#8e44ad}.today .d2 h4{color:#8e44ad}.today .d2 h4 i{background:#8e44ad}
+.today .d1 li.ed:hover{background:#dde8fa}.today .d2 li.ed:hover{background:#ebe0f5}
+.dtabs button[data-sel="1"]{color:var(--blue);border-color:#d4e2f7}.dtabs button[data-sel="1"][aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.dtabs button[data-sel="2"]{color:#8e44ad;border-color:#e3d6f0}.dtabs button[data-sel="2"][aria-selected="true"]{background:#8e44ad;border-color:#8e44ad;color:#fff}
 /* 고칠 수 있는 항목: 연필 표시 */
 .today li.ed{position:relative;padding-right:26px}
 .today li.ed::after{content:"✏️";position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.35;transition:opacity .15s}
