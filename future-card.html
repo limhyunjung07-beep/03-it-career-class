@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>20년 후 나의 명함</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<style>
+:root{
+  --ui-ink:#2a2622; --ui-sub:#6b6258; --accent:#8a5a1c; --line:#dcd1c3;
+  --sans: Pretendard, "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --serif: "Gowun Batang", "Nanum Myeongjo", serif;
+  --cmh: 34vh;
+}
+@supports (height:1dvh){ :root{ --cmh: 34dvh; } }
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0; min-height:100vh; overflow-x:hidden;
+  font-family:var(--sans); color:var(--ui-ink); line-height:1.5;
+  background:
+    radial-gradient(130% 90% at 50% 0%, #e9e1d5 0%, #d3c8b8 55%, #bcae9b 100%) fixed;
+}
+/* 책상 결 */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:var(--noise-img); background-size:260px;
+  opacity:.35; mix-blend-mode:soft-light;
+}
+header,main{ position:relative; z-index:1; }
+header{ max-width:1080px; margin:0 auto; padding:20px 16px 6px; display:flex; align-items:flex-start; gap:12px; }
+header .ttl{ flex:1; min-width:0; }
+.nav{ display:flex; gap:6px; flex:none; }
+.nav a{ display:inline-flex; align-items:center; justify-content:center; gap:5px; min-height:44px; min-width:44px; padding:0 14px; border-radius:999px; background:#1d2b53; color:#fff; text-decoration:none; font-weight:700; font-size:14px; white-space:nowrap; }
+.nav a.back{ background:rgba(255,255,255,.75); color:#1d2b53; border:1.5px solid #1d2b53; }
+.nav a:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+.nav svg{ width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+@media (max-width:560px){ .nav span{ display:none; } .nav a{ padding:0; } }
+h1{ font-family:var(--serif); font-weight:700; font-size:clamp(1.45rem, 5vw, 2rem); margin:0; letter-spacing:-.01em; }
+header p{ margin:2px 0 0; color:var(--ui-sub); font-size:.95rem; }
+
+main{ max-width:1080px; margin:0 auto; padding:0 12px 48px; display:grid; gap:14px; }
+main > *{ min-width:0; }
+
+/* ---------- 미리보기 ---------- */
+.preview{
+  position:sticky; top:0; z-index:5;
+  padding:10px 4px 6px; margin:0 -12px;
+  background:rgba(214,205,192,.9);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.card-wrap{ width:min(100% - 24px, calc(var(--cmh) * 5 / 3)); margin:0 auto; padding:2px 0 10px; }
+.hint{ display:flex; justify-content:center; flex-wrap:wrap; gap:4px 14px; font-size:.82rem; color:var(--ui-sub); min-height:1.3em; text-align:center; }
+.hint .ex-note{ color:#7a4f14; font-weight:600; }
+.hint .ex-note[hidden]{ display:none; }
+
+@media (min-width:900px){
+  main{ grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); align-items:start; gap:28px; padding-top:10px; }
+  .preview{ top:20px; margin:0; padding:28px 8px 16px; background:none; backdrop-filter:none; -webkit-backdrop-filter:none; border:0; }
+  .card-wrap{ width:100%; max-width:640px; }
+  .hint{ font-size:.9rem; margin-top:8px; }
+}
+
+/* ---------- 명함 ---------- */
+.card{
+  position:relative; width:100%; aspect-ratio:5/3;
+  container-type:inline-size; perspective:1600px;
+  cursor:pointer; -webkit-tap-highlight-color:transparent; outline:none;
+  user-select:none; -webkit-user-select:none;
+}
+.card:focus-visible::after{
+  content:""; position:absolute; inset:-8px; border-radius:14px;
+  outline:3px solid var(--accent); pointer-events:none;
+}
+.flipper{
+  position:absolute; inset:0; transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.3,.7,.2,1);
+}
+.card.is-back .flipper{ transform:rotateY(180deg); }
+.face{
+  position:absolute; inset:0; overflow:hidden;
+  border-radius:1.4cqw;
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  background:linear-gradient(135deg, var(--paper), var(--paper2));
+  color:var(--ink);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.18),
+    0 .15cqw .2cqw rgba(40,28,15,.16),
+    0 .6cqw 1.2cqw rgba(40,28,15,.12),
+    0 1.8cqw 3.2cqw rgba(40,28,15,.13),
+    0 4cqw 7cqw -1cqw rgba(40,28,15,.2);
+}
+.face.back{ transform:rotateY(180deg); }
+/* 종이 결 */
+.face::before{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background-image:var(--noise-img); background-size:200px;
+  opacity:var(--noise-op);
+}
+/* 흐르는 빛 */
+.face::after{
+  content:""; position:absolute; inset:-30% -60%; z-index:3; pointer-events:none;
+  background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.32) 48%, rgba(255,255,255,.08) 54%, transparent 62%);
+  mix-blend-mode:soft-light; opacity:0; transform:translateX(-45%);
+}
+.card:hover .face::after{ animation:sweep 2.6s ease-in-out infinite; }
+@keyframes sweep{
+  0%{ opacity:0; transform:translateX(-45%); }
+  15%{ opacity:1; }
+  60%{ opacity:1; transform:translateX(45%); }
+  61%,100%{ opacity:0; transform:translateX(45%); }
+}
+
+.t{ position:absolute; z-index:1; white-space:nowrap; line-height:1.35; transform:translateY(-50%); }
+.t.c{ transform:translate(-50%,-50%); text-align:center; }
+.t.motto{ line-height:1.5; }
+.in{ display:inline-block; transform-origin:50% 60%; }
+.in.pop{ animation:pop .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pop{
+  0%{ transform:none; }
+  35%{ transform:translateY(-7%) scale(1.1); }
+  65%{ transform:scale(.97); }
+  100%{ transform:none; }
+}
+.is-example{ opacity:.34; }
+
+.foil, .foil-bg{
+  background-image:var(--foil); background-size:300% 100%; background-position:35% 50%;
+}
+.foil{
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  padding:.1em 0;
+}
+.card:hover .foil, .card:hover .foil-bg{ animation:shine 1.8s ease-in-out infinite alternate; }
+@keyframes shine{ from{ background-position:0% 50%; } to{ background-position:100% 50%; } }
+
+.logo{ position:absolute; z-index:1; }
+.logo .ring{
+  position:absolute; inset:0; border-radius:50%;
+  -webkit-mask:radial-gradient(circle closest-side, transparent 84%, #000 84.5% 87%, transparent 87.5% 93.5%, #000 94% 99%, transparent 100%);
+          mask:radial-gradient(circle closest-side, transparent 84%, #000 84.5% 87%, transparent 87.5% 93.5%, #000 94% 99%, transparent 100%);
+}
+.logo .t{ left:50%; top:50%; }
+.rule, .dot, .dia{ position:absolute; z-index:1; }
+.rule{ border-radius:1cqw; }
+.dot{ border-radius:50%; }
+.dia{ transform:translate(-50%,-50%) rotate(45deg); }
+.ink{ color:var(--ink); }
+.sub{ color:var(--sub); }
+
+/* ---------- 입력 패널 ---------- */
+.panel{
+  background:rgba(255,253,249,.94); border-radius:18px;
+  padding:6px 16px 20px;
+  box-shadow:0 1px 2px rgba(40,28,15,.08), 0 8px 24px rgba(40,28,15,.10);
+}
+.panel h2{ font-size:1.05rem; margin:18px 0 2px; display:flex; align-items:center; gap:8px; }
+.panel h2 .num{ display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--ui-ink); color:#fff; font-size:.85rem; }
+.panel .desc{ margin:0 0 4px; color:var(--ui-sub); font-size:.88rem; }
+label, .lbl{ display:block; font-weight:700; font-size:.95rem; margin:12px 0 6px; }
+input[type=text]{
+  width:100%; min-height:48px; padding:10px 14px;
+  font:inherit; font-size:16px; color:var(--ui-ink);
+  border:1.5px solid var(--line); border-radius:12px; background:#fff;
+}
+input[type=text]::placeholder{ color:#b3a898; }
+input[type=text]:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(138,90,28,.18); }
+.strengths{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.strengths input{ text-align:center; padding:10px 6px; }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.chip{
+  min-height:44px; padding:0 14px; border-radius:999px;
+  border:1.5px solid #dccfbd; background:#fbf6ee; color:var(--ui-ink);
+  font:inherit; font-size:15px; cursor:pointer;
+}
+.chip:hover{ border-color:#c4ae90; }
+.chip[aria-pressed="true"]{ background:var(--ui-ink); border-color:var(--ui-ink); color:#fff; }
+.chip:focus-visible, .btn:focus-visible, .theme-btn:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+.chip-msg{ min-height:1.3em; margin:6px 0 0; font-size:.85rem; color:#9a4a14; }
+
+.themes{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+@media (min-width:520px) and (max-width:899px){ .themes{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+.theme-btn{
+  min-height:56px; display:flex; align-items:center; gap:10px; padding:6px 10px;
+  border:1.5px solid var(--line); border-radius:12px; background:#fff;
+  font:inherit; font-size:14px; color:var(--ui-ink); cursor:pointer; text-align:left; word-break:keep-all;
+}
+.theme-btn[aria-pressed="true"]{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset; font-weight:700; }
+.swatch{ flex:0 0 auto; width:34px; height:22px; border-radius:4px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+.swatch i{ position:absolute; left:5px; right:5px; top:50%; height:3px; margin-top:-1.5px; border-radius:2px; }
+
+.actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.btn{
+  flex:1 1 140px; min-height:50px; padding:0 16px; border-radius:12px;
+  font:inherit; font-size:16px; font-weight:700; cursor:pointer;
+  border:1.5px solid var(--ui-ink); background:#fff; color:var(--ui-ink);
+}
+.btn.primary{ background:var(--ui-ink); color:#fff; }
+.btn[disabled]{ opacity:.6; cursor:progress; }
+
+/* ---------- 저장 대화상자 ---------- */
+dialog{
+  width:min(92vw, 520px); max-height:92vh; border:0; border-radius:18px; padding:18px;
+  background:#fffdf9; color:var(--ui-ink); box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+dialog::backdrop{ background:rgba(20,15,10,.6); }
+dialog h3{ margin:0 0 10px; font-size:1.1rem; }
+dialog img{ display:block; width:100%; max-height:58vh; object-fit:contain; border-radius:8px; background:#efe8dd; -webkit-touch-callout:default; }
+dialog .tip{ margin:12px 0 0; font-weight:700; color:#7a4f14; text-align:center; }
+dialog .warn{ margin:6px 0 0; font-size:.88rem; color:var(--ui-sub); text-align:center; }
+dialog .actions{ margin-top:14px; }
+dialog a.btn{ display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+
+.padlet-steps{ margin:8px 0 0; padding:0; list-style:none; display:grid; gap:8px; counter-reset:st; }
+.padlet-steps li{ counter-increment:st; display:flex; gap:10px; align-items:flex-start; background:#f6f1e8; border-radius:12px; padding:10px 12px; font-size:.93rem; }
+.padlet-steps li::before{ content:counter(st); flex:none; display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:#1d2b53; color:#fff; font-weight:700; font-size:.8rem; margin-top:1px; }
+.padlet-steps b{ color:#7a4f14; }
+.classes{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-top:12px; }
+.cls{ display:flex; align-items:center; justify-content:center; min-height:48px; border-radius:12px; text-decoration:none; font-weight:700; font-size:16px; background:#1d2b53; color:#fff; border:1.5px solid #1d2b53; }
+.cls.mine{ background:#f5b301; border-color:#f5b301; color:#1d2b53; }
+.cls[aria-disabled="true"]{ background:#fff; color:#9a9184; border-color:var(--line); cursor:not-allowed; }
+.cls:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+.padlet-msg{ min-height:1.3em; margin:8px 0 0; font-size:.85rem; color:#9a4a14; }
+dialog .padlet-box{ margin-top:14px; padding-top:12px; border-top:1.5px dashed var(--line); }
+dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
+.sr-only{ position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation:none !important; transition:none !important; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="ttl">
+    <h1>20년 후 나의 명함</h1>
+    <p>2046년, 나는 어떤 일을 하고 있을까요? 상상하며 명함을 만들어 보세요.</p>
+  </div>
+  <nav class="nav" aria-label="사이트 이동">
+    <a class="back" href="class.html#g1" title="1학년 수업 목록으로" aria-label="1학년 수업 목록으로"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>수업 목록</span></a>
+    <a href="index.html" title="홈으로" aria-label="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
+  </nav>
+</header>
+
+<main>
+  <section class="preview" aria-label="명함 미리보기">
+    <div class="card-wrap">
+      <div class="card" id="card" role="button" tabindex="0" aria-label="명함 앞면. 누르면 뒷면이 보여요">
+        <div class="flipper">
+          <!-- 앞면 -->
+          <div class="face front" aria-hidden="true">
+            <div class="logo" id="logo"><div class="ring foil-bg"></div><div class="t c" id="logoT"><span class="in foil"></span></div></div>
+            <div class="t ink" id="companyT"><span class="in"></span></div>
+            <div class="t sub" id="sinceT"><span class="in">SINCE 2046</span></div>
+            <div class="t" id="nameT"><span class="in foil"></span></div>
+            <div class="rule foil-bg" id="ruleF"></div>
+            <div class="t ink" id="jobT"><span class="in"></span></div>
+          </div>
+          <!-- 뒷면 -->
+          <div class="face back" aria-hidden="true">
+            <div class="t c motto ink" id="mottoT"><span class="in"></span></div>
+            <div class="rule foil-bg" id="lineL"></div>
+            <div class="dia foil-bg" id="dia"></div>
+            <div class="rule foil-bg" id="lineR"></div>
+            <div class="t c sub" id="labelT"><span class="in">MY STRENGTHS</span></div>
+            <div class="t c ink" id="s1T"><span class="in"></span></div>
+            <div class="dot foil-bg" id="dot1"></div>
+            <div class="t c ink" id="s2T"><span class="in"></span></div>
+            <div class="dot foil-bg" id="dot2"></div>
+            <div class="t c ink" id="s3T"><span class="in"></span></div>
+            <div class="t c sub" id="footT"><span class="in"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hint">
+      <span>카드를 누르면 앞뒤가 뒤집혀요</span>
+      <span class="ex-note" id="exNote">흐린 글씨는 예시예요</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="명함 내용 입력">
+    <h2><span class="num">1</span>앞면: 나를 소개해요</h2>
+    <label for="inName">이름</label>
+    <input type="text" id="inName" maxlength="10" placeholder="예) 한서윤" autocomplete="off">
+    <label for="inJob">20년 후 직업</label>
+    <input type="text" id="inJob" maxlength="18" placeholder="예) 우주 정거장 식물 연구원" autocomplete="off">
+    <label for="inCompany">가상 회사 이름</label>
+    <input type="text" id="inCompany" maxlength="16" placeholder="예) 스텔라 그린랩" autocomplete="off">
+
+    <h2><span class="num">2</span>뒷면: 나의 다짐과 강점</h2>
+    <label for="inMotto">좌우명</label>
+    <input type="text" id="inMotto" maxlength="40" placeholder="예) 작은 씨앗 하나로 우주를 푸르게" autocomplete="off">
+    <span class="lbl" id="strLbl">나의 강점 3가지</span>
+    <div class="strengths" role="group" aria-labelledby="strLbl">
+      <input type="text" id="inS1" maxlength="8" placeholder="강점 1" aria-label="강점 1" autocomplete="off">
+      <input type="text" id="inS2" maxlength="8" placeholder="강점 2" aria-label="강점 2" autocomplete="off">
+      <input type="text" id="inS3" maxlength="8" placeholder="강점 3" aria-label="강점 3" autocomplete="off">
+    </div>
+    <div class="chips" id="chips" aria-label="강점 예시 — 누르면 빈칸에 들어가요"></div>
+    <p class="chip-msg" id="chipMsg" aria-live="polite"></p>
+
+    <h2><span class="num">3</span>꾸미고 저장해요</h2>
+    <p class="desc">명함 종이를 골라 보세요.</p>
+    <div class="themes" id="themes"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="flipBtn">앞뒤 뒤집기</button>
+      <button type="button" class="btn primary" id="saveBtn">PNG로 저장</button>
+    </div>
+
+    <h2><span class="num">4</span>우리 반 패들렛에 올려요</h2>
+    <ol class="padlet-steps">
+      <li><span>위의 <b>PNG로 저장</b>을 눌러 명함 이미지를 저장해요.</span></li>
+      <li><span>아래에서 <b>우리 반</b> 버튼을 눌러 패들렛을 열어요.</span></li>
+      <li><span>패들렛 오른쪽 아래 <b>＋</b> 버튼을 누르고, 저장한 명함 이미지를 올려요.</span></li>
+      <li><span>제목에 <b>번호와 이름</b>(예: 15 한서윤)을 쓰고 <b>게시</b>를 눌러요.</span></li>
+    </ol>
+    <div class="classes" data-classes aria-label="반별 패들렛"></div>
+    <p class="padlet-msg" data-padlet-msg aria-live="polite"></p>
+  </section>
+</main>
+
+<dialog id="saveDlg" aria-labelledby="dlgTitle">
+  <h3 id="dlgTitle">명함 이미지가 만들어졌어요</h3>
+  <img id="dlgImg" alt="완성된 명함 앞면과 뒷면 이미지">
+  <p class="tip">다운로드가 안 되면 이미지를 길게 눌러 저장하세요</p>
+  <p class="warn" id="dlgWarn" hidden>흐린 예시 글씨가 함께 저장되었어요. 빈칸을 채우고 다시 저장해 보세요.</p>
+  <div class="padlet-box">
+    <p>저장했으면 우리 반 패들렛에 올려요</p>
+    <div class="classes" data-classes aria-label="반별 패들렛"></div>
+    <p class="padlet-msg" data-padlet-msg aria-live="polite"></p>
+  </div>
+  <div class="actions">
+    <a class="btn" id="dlgDown" download>다시 다운로드</a>
+    <button type="button" class="btn primary" id="dlgClose">닫기</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const SERIF = '"Gowun Batang", serif';
+  const SANS  = 'Pretendard, "Pretendard Variable", sans-serif';
+  const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---------- 템플릿 ---------- */
+  const THEMES = {
+    cream: { label:'금박 크림', paper:'#f7f0e1', paper2:'#eadec4', ink:'#2b241b', sub:'#8d7b5f',
+      foil:['#6e4a10','#a8792a','#dcb460','#f6e2a4','#b98a34','#6e4a10','#c9a04c'], noise:.45 },
+    white: { label:'모던 화이트', paper:'#fdfdfb', paper2:'#eeeeea', ink:'#17181a', sub:'#85878b',
+      foil:['#7a5a1e','#b08a3c','#e2c47a','#fbf0cc','#b8913f','#6f511b','#cfae5e'], noise:.4 },
+    kraft: { label:'크래프트지', paper:'#cca87b', paper2:'#b38b5b', ink:'#2e2115', sub:'#5c4430',
+      foil:['#5e3210','#a8642c','#e9b47c','#ffe0b8','#c27d42','#6e3b14','#d79a5e'], noise:1 },
+    navy:  { label:'남색 은박', paper:'#223460', paper2:'#121c37', ink:'#eef2f8', sub:'#9fadc8',
+      foil:['#7c8899','#b9c2ce','#e6ebf1','#ffffff','#a3adba','#7a8594','#d3dae3'], noise:.5 }
+  };
+  const foilCSS = stops => 'linear-gradient(115deg,' + stops.map((c,i)=>`${c} ${Math.round(i/(stops.length-1)*100)}%`).join(',') + ')';
+
+  /* ---------- 종이 결 (SVG feTurbulence) ---------- */
+  const noiseSVG =
+    "<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'>" +
+    "<filter id='p' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'>" +
+    "<feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch' result='a'/>" +
+    "<feTurbulence type='fractalNoise' baseFrequency='.02 .3' numOctaves='2' seed='7' stitchTiles='stitch' result='b'/>" +
+    "<feComposite in='a' in2='b' operator='arithmetic' k1='0' k2='.8' k3='.2' k4='0'/>" +
+    "<feColorMatrix values='1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1'/>" +
+    "<feColorMatrix values='0 0 0 0 .15  0 0 0 0 .1  0 0 0 0 .05  -1.2 0 0 0 .62'/>" +
+    "</filter><rect width='100%' height='100%' filter='url(#p)'/></svg>";
+  document.documentElement.style.setProperty('--noise-img', `url("data:image/svg+xml,${encodeURIComponent(noiseSVG)}")`);
+
+  /* ---------- 배치(단위: cqw, 카드 가로 = 100, 세로 = 60) — 화면과 PNG가 같은 값을 씀 ---------- */
+  const L = {
+    logo:   { cx:13, cy:13, r:6, size:5.4 },
+    company:{ x:22.5, y:11.2, family:SANS, weight:700, base:3.0, min:1.8, maxW:70, ls:.06 },
+    since:  { x:22.5, y:15.6, family:SANS, weight:600, size:1.7, ls:.32 },
+    name:   { x:7, y:38.5, family:SERIF, weight:700, base:9.5, min:4.5, maxW:86 },
+    rule:   { x:7, y:45.4, w:7, h:.28 },
+    job:    { x:7, y:50.6, family:SANS, weight:500, base:3.3, min:2, maxW:86 },
+    motto:  { x:50, y:18.5, family:SERIF, weight:400, base:4.6, min:2.6, maxW:80, lh:1.5 },
+    line:   { x1:28, x2:72, y:32.5, h:.2, gap:2.2, dia:1.1 },
+    label:  { x:50, y:39.5, family:SANS, weight:700, size:1.65, ls:.38 },
+    str:    { xs:[22,50,78], y:47.6, family:SERIF, weight:700, base:4.1, min:2.2, maxW:23 },
+    dots:   { xs:[36,64], y:47.6, r:.42 },
+    foot:   { x:50, y:55, family:SANS, weight:500, size:1.45, ls:.18 }
+  };
+  const LOGO_FAMILY = SERIF, LOGO_WEIGHT = 700;
+
+  /* ---------- 예시(가상 인물) ---------- */
+  const EX = { name:'한서윤', job:'우주 정거장 식물 연구원', company:'스텔라 그린랩',
+               motto:'작은 씨앗 하나로 우주를 푸르게', s1:'호기심', s2:'끈기', s3:'관찰력' };
+  const inputs = { name:$('inName'), job:$('inJob'), company:$('inCompany'), motto:$('inMotto'),
+                   s1:$('inS1'), s2:$('inS2'), s3:$('inS3') };
+  const BACK_KEYS = ['motto','s1','s2','s3'];
+  const CHIPS = ['호기심','끈기','공감','창의력','책임감','성실함','도전정신','협동심','관찰력','꼼꼼함','리더십','배려','논리력','표현력','유머 감각'];
+
+  /* ---------- 글자 폭 측정 ---------- */
+  const mctx = document.createElement('canvas').getContext('2d');
+  const fontStr = (w, px, fam) => `${w} ${px}px ${fam}`;
+  function measure(text, family, weight, size, ls = 0) {
+    mctx.font = fontStr(weight, size * 10, family);
+    const n = [...text].length;
+    return mctx.measureText(text).width / 10 + (ls ? ls * size * Math.max(0, n - 1) : 0);
+  }
+  function fit(text, f) {
+    const w = measure(text, f.family, f.weight, f.base, f.ls || 0);
+    return w <= f.maxW ? f.base : Math.max(f.min, +(f.base * f.maxW / w).toFixed(2));
+  }
+  function wrap(text, f, size) {
+    const m = s => measure(s, f.family, f.weight, size);
+    const lines = []; let cur = '';
+    for (const word of text.split(/\s+/).filter(Boolean)) {
+      const test = cur ? cur + ' ' + word : word;
+      if (m(test) <= f.maxW) { cur = test; continue; }
+      if (cur) lines.push(cur);
+      if (m(word) <= f.maxW) { cur = word; continue; }
+      cur = '';
+      for (const ch of word) { if (m(cur + ch) > f.maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; }
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function fitMotto(text) {
+    const f = L.motto;
+    for (let s = f.base; s >= f.min - 1e-6; s = +(s - 0.1).toFixed(2)) {
+      const lines = wrap(text, f, s);
+      if (lines.length <= 2) return { size: s, lines };
+    }
+    return { size: f.min, lines: wrap(text, f, f.min) };
+  }
+  const firstChar = s => { const c = [...s.trim()][0] || '?'; return c.toUpperCase(); };
+
+  /* ---------- 현재 내용 계산 ---------- */
+  function model() {
+    const g = k => { const v = inputs[k].value.trim(); return { text: v || EX[k], ex: !v }; };
+    const name = g('name'), job = g('job'), company = g('company'), motto = g('motto');
+    const s = ['s1','s2','s3'].map(g);
+    const m = fitMotto('“' + motto.text + '”');
+    return {
+      logo:    { text: firstChar(company.text), ex: company.ex },
+      company: { ...company, size: fit(company.text, L.company) },
+      name:    { ...name, size: fit(name.text, L.name) },
+      job:     { ...job, size: fit(job.text, L.job) },
+      motto:   { ...motto, size: m.size, lines: m.lines },
+      s:       s.map(x => ({ ...x, size: fit(x.text, L.str) })),
+      foot:    { text: `${name.text} · ${company.text}`, ex: name.ex || company.ex },
+      anyEx:   [name, job, company, motto, ...s].some(x => x.ex)
+    };
+  }
+
+  /* ---------- 화면에 그리기 ---------- */
+  const place = (el, x, y) => { el.style.left = x + 'cqw'; el.style.top = y + 'cqw'; };
+  function layoutDOM() {
+    const lg = $('logo');
+    lg.style.left = (L.logo.cx - L.logo.r) + 'cqw'; lg.style.top = (L.logo.cy - L.logo.r) + 'cqw';
+    lg.style.width = lg.style.height = (L.logo.r * 2) + 'cqw';
+    const lt = $('logoT'); lt.style.fontFamily = LOGO_FAMILY; lt.style.fontWeight = LOGO_WEIGHT; lt.style.fontSize = L.logo.size + 'cqw';
+    const txt = (id, f, center) => {
+      const el = $(id); place(el, f.x, f.y);
+      el.style.fontFamily = f.family; el.style.fontWeight = f.weight;
+      if (f.size) el.style.fontSize = f.size + 'cqw';
+      if (f.ls) { el.style.letterSpacing = f.ls + 'em'; if (center) el.style.paddingLeft = f.ls + 'em'; }
+    };
+    txt('companyT', L.company); txt('sinceT', L.since); txt('nameT', L.name); txt('jobT', L.job);
+    txt('mottoT', L.motto, true); txt('labelT', L.label, true); txt('footT', L.foot, true);
+    ['s1T','s2T','s3T'].forEach((id, i) => txt(id, { ...L.str, x: L.str.xs[i], y: L.str.y }, true));
+    const rect = (id, x, y, w, h) => { const e = $(id); e.style.left = x+'cqw'; e.style.top = y+'cqw'; e.style.width = w+'cqw'; e.style.height = h+'cqw'; };
+    rect('ruleF', L.rule.x, L.rule.y - L.rule.h/2, L.rule.w, L.rule.h);
+    const ln = L.line;
+    rect('lineL', ln.x1, ln.y - ln.h/2, 50 - ln.gap - ln.x1, ln.h);
+    rect('lineR', 50 + ln.gap, ln.y - ln.h/2, ln.x2 - 50 - ln.gap, ln.h);
+    const d = $('dia'); place(d, 50, ln.y); d.style.width = d.style.height = ln.dia + 'cqw';
+    L.dots.xs.forEach((x, i) => rect('dot' + (i+1), x - L.dots.r, L.dots.y - L.dots.r, L.dots.r*2, L.dots.r*2));
+  }
+
+  function pop(el) {
+    if (RM.matches) return;
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  }
+  function show(id, item, allowPop) {
+    const box = $(id), inner = box.firstElementChild;
+    if (item.size != null) box.style.fontSize = item.size + 'cqw';
+    box.classList.toggle('is-example', !!item.ex);
+    const had = inner.dataset.v !== undefined;
+    const changed = inner.dataset.v !== item.text;
+    if (item.lines) {
+      const nodes = [];
+      item.lines.forEach((ln, i) => { if (i) nodes.push(document.createElement('br')); nodes.push(document.createTextNode(ln)); });
+      inner.replaceChildren(...nodes);
+    } else if (changed) inner.textContent = item.text;
+    if (changed) { if (had && allowPop) pop(inner); inner.dataset.v = item.text; }
+  }
+  function render(allowPop = true) {
+    const m = model();
+    show('logoT', m.logo, allowPop);
+    $('logo').classList.toggle('is-example', m.logo.ex);
+    $('logoT').classList.remove('is-example');
+    show('companyT', m.company, allowPop);
+    show('nameT', m.name, allowPop);
+    show('jobT', m.job, allowPop);
+    show('mottoT', m.motto, allowPop);
+    m.s.forEach((x, i) => show(`s${i+1}T`, x, allowPop));
+    show('footT', m.foot, allowPop);
+    $('exNote').hidden = !m.anyEx;
+    syncChips();
+    return m;
+  }
+
+  /* ---------- 뒤집기 ---------- */
+  const card = $('card');
+  let isBack = false;
+  function setSide(back) {
+    isBack = back;
+    card.classList.toggle('is-back', back);
+    card.setAttribute('aria-label', back ? '명함 뒷면. 누르면 앞면이 보여요' : '명함 앞면. 누르면 뒷면이 보여요');
+  }
+  card.addEventListener('click', () => setSide(!isBack));
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSide(!isBack); } });
+  $('flipBtn').addEventListener('click', () => setSide(!isBack));
+
+  for (const [k, el] of Object.entries(inputs)) {
+    const back = BACK_KEYS.includes(k);
+    el.addEventListener('focus', () => setSide(back));
+    el.addEventListener('input', () => { if (isBack !== back) setSide(back); render(true); });
+  }
+
+  /* ---------- 강점 칩 ---------- */
+  const chipBox = $('chips'), chipMsg = $('chipMsg');
+  const strInputs = [inputs.s1, inputs.s2, inputs.s3];
+  CHIPS.forEach(word => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = word; b.dataset.word = word;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      setSide(true);
+      const used = strInputs.find(i => i.value.trim() === word);
+      if (used) { used.value = ''; chipMsg.textContent = `‘${word}’을(를) 뺐어요.`; render(true); return; }
+      const empty = strInputs.find(i => !i.value.trim());
+      if (!empty) { chipMsg.textContent = '강점 3칸이 모두 찼어요. 바꾸고 싶은 칸을 지운 뒤 눌러 보세요.'; return; }
+      empty.value = word; chipMsg.textContent = '';
+      render(true);
+    });
+    chipBox.appendChild(b);
+  });
+  function syncChips() {
+    const vals = strInputs.map(i => i.value.trim());
+    chipBox.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', vals.includes(b.dataset.word) ? 'true' : 'false'));
+  }
+
+  /* ---------- 템플릿 ---------- */
+  let themeKey = 'cream';
+  function applyTheme(key) {
+    themeKey = key; const t = THEMES[key];
+    const s = card.style;
+    s.setProperty('--paper', t.paper); s.setProperty('--paper2', t.paper2);
+    s.setProperty('--ink', t.ink); s.setProperty('--sub', t.sub);
+    s.setProperty('--foil', foilCSS(t.foil)); s.setProperty('--noise-op', t.noise);
+    document.querySelectorAll('.theme-btn').forEach(b => b.setAttribute('aria-pressed', b.dataset.key === key ? 'true' : 'false'));
+  }
+  const themeBox = $('themes');
+  Object.entries(THEMES).forEach(([key, t]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'theme-btn'; b.dataset.key = key;
+    b.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${t.paper},${t.paper2})"><i style="background:${foilCSS(t.foil)}"></i></span><span>${t.label}</span>`;
+    b.addEventListener('click', () => applyTheme(key));
+    themeBox.appendChild(b);
+  });
+
+  /* ---------- PNG 저장 (캔버스에 다시 그리기) ---------- */
+  function noisePattern(ctx) {
+    const N = 240, c = document.createElement('canvas'); c.width = c.height = N;
+    const x = c.getContext('2d'), img = x.createImageData(N, N), d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = (Math.random() + Math.random()) / 2;          // 0~1, 가운데 몰림
+      d[i] = 38; d[i+1] = 25; d[i+2] = 13; d[i+3] = Math.max(0, (v - .45) * 1.6) * 255;
+    }
+    x.putImageData(img, 0, 0);
+    for (let i = 0; i < 160; i++) {            // 종이 섬유
+      const y = Math.random() * N, x0 = Math.random() * N, len = 6 + Math.random() * 30;
+      x.strokeStyle = Math.random() < .5 ? 'rgba(255,255,255,.18)' : 'rgba(38,25,13,.14)';
+      x.lineWidth = .6; x.beginPath(); x.moveTo(x0, y); x.lineTo(x0 + len, y + (Math.random() - .5) * 2); x.stroke();
+    }
+    return ctx.createPattern(c, 'repeat');
+  }
+  function rrect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function foilGrad(ctx, x0, y0, w, h, stops) {
+    // 화면의 background-size:300%, position:35% 와 같은 구간을 보여 줌
+    const start = x0 - 0.7 * w, len = 3 * w;
+    const g = ctx.createLinearGradient(start, y0, start + len, y0 + h * 0.6);
+    stops.forEach((c, i) => g.addColorStop(i / (stops.length - 1), c));
+    return g;
+  }
+  function textW(ctx, text, ls) {
+    if (!ls) return ctx.measureText(text).width;
+    const ch = [...text]; return ch.reduce((a, c) => a + ctx.measureText(c).width, 0) + ls * (ch.length - 1);
+  }
+  function drawText(ctx, U, ox, oy, o) {
+    // o: {text, x, y, size, family, weight, ls, align, fill:'ink'|'sub'|'foil', ex}
+    const t = THEMES[themeKey];
+    const px = o.size * U, x = ox + o.x * U, y = oy + o.y * U, ls = (o.ls || 0) * px;
+    ctx.save();
+    ctx.globalAlpha = o.ex ? .34 : 1;
+    ctx.font = fontStr(o.weight, px, o.family);
+    ctx.textBaseline = 'middle';
+    const w = textW(ctx, o.text, ls);
+    const left = o.align === 'center' ? x - w / 2 : x;
+    ctx.fillStyle = o.fill === 'foil' ? foilGrad(ctx, left, y - px / 2, w, px, t.foil) : (o.fill === 'sub' ? t.sub : t.ink);
+    if (!ls) { ctx.textAlign = o.align === 'center' ? 'center' : 'left'; ctx.fillText(o.text, x, y); }
+    else {
+      ctx.textAlign = 'left'; let cx = left;
+      for (const c of o.text) { ctx.fillText(c, cx, y); cx += ctx.measureText(c).width + ls; }
+    }
+    ctx.restore();
+  }
+  function drawCard(ctx, S, ox, oy, W, back, m, pat) {
+    const t = THEMES[themeKey], U = W / 100, H = 60 * U, R = 1.4 * U;
+    // 여러 겹 그림자
+    [[1.5, 1, .16], [12, 6, .12], [32, 18, .13], [70, 40, .2]].forEach(([b, o, a]) => {
+      ctx.save();
+      ctx.shadowColor = `rgba(40,28,15,${a})`; ctx.shadowBlur = b * S; ctx.shadowOffsetY = o * S;
+      ctx.fillStyle = t.paper2; rrect(ctx, ox, oy, W, H, R); ctx.fill();
+      ctx.restore();
+    });
+    ctx.save();
+    rrect(ctx, ox, oy, W, H, R); ctx.clip();
+    const pg = ctx.createLinearGradient(ox, oy, ox + W, oy + H);
+    pg.addColorStop(0, t.paper); pg.addColorStop(1, t.paper2);
+    ctx.fillStyle = pg; ctx.fillRect(ox, oy, W, H);
+
+    const foilRect = (x, y, w, h, ex) => {
+      ctx.save(); ctx.globalAlpha = ex ? .34 : 1;
+      ctx.fillStyle = foilGrad(ctx, ox + x * U, oy + y * U, w * U, h * U, t.foil);
+      ctx.fillRect(ox + x * U, oy + y * U, w * U, h * U); ctx.restore();
+    };
+    if (!back) {
+      const lg = L.logo, cx = ox + lg.cx * U, cy = oy + lg.cy * U, r = lg.r * U;
+      ctx.save(); ctx.globalAlpha = m.logo.ex ? .34 : 1;
+      const g = foilGrad(ctx, cx - r, cy - r, 2 * r, 2 * r, t.foil);
+      ctx.strokeStyle = g;
+      ctx.lineWidth = r * .05; ctx.beginPath(); ctx.arc(cx, cy, r * .965, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = r * .025; ctx.beginPath(); ctx.arc(cx, cy, r * .8575, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+      drawText(ctx, U, ox, oy, { text: m.logo.text, x: lg.cx, y: lg.cy, size: lg.size, family: LOGO_FAMILY, weight: LOGO_WEIGHT, align: 'center', fill: 'foil', ex: m.logo.ex });
+      drawText(ctx, U, ox, oy, { ...L.company, text: m.company.text, size: m.company.size, fill: 'ink', ex: m.company.ex });
+      drawText(ctx, U, ox, oy, { ...L.since, text: 'SINCE 2046', fill: 'sub' });
+      drawText(ctx, U, ox, oy, { ...L.name, text: m.name.text, size: m.name.size, fill: 'foil', ex: m.name.ex });
+      foilRect(L.rule.x, L.rule.y - L.rule.h / 2, L.rule.w, L.rule.h);
+      drawText(ctx, U, ox, oy, { ...L.job, text: m.job.text, size: m.job.size, fill: 'ink', ex: m.job.ex });
+    } else {
+      const f = L.motto, n = m.motto.lines.length;
+      m.motto.lines.forEach((ln, i) => drawText(ctx, U, ox, oy, { ...f, text: ln, size: m.motto.size, align: 'center', fill: 'ink', ex: m.motto.ex,
+        y: f.y + (i - (n - 1) / 2) * m.motto.size * f.lh }));
+      const ln = L.line;
+      foilRect(ln.x1, ln.y - ln.h / 2, 50 - ln.gap - ln.x1, ln.h);
+      foilRect(50 + ln.gap, ln.y - ln.h / 2, ln.x2 - 50 - ln.gap, ln.h);
+      ctx.save(); ctx.translate(ox + 50 * U, oy + ln.y * U); ctx.rotate(Math.PI / 4);
+      const ds = ln.dia * U; ctx.fillStyle = foilGrad(ctx, -ds / 2, -ds / 2, ds, ds, t.foil); ctx.fillRect(-ds / 2, -ds / 2, ds, ds); ctx.restore();
+      drawText(ctx, U, ox, oy, { ...L.label, text: 'MY STRENGTHS', align: 'center', fill: 'sub' });
+      m.s.forEach((x, i) => drawText(ctx, U, ox, oy, { ...L.str, x: L.str.xs[i], text: x.text, size: x.size, align: 'center', fill: 'ink', ex: x.ex }));
+      L.dots.xs.forEach(x => {
+        const r = L.dots.r * U, cx = ox + x * U, cy = oy + L.dots.y * U;
+        ctx.fillStyle = foilGrad(ctx, cx - r, cy - r, 2 * r, 2 * r, t.foil); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+      });
+      drawText(ctx, U, ox, oy, { ...L.foot, text: m.foot.text, align: 'center', fill: 'sub', ex: m.foot.ex });
+    }
+    // 종이 결
+    ctx.globalAlpha = t.noise;
+    ctx.fillStyle = pat; ctx.fillRect(ox, oy, W, H);
+    ctx.restore();
+    // 가장자리 하이라이트
+    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = 1;
+    rrect(ctx, ox + .5, oy + .5, W - 1, H - 1, R); ctx.stroke(); ctx.restore();
+  }
+
+  async function savePNG() {
+    const btn = $('saveBtn'); btn.disabled = true; const old = btn.textContent; btn.textContent = '만드는 중…';
+    try {
+      await document.fonts.ready;
+      const m = model();
+      const allText = [m.logo.text, m.company.text, m.name.text, m.job.text, m.motto.lines.join(''), ...m.s.map(x => x.text), m.foot.text, 'SINCE 2046 MY STRENGTHS'].join('');
+      await Promise.all([
+        `400 40px ${SERIF}`, `700 40px ${SERIF}`, `500 40px ${SANS}`, `600 40px ${SANS}`, `700 40px ${SANS}`
+      ].map(f => document.fonts.load(f, allText).catch(() => null)));
+      await document.fonts.ready;
+      const fm = model();   // 글꼴이 다 들어온 뒤 다시 계산
+
+      const S = 1.6, W = 1000, H = 600, PAD = 70, GAP = 70, CAP = 70;
+      const CW = W + PAD * 2, CH = PAD + H + GAP + H + CAP + 20;
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(CW * S); cv.height = Math.round(CH * S);
+      const ctx = cv.getContext('2d'); ctx.scale(S, S);
+      const bg = ctx.createLinearGradient(0, 0, 0, CH); bg.addColorStop(0, '#ece4d8'); bg.addColorStop(1, '#d6cab9');
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, CW, CH);
+      const pat = noisePattern(ctx);
+      drawCard(ctx, S, PAD, PAD, W, false, fm, pat);
+      drawCard(ctx, S, PAD, PAD + H + GAP, W, true, fm, pat);
+      ctx.fillStyle = 'rgba(60,45,30,.55)'; ctx.font = fontStr(600, 22, SANS);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('20년 후 나의 명함 · 2046', CW / 2, PAD + H * 2 + GAP + CAP / 2 + 6);
+
+      const url = cv.toDataURL('image/png');
+      const safe = (inputs.name.value.trim() || '예시').replace(/[\\/:*?"<>|\s]+/g, '_');
+      const fname = `20년후_나의명함_${safe}.png`;
+      const a = document.createElement('a'); a.href = url; a.download = fname;
+      document.body.appendChild(a); a.click(); a.remove();
+
+      $('dlgImg').src = url; $('dlgDown').href = url; $('dlgDown').download = fname;
+      $('dlgWarn').hidden = !fm.anyEx;
+      const dlg = $('saveDlg');
+      if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    } catch (err) {
+      console.error(err);
+      alert('이미지를 만들지 못했어요. 다시 한 번 눌러 주세요.');
+    } finally {
+      btn.disabled = false; btn.textContent = old;
+    }
+  }
+  $('saveBtn').addEventListener('click', savePNG);
+  const dlg = $('saveDlg');
+  const closeDlg = () => { if (dlg.open) { typeof dlg.close === 'function' ? dlg.close() : dlg.removeAttribute('open'); } };
+  $('dlgClose').addEventListener('click', closeDlg);
+  dlg.addEventListener('click', e => { if (e.target === dlg) closeDlg(); });
+
+  /* ---------- 반별 패들렛 ----------
+     각 반 패들렛 주소를 '' 안에 붙여 넣으세요. 비어 있으면 버튼이 회색으로 보여요. */
+  const PADLET = {
+    1: 'https://padlet.com/maetant240061/1-1-5ab0zaoiqykn3ti8',
+    2: 'https://padlet.com/maetant240061/1-2-xt39ugbsbryn0usu',
+    3: 'https://padlet.com/maetant240061/1-3-cai6rrphteegjt3k',
+    4: '',
+    5: '',
+    6: '',
+    7: '',
+    8: 'https://padlet.com/maetant240061/1-8-9cwramh32yse37xp'
+  };
+  let myClass = '';
+  try { myClass = localStorage.getItem('futureCardClass') || ''; } catch (e) {}
+  function drawClasses() {
+    document.querySelectorAll('[data-classes]').forEach(box => {
+      box.replaceChildren(...Object.keys(PADLET).map(n => {
+        const a = document.createElement('a');
+        const url = (PADLET[n] || '').trim();
+        a.className = 'cls' + (String(n) === myClass ? ' mine' : '');
+        a.textContent = n + '반';
+        if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label', n + '반 패들렛 열기 (새 창)'); }
+        else { a.setAttribute('aria-disabled', 'true'); a.setAttribute('role', 'link'); a.tabIndex = 0; }
+        a.addEventListener('click', e => {
+          myClass = String(n);
+          try { localStorage.setItem('futureCardClass', myClass); } catch (er) {}
+          const msg = box.parentElement.querySelector('[data-padlet-msg]');
+          if (!url) { e.preventDefault(); if (msg) msg.textContent = n + '반 패들렛 주소가 아직 없어요. 선생님이 알려 준 주소로 들어가세요.'; }
+          else if (msg) msg.textContent = '';
+          drawClasses();
+        });
+        return a;
+      }));
+    });
+  }
+  drawClasses();
+
+  /* ---------- 시작 ---------- */
+  layoutDOM();
+  applyTheme('cream');
+  render(false);
+  if (document.fonts) {
+    document.fonts.ready.then(() => render(false));
+    document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', () => render(false));
+  }
+})();
+</script>
+</body>
+</html>
