@@ -57,6 +57,7 @@ const SCHED={
 };
 SCHED.refresh();
 
+
 /* ▼ 내 시간표: 요일(월~금)마다 교시 번호: '수업 이름'. 'x' = 수업 불가(비움 표시) */
 const PERIODS=['09:15','10:10','11:05','12:00','13:40','14:35','15:30']; /* 1~7교시 시작 시각, 수업 45분 */
 const TIMETABLE={
@@ -79,6 +80,75 @@ const CLASS_PLAN={
 };
 /* 양력 고정 공휴일 (설날·추석 등 음력 공휴일은 직접 추가) */
 const HOL={'01-01':'신정','03-01':'삼일절','05-05':'어린이날','06-06':'현충일','08-15':'광복절','10-03':'개천절','10-09':'한글날','12-25':'성탄절'};
+
+/* ===== 수업(시간표) 고치기 =====
+   매주 바꾸기 → 'schedule:ttEdits' {요일:{교시:'수업 이름' 또는 ''(수업 없음)}}
+   이 날만 바꾸기 → 'schedule:classDay' {날짜:{교시:{name, memo, cancel}}} */
+const TIMETABLE_BASE=JSON.parse(JSON.stringify(TIMETABLE));
+Object.assign(SCHED,{
+  ttEdits(){return this.load('schedule:ttEdits',{})},
+  dayEdits(){return this.load('schedule:classDay',{})},
+  refreshTT(){const ed=this.ttEdits();
+    for(const k of Object.keys(TIMETABLE))delete TIMETABLE[k];
+    for(const d of [1,2,3,4,5,6,0]){const row={...(TIMETABLE_BASE[d]||{})};
+      for(const [p,v] of Object.entries(ed[d]||{})){if(v==='')delete row[p];else row[p]=v}
+      if(Object.keys(row).length)TIMETABLE[d]=row}},
+  /* 그날 실제 시간표: {교시:{name, memo, cancel, dayEdited, weekEdited}} */
+  dayTable(ds){const [y,m,d]=ds.split('-').map(Number),dow=new Date(y,m-1,d).getDay();
+    const out={},base=TIMETABLE[dow]||{},we=(this.ttEdits()[dow])||{},de=this.dayEdits()[ds]||{};
+    for(const p in base)out[p]={name:base[p],memo:'',cancel:false,weekEdited:p in we};
+    for(const p in we)if(we[p]===''&&!out[p])out[p]=null;
+    for(const [p,o] of Object.entries(de)){
+      if(o.name==='')delete out[p];
+      else out[p]={name:o.name??(out[p]&&out[p].name)??'',memo:o.memo||'',cancel:!!o.cancel,dayEdited:true,weekEdited:!!(out[p]&&out[p].weekEdited)}}
+    for(const p in out)if(!out[p]||!out[p].name)delete out[p];
+    return out},
+  saveClass(ds,p,o,weekly){
+    if(weekly){const [y,m,d]=ds.split('-').map(Number),dow=new Date(y,m-1,d).getDay();
+      const ed=this.ttEdits();ed[dow]=ed[dow]||{};
+      if((TIMETABLE_BASE[dow]||{})[p]===o.name||(!(TIMETABLE_BASE[dow]||{})[p]&&o.name===''))delete ed[dow][p];else ed[dow][p]=o.name;
+      this.save('schedule:ttEdits',ed);this.refreshTT();this.clearClassDay(ds,p)}
+    else{const de=this.dayEdits();de[ds]=de[ds]||{};de[ds][p]={name:o.name,memo:o.memo,cancel:o.cancel};this.save('schedule:classDay',de)}},
+  clearClassDay(ds,p){const de=this.dayEdits();if(de[ds]){delete de[ds][p];if(!Object.keys(de[ds]).length)delete de[ds]}this.save('schedule:classDay',de)},
+  resetWeekly(ds,p){const [y,m,d]=ds.split('-').map(Number),dow=new Date(y,m-1,d).getDay(),ed=this.ttEdits();
+    if(ed[dow]){delete ed[dow][p];if(!Object.keys(ed[dow]).length)delete ed[dow]}this.save('schedule:ttEdits',ed);this.refreshTT()}
+});
+SCHED.refreshTT();
+
+/* 수업 고치기 창 (첫 화면·일정관리 페이지 공용). onDone은 저장 뒤 화면을 다시 그리는 함수 */
+function openClassEditor(ds,p,onDone){
+  let dlg=document.getElementById('clsDlg');
+  if(!dlg){
+    const st=document.createElement('style');
+    st.textContent='#clsDlg{border:0;border-radius:20px;padding:0;width:min(420px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3);font-family:inherit}#clsDlg::backdrop{background:rgba(29,43,83,.45)}#clsDlg form{padding:18px}#clsDlg h3{margin:0 0 10px;font-size:20px;color:#1d2b53}#clsDlg h3 small{display:block;font-size:12px;color:#5b6275;font-weight:500;margin-top:2px}#clsDlg label.f{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:#5b6275}#clsDlg input[type=text]{font:inherit;font-size:15px;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px 10px;width:100%;box-sizing:border-box}#clsDlg .ck{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin:4px 0 8px;cursor:pointer}#clsDlg .ck input{width:18px;height:18px;accent-color:#e63946}#clsDlg .rg{display:flex;gap:6px;margin:4px 0 10px}#clsDlg .rg label{flex:1;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;color:#5b6275}#clsDlg .rg input{display:none}#clsDlg .rg label:has(input:checked){border-color:#1f9d74;background:#e3f5ee;color:#1f9d74}#clsDlg .bt{display:flex;gap:6px;flex-wrap:wrap}#clsDlg .bt .sp{flex:1}#clsDlg button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 13px;border:1.5px solid #e3e6ee;background:#fff;color:#1d2b53;cursor:pointer}#clsDlg button.main{background:#1f9d74;border-color:#1f9d74;color:#fff}#clsDlg .hint{font-size:12px;color:#5b6275;margin:8px 0 0}';
+    document.head.appendChild(st);
+    dlg=document.createElement('dialog');dlg.id='clsDlg';
+    dlg.innerHTML='<form><h3 id="clsT"></h3>'
+      +'<label class="f">수업 이름 (비우면 이 시간 수업 없음)<input type="text" name="name" maxlength="20" list="clsNames" placeholder="예) 107진로"></label><datalist id="clsNames"></datalist>'
+      +'<label class="f">메모<input type="text" name="memo" maxlength="60" placeholder="예) 담임 요청으로 교체, 보강"></label>'
+      +'<label class="ck"><input type="checkbox" name="cancel">이 날 휴강 (수업 없음 표시)</label>'
+      +'<div class="rg"><label><input type="radio" name="scope" value="day" checked>이 날만</label><label><input type="radio" name="scope" value="week">매주 이 시간</label></div>'
+      +'<div class="bt"><button type="button" id="clsDay">이 날 원래대로</button><button type="button" id="clsWeek">매주 원래대로</button><span class="sp"></span><button type="button" id="clsCancel">취소</button><button type="submit" class="main">저장</button></div>'
+      +'<p class="hint">매주 바꾸면 시간표 자체가 바뀌어요. 반별 진로설계 일정은 일정관리의 반별 표에서 고쳐요.</p></form>';
+    document.body.appendChild(dlg);
+    const f=dlg.querySelector('form');
+    f.addEventListener('change',e=>{if(e.target.name==='scope'){const w=f.querySelector('[name=scope]:checked').value==='week';f.cancel.disabled=w;f.memo.disabled=w;if(w)f.cancel.checked=false}});
+    dlg.querySelector('#clsCancel').onclick=()=>dlg.close();
+  }
+  const f=dlg.querySelector('form'),[y,m,d]=ds.split('-').map(Number),dt=new Date(y,m-1,d);
+  const cur=SCHED.dayTable(ds)[p]||{name:'',memo:'',cancel:false};
+  const names=new Set();Object.values(TIMETABLE_BASE).forEach(r=>Object.values(r).forEach(v=>{if(v!=='x')names.add(v)}));
+  dlg.querySelector('#clsNames').innerHTML=[...names].sort().map(v=>'<option value="'+v+'">').join('');
+  dlg.querySelector('#clsT').innerHTML=(m)+'. '+d+'.('+'일월화수목금토'[dt.getDay()]+') '+p+'교시 수업<small>'+PERIODS[p-1]+' 시작'+(cur.dayEdited?' · 이 날 바꿈':'')+(cur.weekEdited?' · 매주 바꿈':'')+'</small>';
+  f.name.value=cur.name==='x'?'':cur.name;f.memo.value=cur.memo||'';f.cancel.checked=!!cur.cancel;
+  f.querySelector('[name=scope][value=day]').checked=true;f.cancel.disabled=false;f.memo.disabled=false;
+  dlg.querySelector('#clsDay').hidden=!cur.dayEdited;dlg.querySelector('#clsWeek').hidden=!cur.weekEdited;
+  f.onsubmit=e=>{e.preventDefault();const w=f.querySelector('[name=scope]:checked').value==='week';
+    SCHED.saveClass(ds,p,{name:f.name.value.trim(),memo:f.memo.value.trim(),cancel:f.cancel.checked},w);dlg.close();onDone&&onDone()};
+  dlg.querySelector('#clsDay').onclick=()=>{SCHED.clearClassDay(ds,p);dlg.close();onDone&&onDone()};
+  dlg.querySelector('#clsWeek').onclick=()=>{SCHED.resetWeekly(ds,p);dlg.close();onDone&&onDone()};
+  dlg.showModal();f.name.focus();
+}
 
 /* ===== 하루 요약 (첫 화면 일정관리 카드에서 사용) ===== */
 function scheduleDay(ds){
@@ -103,11 +173,11 @@ function scheduleDay(ds){
     const o=(cp[c]||{})[st.k]||{};
     plans.push({c,name:st.name,date:o.date||def.date,p:o.p||def.p,done:!!o.done});
   }));
-  const t=TIMETABLE[parse(ds).getDay()]||{};
-  const classes=Object.keys(t).map(Number).sort((a,b)=>a-b).filter(p=>t[p]!=='x').map(p=>{
-    const name=t[p],grade=+((name.match(/\d/)||[1])[0]);
+  const t=SCHED.dayTable(ds);
+  const classes=Object.keys(t).map(Number).sort((a,b)=>a-b).filter(p=>t[p].name!=='x').map(p=>{
+    const o=t[p],name=o.name,grade=+((name.match(/\d/)||[1])[0]);
     const pl=plans.find(x=>x.date===ds&&x.p===p&&name.startsWith(x.c));
-    return {p,start:PERIODS[p-1],name,blocked:blocker(p,grade),plan:pl?CLASS_PLAN.title+' '+pl.name+(pl.done?' ✓':''):''};
+    return {p,start:PERIODS[p-1],name,memo:o.memo,edited:!!(o.dayEdited||o.weekEdited),blocked:o.cancel?'휴강'+(o.memo?': '+o.memo:''):blocker(p,grade),plan:pl?CLASS_PLAN.title+' '+pl.name+(pl.done?' ✓':''):''};
   });
   /* 시간표와 다른 교시로 옮긴 반별 수업도 수업에 포함 */
   plans.filter(x=>x.date===ds&&!classes.some(k=>k.p===x.p)).forEach(x=>classes.push({p:x.p,start:PERIODS[x.p-1],name:x.c+'진로',blocked:'',plan:CLASS_PLAN.title+' '+x.name+(x.done?' ✓':''),moved:true}));
