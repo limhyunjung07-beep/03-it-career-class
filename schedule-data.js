@@ -88,6 +88,8 @@ const TIMETABLE_BASE=JSON.parse(JSON.stringify(TIMETABLE));
 Object.assign(SCHED,{
   ttEdits(){return this.load('schedule:ttEdits',{})},
   dayEdits(){return this.load('schedule:classDay',{})},
+  topics(){return this.load('schedule:topics',{})},
+  setTopic(ds,p,t){const tp=this.topics();tp[ds]=tp[ds]||{};if(t)tp[ds][p]=t;else delete tp[ds][p];if(!Object.keys(tp[ds]).length)delete tp[ds];this.save('schedule:topics',tp)},
   refreshTT(){const ed=this.ttEdits();
     for(const k of Object.keys(TIMETABLE))delete TIMETABLE[k];
     for(const d of [1,2,3,4,5,6,0]){const row={...(TIMETABLE_BASE[d]||{})};
@@ -102,6 +104,7 @@ Object.assign(SCHED,{
       if(o.name==='')delete out[p];
       else out[p]={name:o.name??(out[p]&&out[p].name)??'',memo:o.memo||'',cancel:!!o.cancel,dayEdited:true,weekEdited:!!(out[p]&&out[p].weekEdited)}}
     for(const p in out)if(!out[p]||!out[p].name)delete out[p];
+    const tp=this.topics()[ds]||{};for(const p in out)out[p].topic=tp[p]||'';
     return out},
   saveClass(ds,p,o,weekly){
     if(weekly){const [y,m,d]=ds.split('-').map(Number),dow=new Date(y,m-1,d).getDay();
@@ -120,16 +123,18 @@ function openClassEditor(ds,p,onDone){
   let dlg=document.getElementById('clsDlg');
   if(!dlg){
     const st=document.createElement('style');
-    st.textContent='#clsDlg{border:0;border-radius:20px;padding:0;width:min(420px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3);font-family:inherit}#clsDlg::backdrop{background:rgba(29,43,83,.45)}#clsDlg form{padding:18px}#clsDlg h3{margin:0 0 10px;font-size:20px;color:#1d2b53}#clsDlg h3 small{display:block;font-size:12px;color:#5b6275;font-weight:500;margin-top:2px}#clsDlg label.f{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:#5b6275}#clsDlg input[type=text]{font:inherit;font-size:15px;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px 10px;width:100%;box-sizing:border-box}#clsDlg .ck{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin:4px 0 8px;cursor:pointer}#clsDlg .ck input{width:18px;height:18px;accent-color:#e63946}#clsDlg .rg{display:flex;gap:6px;margin:4px 0 10px}#clsDlg .rg label{flex:1;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;color:#5b6275}#clsDlg .rg input{display:none}#clsDlg .rg label:has(input:checked){border-color:#1f9d74;background:#e3f5ee;color:#1f9d74}#clsDlg .bt{display:flex;gap:6px;flex-wrap:wrap}#clsDlg .bt .sp{flex:1}#clsDlg button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 13px;border:1.5px solid #e3e6ee;background:#fff;color:#1d2b53;cursor:pointer}#clsDlg button.main{background:#1f9d74;border-color:#1f9d74;color:#fff}#clsDlg .hint{font-size:12px;color:#5b6275;margin:8px 0 0}';
+    st.textContent='#clsDlg{border:0;border-radius:20px;padding:0;width:min(420px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3);font-family:inherit}#clsDlg::backdrop{background:rgba(29,43,83,.45)}#clsDlg form{padding:18px}#clsDlg h3{margin:0 0 10px;font-size:20px;color:#1d2b53}#clsDlg h3 small{display:block;font-size:12px;color:#5b6275;font-weight:500;margin-top:2px}#clsDlg label.f{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:#5b6275}#clsDlg input[type=text]{font:inherit;font-size:15px;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px 10px;width:100%;box-sizing:border-box}#clsDlg .ck{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin:4px 0 8px;cursor:pointer}#clsDlg .ck input{width:18px;height:18px;accent-color:#e63946}#clsDlg .ck.tw{font-size:13px;font-weight:500;color:#5b6275;margin-top:-4px}#clsDlg .ck.tw input{accent-color:#1f9d74;width:16px;height:16px}#clsDlg input[name=topic]{border-color:#bfe6d6;background:#f1faf6}#clsDlg .rg{display:flex;gap:6px;margin:4px 0 10px}#clsDlg .rg label{flex:1;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;color:#5b6275}#clsDlg .rg input{display:none}#clsDlg .rg label:has(input:checked){border-color:#1f9d74;background:#e3f5ee;color:#1f9d74}#clsDlg .bt{display:flex;gap:6px;flex-wrap:wrap}#clsDlg .bt .sp{flex:1}#clsDlg button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 13px;border:1.5px solid #e3e6ee;background:#fff;color:#1d2b53;cursor:pointer}#clsDlg button.main{background:#1f9d74;border-color:#1f9d74;color:#fff}#clsDlg .hint{font-size:12px;color:#5b6275;margin:8px 0 0}';
     document.head.appendChild(st);
     dlg=document.createElement('dialog');dlg.id='clsDlg';
     dlg.innerHTML='<form><h3 id="clsT"></h3>'
+      +'<label class="f">수업 주제<input type="text" name="topic" maxlength="60" placeholder="예) 진로설계 제작계획서 쓰기"></label>'
+      +'<label class="ck tw"><input type="checkbox" name="topicWeek">이번 주 같은 학년 수업에도 같은 주제 넣기</label>'
       +'<label class="f">수업 이름 (비우면 이 시간 수업 없음)<input type="text" name="name" maxlength="20" list="clsNames" placeholder="예) 107진로"></label><datalist id="clsNames"></datalist>'
       +'<label class="f">메모<input type="text" name="memo" maxlength="60" placeholder="예) 담임 요청으로 교체, 보강"></label>'
       +'<label class="ck"><input type="checkbox" name="cancel">이 날 휴강 (수업 없음 표시)</label>'
       +'<div class="rg"><label><input type="radio" name="scope" value="day" checked>이 날만</label><label><input type="radio" name="scope" value="week">매주 이 시간</label></div>'
       +'<div class="bt"><button type="button" id="clsDay">이 날 원래대로</button><button type="button" id="clsWeek">매주 원래대로</button><span class="sp"></span><button type="button" id="clsCancel">취소</button><button type="submit" class="main">저장</button></div>'
-      +'<p class="hint">매주 바꾸면 시간표 자체가 바뀌어요. 반별 진로설계 일정은 일정관리의 반별 표에서 고쳐요.</p></form>';
+      +'<p class="hint">주제는 그 날 수업에만 붙어요. 매주 이 시간을 고르면 시간표 자체가 바뀌어요. 반별 진로설계 일정은 일정관리의 반별 표에서 고쳐요.</p></form>';
     document.body.appendChild(dlg);
     const f=dlg.querySelector('form');
     f.addEventListener('change',e=>{if(e.target.name==='scope'){const w=f.querySelector('[name=scope]:checked').value==='week';f.cancel.disabled=w;f.memo.disabled=w;if(w)f.cancel.checked=false}});
@@ -140,11 +145,22 @@ function openClassEditor(ds,p,onDone){
   const names=new Set();Object.values(TIMETABLE_BASE).forEach(r=>Object.values(r).forEach(v=>{if(v!=='x')names.add(v)}));
   dlg.querySelector('#clsNames').innerHTML=[...names].sort().map(v=>'<option value="'+v+'">').join('');
   dlg.querySelector('#clsT').innerHTML=(m)+'. '+d+'.('+'일월화수목금토'[dt.getDay()]+') '+p+'교시 수업<small>'+PERIODS[p-1]+' 시작'+(cur.dayEdited?' · 이 날 바꿈':'')+(cur.weekEdited?' · 매주 바꿈':'')+'</small>';
+  f.topic.value=cur.topic||'';f.topicWeek.checked=false;
   f.name.value=cur.name==='x'?'':cur.name;f.memo.value=cur.memo||'';f.cancel.checked=!!cur.cancel;
   f.querySelector('[name=scope][value=day]').checked=true;f.cancel.disabled=false;f.memo.disabled=false;
   dlg.querySelector('#clsDay').hidden=!cur.dayEdited;dlg.querySelector('#clsWeek').hidden=!cur.weekEdited;
   f.onsubmit=e=>{e.preventDefault();const w=f.querySelector('[name=scope]:checked').value==='week';
-    SCHED.saveClass(ds,p,{name:f.name.value.trim(),memo:f.memo.value.trim(),cancel:f.cancel.checked},w);dlg.close();onDone&&onDone()};
+    const name=f.name.value.trim(),memo=f.memo.value.trim(),cancel=f.cancel.checked,topic=f.topic.value.trim();
+    const same=name===(cur.name==='x'?'':cur.name)&&(w||(memo===(cur.memo||'')&&cancel===!!cur.cancel));
+    if(!same)SCHED.saveClass(ds,p,{name,memo,cancel},w);
+    /* 주제 */
+    SCHED.setTopic(ds,p,topic);
+    if(f.topicWeek.checked){const g=((name||cur.name||'').match(/\d/)||[''])[0];
+      const mon=new Date(y,m-1,d);mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
+      for(let i=0;i<5;i++){const x=new Date(mon);x.setDate(mon.getDate()+i);
+        const xs=x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+        const tb=SCHED.dayTable(xs);for(const q in tb){const n=tb[q].name;if(n!=='x'&&g&&(n.match(/\d/)||[''])[0]===g)SCHED.setTopic(xs,+q,topic)}}}
+    dlg.close();onDone&&onDone()};
   dlg.querySelector('#clsDay').onclick=()=>{SCHED.clearClassDay(ds,p);dlg.close();onDone&&onDone()};
   dlg.querySelector('#clsWeek').onclick=()=>{SCHED.resetWeekly(ds,p);dlg.close();onDone&&onDone()};
   dlg.showModal();f.name.focus();
@@ -177,7 +193,7 @@ function scheduleDay(ds){
   const classes=Object.keys(t).map(Number).sort((a,b)=>a-b).filter(p=>t[p].name!=='x').map(p=>{
     const o=t[p],name=o.name,grade=+((name.match(/\d/)||[1])[0]);
     const pl=plans.find(x=>x.date===ds&&x.p===p&&name.startsWith(x.c));
-    return {p,start:PERIODS[p-1],name,memo:o.memo,edited:!!(o.dayEdited||o.weekEdited),blocked:o.cancel?'휴강'+(o.memo?': '+o.memo:''):blocker(p,grade),plan:pl?CLASS_PLAN.title+' '+pl.name+(pl.done?' ✓':''):''};
+    return {p,start:PERIODS[p-1],name,memo:o.memo,topic:o.topic||'',edited:!!(o.dayEdited||o.weekEdited),blocked:o.cancel?'휴강'+(o.memo?': '+o.memo:''):blocker(p,grade),plan:pl?CLASS_PLAN.title+' '+pl.name+(pl.done?' ✓':''):''};
   });
   /* 시간표와 다른 교시로 옮긴 반별 수업도 수업에 포함 */
   plans.filter(x=>x.date===ds&&!classes.some(k=>k.p===x.p)).forEach(x=>classes.push({p:x.p,start:PERIODS[x.p-1],name:x.c+'진로',blocked:'',plan:CLASS_PLAN.title+' '+x.name+(x.done?' ✓':''),moved:true}));

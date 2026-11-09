@@ -88,6 +88,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:8px 0 36px}
 .today li{flex-wrap:nowrap;align-items:center;gap:6px;white-space:nowrap;min-width:0;padding:3px 8px}
 .today li b{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
 .today li[data-cd] b{flex:none;max-width:55%}
+.today li em.tp{color:var(--navy);font-weight:700}
 .today li .pn{font-weight:700;font-size:12.5px}
 .today li em,.today li small{flex:none;font-weight:500;white-space:nowrap}
 .today li em{overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0}
@@ -283,8 +284,8 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     /* 1. 수업·상담: 시간표 수업 + 수업·상담 분류 일정을 시간 순서로 */
     const rows=info.classes.map(c=>({m:toMin(c.start),html:(()=>{
       const on=isToday&&!c.blocked&&now>=toMin(c.start)&&now<toMin(c.start)+45;
-      return '<li class="ed" data-cd="'+ds+'" data-cp="'+c.p+'" title="'+esc(c.p+'교시 '+c.start+' '+c.name+(c.plan?' · '+c.plan:'')+(c.blocked?' · 수업 없음 '+c.blocked:''))+'" class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+(c.edited?' ✎':'')+'</b>'
-        +(c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':c.memo?'<em style="color:var(--sub)">'+esc(c.memo)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
+      return '<li class="ed" data-cd="'+ds+'" data-cp="'+c.p+'" title="'+esc(c.p+'교시 '+c.start+' '+c.name+(c.topic?' · 주제: '+c.topic:'')+(c.plan?' · '+c.plan:'')+(c.blocked?' · 수업 없음 '+c.blocked:''))+'" class="'+(c.blocked?'off':'')+(on?' now':'')+'"><span class="pn">'+c.p+'교시 '+c.start+'</span><b>'+esc(c.name)+(c.edited?' ✎':'')+'</b>'
+        +(c.topic?'<em class="tp">'+esc(c.topic)+'</em>':c.plan?'<em>'+esc(c.plan)+'</em>':'')+(c.blocked?'<em class="why">수업 없음 · '+esc(c.blocked)+'</em>':c.memo?'<em style="color:var(--sub)">'+esc(c.memo)+'</em>':'')+(on?'<em style="color:var(--orange)">지금</em>':'')+'</li>'})()}))
       .concat(cs.map(e=>({m:evMin(e.time),html:'<li class="ed" data-k="'+esc(e.key)+'" title="'+esc((e.time?e.time+' ':'')+e.title)+' · 눌러서 고치기"><span class="pn" style="color:'+((CATS[e.cat]||CATS.etc).c)+'">'+(e.time?esc(e.time):(CATS[e.cat]||CATS.etc).name)+'</span><b>'+esc(e.title)+'</b>'+(e.cat==='counsel'?'<em>상담</em>':'')+'</li>'})))
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;

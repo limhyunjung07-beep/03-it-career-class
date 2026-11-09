@@ -126,7 +126,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 .tt td.x{color:#b6bccb;font-weight:700;background:repeating-linear-gradient(45deg,#fafbfd 0 6px,#f1f3f8 6px 12px)}
 .tt .tcol{background:#fffaf2}
 .tt td[data-cd]{cursor:pointer}.tt td[data-cd]:hover{box-shadow:inset 0 0 0 2px var(--green)}
-.tt td.chg{box-shadow:inset 0 0 0 2px #c6a0e0}.tt td i.mm{color:var(--sub)}
+.tt td.chg{box-shadow:inset 0 0 0 2px #c6a0e0}.tt td i.mm{color:var(--sub)}.tt td i.tp{color:var(--navy);font-weight:700;background:#eef2fb;border-radius:6px;padding:1px 4px;margin-top:3px}
 .tt thead th.tcol{background:var(--orange);color:#fff}
 .tt td.now{outline:3px solid var(--orange);outline-offset:-3px}
 .tt td.now b{background:var(--orange);color:#fff}
@@ -250,7 +250,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
       <div class="grid" id="grid"></div>
     </section>
     <section class="box" id="ttBox">
-      <div class="tt-head"><h3>내 시간표</h3><small>칸을 누르면 그 날·매주 수업을 고칠 수 있어요</small><span class="sp"></span>
+      <div class="tt-head"><h3>내 시간표</h3><small>칸을 누르면 수업 주제를 넣거나 수업을 고칠 수 있어요</small><span class="sp"></span>
         <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap"><button type="button" class="nav" id="ttPrev" title="지난주">‹</button><span class="tt-week" id="ttWeek"></span><button type="button" class="btn" id="ttNow">이번 주</button><button type="button" class="nav" id="ttNext" title="다음 주">›</button></span></div>
       <table class="tt" id="tt"></table>
     </section>
@@ -543,7 +543,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 
   /* 백업 */
   $('#exportBtn').onclick=()=>{
-    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,fixedEdits:SCHED.edits(),ttEdits:SCHED.ttEdits(),classDay:SCHED.dayEdits(),plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,fixedEdits:SCHED.edits(),ttEdits:SCHED.ttEdits(),classDay:SCHED.dayEdits(),topics:SCHED.topics(),plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='일정관리-백업-'+today+'.json';
     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   };
@@ -559,6 +559,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
       if(j.fixedEdits&&typeof j.fixedEdits==='object'){SCHED.save('schedule:fixedEdits',j.fixedEdits);SCHED.refresh()}
       if(j.ttEdits&&typeof j.ttEdits==='object'){SCHED.save('schedule:ttEdits',j.ttEdits);SCHED.refreshTT()}
       if(j.classDay&&typeof j.classDay==='object')SCHED.save('schedule:classDay',j.classDay);
+      if(j.topics&&typeof j.topics==='object')SCHED.save('schedule:topics',j.topics);
       if(j.plans&&j.plans[CLASS_PLAN.key]){cp=j.plans[CLASS_PLAN.key];save(CPKEY,cp)}
       save(KEY,mine);renderAll();alert(n+'개 일정을 가져왔어요.'+(j.plans?' 반별 일정도 불러왔어요.':''));
     }catch(err){alert('백업 파일을 읽지 못했어요.')}
@@ -592,7 +593,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
         const allOff=!!(HOL[ds.slice(5)]||evs.some(e=>e.off&&onDay(e,ds)));
         const pl=v&&v!=='x'?plans.filter(e=>e.start===ds&&e.time.startsWith(p+'교시')&&v.startsWith(e.id.split('-')[1])):[];
         const cls=[ds===today&&'tcol',v&&kind(v),v&&v!=='x'&&bk&&'blk',!v&&allOff&&'offday',v&&v!=='x'&&!bk&&ds===today&&np.p===p&&'now'].filter(Boolean).join(' ');
-        let inner=v?(v==='x'?'×':'<b>'+esc(v)+'</b>'+(bk?'<i>'+esc(bk)+'</i>':o.memo?'<i class="mm">'+esc(o.memo)+'</i>':'')+pl.map(e=>'<i class="pl">'+esc(e.title.replace(/^\S+ /,''))+'</i>').join('')):'';
+        let inner=v?(v==='x'?'×':'<b>'+esc(v)+'</b>'+(o.topic?'<i class="tp">'+esc(o.topic)+'</i>':'')+(bk?'<i>'+esc(bk)+'</i>':o.memo?'<i class="mm">'+esc(o.memo)+'</i>':'')+pl.map(e=>'<i class="pl">'+esc(e.title.replace(/^\S+ /,''))+'</i>').join('')):'';
         return '<td data-cd="'+ds+'" data-cp="'+p+'"'+(cls||o&&(o.dayEdited||o.weekEdited)?' class="'+cls+(o&&(o.dayEdited||o.weekEdited)?' chg':'')+'"':'')+' title="눌러서 수업 고치기">'+inner+'</td>';
       }).join('')+'</tr>';
     });
@@ -605,7 +606,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
     const np=nowPeriod();
     return Object.keys(t).map(Number).sort((a,b)=>a-b).filter(p=>t[p]!=='x').map(p=>
       {const o=t0[p],bk=o.cancel?'휴강'+(o.memo?': '+o.memo:''):blocker(s,p,+(t[p].match(/\d/)||[0])[0]);
-      return '<li class="period '+kind(t[p])+(bk?' off':s===today&&np.p===p?' now':'')+'" data-cd="'+s+'" data-cp="'+p+'" title="눌러서 수업 고치기" style="cursor:pointer"><span class="pn">'+p+'교시 '+PERIODS[p-1]+'~'+end45(PERIODS[p-1])+'</span><b>'+esc(t[p])+(o.dayEdited||o.weekEdited?' ✎':'')+'</b>'+(bk?'<span class="why">수업 없음 · '+esc(bk)+'</span>':o.memo?'<span class="why" style="color:var(--sub)">'+esc(o.memo)+'</span>':'')+'</li>'}).join('');
+      return '<li class="period '+kind(t[p])+(bk?' off':s===today&&np.p===p?' now':'')+'" data-cd="'+s+'" data-cp="'+p+'" title="눌러서 수업 고치기" style="cursor:pointer"><span class="pn">'+p+'교시 '+PERIODS[p-1]+'~'+end45(PERIODS[p-1])+'</span><b>'+esc(t[p])+(o.dayEdited||o.weekEdited?' ✎':'')+'</b>'+(o.topic?'<span class="why" style="color:var(--navy)">📘 '+esc(o.topic)+'</span>':'')+(bk?'<span class="why">수업 없음 · '+esc(bk)+'</span>':o.memo?'<span class="why" style="color:var(--sub)">'+esc(o.memo)+'</span>':'')+'</li>'}).join('');
   }
   /* 수업 칸·오늘 수업 누르면 고치기 */
   document.addEventListener('click',e=>{const c=e.target.closest('[data-cd][data-cp]');if(!c)return;openClassEditor(c.dataset.cd,+c.dataset.cp,renderAll)});
