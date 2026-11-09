@@ -102,7 +102,7 @@ Object.assign(SCHED,{
     for(const p in we)if(we[p]===''&&!out[p])out[p]=null;
     for(const [p,o] of Object.entries(de)){
       if(o.name==='')delete out[p];
-      else out[p]={name:o.name??(out[p]&&out[p].name)??'',memo:o.memo||'',cancel:!!o.cancel,dayEdited:true,weekEdited:!!(out[p]&&out[p].weekEdited)}}
+      else out[p]={name:o.name??(out[p]&&out[p].name)??'',memo:o.memo||'',cancel:!!o.cancel,swap:o.swap||'',dayEdited:true,weekEdited:!!(out[p]&&out[p].weekEdited)}}
     for(const p in out)if(!out[p]||!out[p].name)delete out[p];
     const tp=this.topics()[ds]||{};for(const p in out)out[p].topic=tp[p]||'';
     return out},
@@ -118,12 +118,58 @@ Object.assign(SCHED,{
 });
 SCHED.refreshTT();
 
+/* ===== 수업 교환·이동 ===== */
+function planDefault(c,st){
+  for(const d of [1,2,3,4,5]){const t=TIMETABLE[d]||{};for(const p in t){if(t[p].startsWith(c)){
+    const [y,m,dd]=st.week.split('-').map(Number),x=new Date(y,m-1,dd+d-1);
+    return {date:x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'),p:+p}}}}
+  return {date:st.week,p:1};
+}
+Object.assign(SCHED,{
+  swaps(){return this.load('schedule:swaps',[])},
+  planAt(ds,p,name){const cp=this.load('schedule:plan:'+CLASS_PLAN.key,{}),out=[];
+    CLASS_PLAN.classes.forEach(c=>{if(!name||!name.startsWith(c))return;CLASS_PLAN.steps.forEach(st=>{
+      const o=(cp[c]||{})[st.k]||{},d=planDefault(c,st);
+      if((o.date||d.date)===ds&&(o.p||d.p)===p)out.push({c,k:st.k,prev:(cp[c]&&cp[c][st.k])?JSON.parse(JSON.stringify(cp[c][st.k])):null,o})})});
+    return out},
+  /* (ds,p) 수업을 (ds2,p2)로: 그 시간에 수업이 있으면 서로 바꾸고, 없으면 옮겨요 */
+  swap(ds,p,ds2,p2){
+    if(ds===ds2&&p===p2)return '같은 시간이에요.';
+    const A=this.dayTable(ds)[p],B=this.dayTable(ds2)[p2];
+    if(!A)return '옮길 수업이 없어요.';
+    const de=this.dayEdits(),tp=this.topics(),cpKey='schedule:plan:'+CLASS_PLAN.key,cp=this.load(cpKey,{});
+    const cl=v=>v===undefined?null:JSON.parse(JSON.stringify(v));
+    const id='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const rec={id,a:{ds,p,day:cl((de[ds]||{})[p]),topic:(tp[ds]||{})[p]||''},b:{ds:ds2,p:p2,day:cl((de[ds2]||{})[p2]),topic:(tp[ds2]||{})[p2]||''},plans:[]};
+    const lbl=(d,q)=>{const [,m,dd]=d.split('-').map(Number);return (ds===ds2?'':m+'. '+dd+'. ')+q+'교시'};
+    const pa=this.planAt(ds,p,A.name),pb=B?this.planAt(ds2,p2,B.name):[];
+    de[ds2]=de[ds2]||{};de[ds2][p2]={name:A.name,memo:(B?'↔ '+lbl(ds,p)+'와 교환':'← '+lbl(ds,p)+'에서 옮김'),cancel:false,swap:id};
+    de[ds]=de[ds]||{};de[ds][p]=B?{name:B.name,memo:'↔ '+lbl(ds2,p2)+'와 교환',cancel:false,swap:id}:{name:'',memo:'',cancel:false,swap:id};
+    this.save('schedule:classDay',de);
+    this.setTopic(ds2,p2,rec.a.topic);this.setTopic(ds,p,rec.b.topic);
+    const mv=(list,date,q)=>list.forEach(x=>{rec.plans.push({c:x.c,k:x.k,prev:x.prev});cp[x.c]=cp[x.c]||{};cp[x.c][x.k]={...(x.o||{}),date,p:q}});
+    mv(pa,ds2,p2);mv(pb,ds,p);this.save(cpKey,cp);
+    const sw=this.swaps();sw.push(rec);this.save('schedule:swaps',sw);
+    return '';
+  },
+  unswap(id){
+    const sw=this.swaps(),rec=sw.find(x=>x.id===id);if(!rec)return;
+    const de=this.dayEdits(),cpKey='schedule:plan:'+CLASS_PLAN.key,cp=this.load(cpKey,{});
+    [rec.a,rec.b].forEach(x=>{de[x.ds]=de[x.ds]||{};if(x.day)de[x.ds][x.p]=x.day;else delete de[x.ds][x.p];if(!Object.keys(de[x.ds]).length)delete de[x.ds]});
+    this.save('schedule:classDay',de);
+    [rec.a,rec.b].forEach(x=>this.setTopic(x.ds,x.p,x.topic));
+    rec.plans.forEach(x=>{cp[x.c]=cp[x.c]||{};if(x.prev)cp[x.c][x.k]=x.prev;else delete cp[x.c][x.k]});
+    this.save(cpKey,cp);
+    this.save('schedule:swaps',sw.filter(x=>x.id!==id));
+  }
+});
+
 /* 수업 고치기 창 (첫 화면·일정관리 페이지 공용). onDone은 저장 뒤 화면을 다시 그리는 함수 */
 function openClassEditor(ds,p,onDone){
   let dlg=document.getElementById('clsDlg');
   if(!dlg){
     const st=document.createElement('style');
-    st.textContent='#clsDlg{border:0;border-radius:20px;padding:0;width:min(420px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3);font-family:inherit}#clsDlg::backdrop{background:rgba(29,43,83,.45)}#clsDlg form{padding:18px}#clsDlg h3{margin:0 0 10px;font-size:20px;color:#1d2b53}#clsDlg h3 small{display:block;font-size:12px;color:#5b6275;font-weight:500;margin-top:2px}#clsDlg label.f{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:#5b6275}#clsDlg input[type=text]{font:inherit;font-size:15px;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px 10px;width:100%;box-sizing:border-box}#clsDlg .ck{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin:4px 0 8px;cursor:pointer}#clsDlg .ck input{width:18px;height:18px;accent-color:#e63946}#clsDlg .ck.tw{font-size:13px;font-weight:500;color:#5b6275;margin-top:-4px}#clsDlg .ck.tw input{accent-color:#1f9d74;width:16px;height:16px}#clsDlg input[name=topic]{border-color:#bfe6d6;background:#f1faf6}#clsDlg .rg{display:flex;gap:6px;margin:4px 0 10px}#clsDlg .rg label{flex:1;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;color:#5b6275}#clsDlg .rg input{display:none}#clsDlg .rg label:has(input:checked){border-color:#1f9d74;background:#e3f5ee;color:#1f9d74}#clsDlg .bt{display:flex;gap:6px;flex-wrap:wrap}#clsDlg .bt .sp{flex:1}#clsDlg button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 13px;border:1.5px solid #e3e6ee;background:#fff;color:#1d2b53;cursor:pointer}#clsDlg button.main{background:#1f9d74;border-color:#1f9d74;color:#fff}#clsDlg .hint{font-size:12px;color:#5b6275;margin:8px 0 0}';
+    st.textContent='#clsDlg{border:0;border-radius:20px;padding:0;width:min(420px,calc(100vw - 24px));box-shadow:0 20px 50px rgba(29,43,83,.3);font-family:inherit}#clsDlg::backdrop{background:rgba(29,43,83,.45)}#clsDlg form{padding:18px}#clsDlg h3{margin:0 0 10px;font-size:20px;color:#1d2b53}#clsDlg h3 small{display:block;font-size:12px;color:#5b6275;font-weight:500;margin-top:2px}#clsDlg label.f{display:grid;gap:3px;margin-bottom:9px;font-size:13px;font-weight:700;color:#5b6275}#clsDlg input[type=text]{font:inherit;font-size:15px;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px 10px;width:100%;box-sizing:border-box}#clsDlg .ck{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;margin:4px 0 8px;cursor:pointer}#clsDlg .ck input{width:18px;height:18px;accent-color:#e63946}#clsDlg .ck.tw{font-size:13px;font-weight:500;color:#5b6275;margin-top:-4px}#clsDlg .ck.tw input{accent-color:#1f9d74;width:16px;height:16px}#clsDlg input[name=topic]{border-color:#bfe6d6;background:#f1faf6}#clsDlg .rg{display:flex;gap:6px;margin:4px 0 10px}#clsDlg .rg label{flex:1;border:1.5px solid #e3e6ee;border-radius:10px;padding:7px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;color:#5b6275}#clsDlg .rg input{display:none}#clsDlg .rg label:has(input:checked){border-color:#1f9d74;background:#e3f5ee;color:#1f9d74}#clsDlg .bt{display:flex;gap:6px;flex-wrap:wrap}#clsDlg .bt .sp{flex:1}#clsDlg button{font:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:6px 13px;border:1.5px solid #e3e6ee;background:#fff;color:#1d2b53;cursor:pointer}#clsDlg button.main{background:#1f9d74;border-color:#1f9d74;color:#fff}#clsDlg details.sw{border:1.5px solid #cfe0f7;background:#f4f8fe;border-radius:12px;padding:8px 10px;margin:2px 0 10px}#clsDlg details.sw summary{cursor:pointer;font-weight:700;font-size:14px;color:#2f6fd6}#clsDlg .swr{display:grid;grid-template-columns:1fr 1.3fr auto;gap:6px;margin-top:8px}#clsDlg .swr input,#clsDlg .swr select{font:inherit;font-size:14px;border:1.5px solid #e3e6ee;border-radius:10px;padding:6px 8px;min-width:0;background:#fff}#clsDlg .swr button.main{background:#2f6fd6;border-color:#2f6fd6}@media (max-width:420px){#clsDlg .swr{grid-template-columns:1fr 1fr}#clsDlg .swr button{grid-column:1/-1}}#clsDlg .hint{font-size:12px;color:#5b6275;margin:8px 0 0}';
     document.head.appendChild(st);
     dlg=document.createElement('dialog');dlg.id='clsDlg';
     dlg.innerHTML='<form><h3 id="clsT"></h3>'
@@ -133,7 +179,8 @@ function openClassEditor(ds,p,onDone){
       +'<label class="f">메모<input type="text" name="memo" maxlength="60" placeholder="예) 담임 요청으로 교체, 보강"></label>'
       +'<label class="ck"><input type="checkbox" name="cancel">이 날 휴강 (수업 없음 표시)</label>'
       +'<div class="rg"><label><input type="radio" name="scope" value="day" checked>이 날만</label><label><input type="radio" name="scope" value="week">매주 이 시간</label></div>'
-      +'<div class="bt"><button type="button" id="clsDay">이 날 원래대로</button><button type="button" id="clsWeek">매주 원래대로</button><span class="sp"></span><button type="button" id="clsCancel">취소</button><button type="submit" class="main">저장</button></div>'
+      +'<details class="sw"><summary>🔄 수업 교환·이동</summary><div class="swr"><input type="date" name="swDate"><select name="swP"></select><button type="button" id="clsSwap" class="main">교환하기</button></div><p class="hint" style="margin:6px 0 0">고른 시간에 수업이 있으면 <b>서로 바꾸고</b>, 비어 있으면 그 시간으로 <b>옮겨요</b>. 주제와 반별 진로설계 일정도 함께 따라가요.</p></details>'
+      +'<div class="bt"><button type="button" id="clsUnswap">교환 취소</button><button type="button" id="clsDay">이 날 원래대로</button><button type="button" id="clsWeek">매주 원래대로</button><span class="sp"></span><button type="button" id="clsCancel">취소</button><button type="submit" class="main">저장</button></div>'
       +'<p class="hint">주제는 그 날 수업에만 붙어요. 매주 이 시간을 고르면 시간표 자체가 바뀌어요. 반별 진로설계 일정은 일정관리의 반별 표에서 고쳐요.</p></form>';
     document.body.appendChild(dlg);
     const f=dlg.querySelector('form');
@@ -163,6 +210,16 @@ function openClassEditor(ds,p,onDone){
     dlg.close();onDone&&onDone()};
   dlg.querySelector('#clsDay').onclick=()=>{SCHED.clearClassDay(ds,p);dlg.close();onDone&&onDone()};
   dlg.querySelector('#clsWeek').onclick=()=>{SCHED.resetWeekly(ds,p);dlg.close();onDone&&onDone()};
+  /* 교환·이동 */
+  const sw=dlg.querySelector('details.sw');sw.open=false;
+  const fillP=()=>{const tb=SCHED.dayTable(f.swDate.value||ds);f.swP.innerHTML=PERIODS.map((t,i)=>{const q=i+1;if((f.swDate.value||ds)===ds&&q===p)return '';const o=tb[q];
+      return '<option value="'+q+'">'+q+'교시 · '+(o&&o.name&&o.name!=='x'?o.name+' (서로 교환)':'비어 있음 (옮기기)')+'</option>'}).join('')};
+  f.swDate.value=ds;fillP();f.swDate.onchange=fillP;
+  dlg.querySelector('#clsSwap').onclick=()=>{const d2=f.swDate.value||ds,p2=+f.swP.value;if(!p2)return;
+    const err=SCHED.swap(ds,p,d2,p2);if(err){alert(err);return}dlg.close();onDone&&onDone()};
+  dlg.querySelector('#clsSwap').disabled=!cur.name||cur.name==='x';
+  const un=dlg.querySelector('#clsUnswap');un.hidden=!cur.swap||!SCHED.swaps().some(x=>x.id===cur.swap);
+  un.onclick=()=>{SCHED.unswap(cur.swap);dlg.close();onDone&&onDone()};
   dlg.showModal();f.name.focus();
 }
 

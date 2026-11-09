@@ -543,7 +543,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 
   /* 백업 */
   $('#exportBtn').onclick=()=>{
-    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,fixedEdits:SCHED.edits(),ttEdits:SCHED.ttEdits(),classDay:SCHED.dayEdits(),topics:SCHED.topics(),plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
+    const blob=new Blob([JSON.stringify({app:'it-career-schedule',v:1,events:mine,fixedEdits:SCHED.edits(),ttEdits:SCHED.ttEdits(),classDay:SCHED.dayEdits(),topics:SCHED.topics(),swaps:SCHED.swaps(),plans:{[CLASS_PLAN.key]:cp}},null,2)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='일정관리-백업-'+today+'.json';
     document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   };
@@ -560,6 +560,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
       if(j.ttEdits&&typeof j.ttEdits==='object'){SCHED.save('schedule:ttEdits',j.ttEdits);SCHED.refreshTT()}
       if(j.classDay&&typeof j.classDay==='object')SCHED.save('schedule:classDay',j.classDay);
       if(j.topics&&typeof j.topics==='object')SCHED.save('schedule:topics',j.topics);
+      if(Array.isArray(j.swaps))SCHED.save('schedule:swaps',j.swaps);
       if(j.plans&&j.plans[CLASS_PLAN.key]){cp=j.plans[CLASS_PLAN.key];save(CPKEY,cp)}
       save(KEY,mine);renderAll();alert(n+'개 일정을 가져왔어요.'+(j.plans?' 반별 일정도 불러왔어요.':''));
     }catch(err){alert('백업 파일을 읽지 못했어요.')}
@@ -648,7 +649,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
     $('#allList').innerHTML=h;
   }
 
-  function renderAll(){renderFilters();renderCal();renderSel();renderUp();renderTT();renderPlan();renderAllList()}
+  function renderAll(){cp=load(CPKEY,{});renderFilters();renderCal();renderSel();renderUp();renderTT();renderPlan();renderAllList()}
   setView(viewMode);
   renderAll();
 })();
