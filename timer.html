@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>꿈it(잇)다 수업 타이머</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1d2b53;--bg:#f4f6fb;--ink:#1f2433;--sub:#5b6275;--line:#e3e6ee;
+  --red:#e63946;--orange:#f57c00;--green:#1f9d74;--blue:#2f6fd6;--yellow:#ffc928;--purple:#8e44ad}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header{background:var(--navy);color:#fff}
+.hd{display:flex;align-items:center;gap:14px;padding:12px 16px}
+.logo{width:62px;height:48px;background:#fff;border-radius:14px;display:grid;place-items:center;flex:none;text-decoration:none}
+.hd h1{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(22px,4.4vw,32px);line-height:1.2}
+.hd h1 b{color:var(--yellow);font-weight:400}
+.hd p{margin:2px 0 0;opacity:.85;font-size:clamp(12px,2.4vw,15px)}
+.bar{height:7px;background:linear-gradient(90deg,var(--red) 0 25%,var(--orange) 25% 50%,var(--green) 50% 75%,var(--blue) 75%)}
+.hd-btns{margin-left:auto;flex:none;display:flex;gap:8px;align-items:center}
+.go-home,.home-btn{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:900;font-size:14px;border-radius:999px;padding:7px 14px;white-space:nowrap}
+.go-home{background:#fff;color:var(--navy)}
+.go-home:hover{background:var(--yellow)}
+.home-btn{color:#fff;font-weight:700;font-size:13px;border:1.5px solid rgba(255,255,255,.45);padding:6px 12px}
+.go-home svg,.home-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fab-home{position:fixed;left:16px;bottom:16px;z-index:50;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;text-decoration:none;box-shadow:0 6px 16px rgba(29,43,83,.3);border:3px solid #fff}
+.fab-home svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.fab-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.tabs{display:flex;gap:4px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:4px;width:max-content;max-width:100%;margin:20px auto 16px;overflow-x:auto}
+.tabs button{border:0;background:none;font:inherit;font-weight:700;font-size:15px;color:var(--sub);border-radius:999px;padding:7px 18px;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--navy);color:#fff}
+.box{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--line);background:#fff;color:var(--navy);font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:8px 16px;cursor:pointer;min-height:42px}
+.btn:hover{border-color:var(--navy)}
+.btn.go{background:var(--green);border-color:var(--green);color:#fff;min-width:120px;font-size:17px}
+.btn.go.pause{background:var(--orange);border-color:var(--orange)}
+.btn.sm{font-size:14px;padding:5px 12px;min-height:36px}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.opts{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:center;margin-top:14px;font-size:14px;color:var(--sub);font-weight:700}
+.opts label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.opts input[type=checkbox]{width:18px;height:18px;accent-color:var(--green)}
+
+/* 큰 타이머 */
+.main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.stage{text-align:center;position:relative}
+.ring{position:relative;width:min(420px,78vw);aspect-ratio:1;margin:0 auto}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .trk{fill:none;stroke:#eef1f7;stroke-width:14}
+.ring .val{fill:none;stroke:var(--green);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset .25s linear,stroke .3s}
+.ring .mid{position:absolute;inset:0;display:grid;place-content:center;gap:4px}
+.big{font-family:'Jua',sans-serif;font-size:clamp(64px,13vw,124px);line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.lbl{font-weight:700;color:var(--sub);font-size:16px;min-height:24px}
+.stage.warn .val{stroke:var(--orange)}.stage.warn .big{color:var(--orange)}
+.stage.end .val{stroke:var(--red)}.stage.end .big{color:var(--red);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.title-in{font:inherit;font-size:18px;font-weight:700;text-align:center;border:0;border-bottom:2px dashed var(--line);background:none;color:var(--navy);width:min(420px,90%);padding:4px;margin-bottom:10px}
+.title-in:focus{outline:none;border-bottom-color:var(--green)}
+.side h3{margin:0 0 8px;font-family:'Jua',sans-serif;font-weight:400;font-size:21px;color:var(--navy)}
+.presets{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.presets button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 0;font:inherit;font-weight:700;font-size:15px;color:var(--navy);cursor:pointer}
+.presets button:hover,.presets button.on{border-color:var(--green);background:#e3f5ee;color:var(--green)}
+.setr{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.setr input{width:64px;font:inherit;font-size:18px;font-weight:700;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:6px}
+.setr span{font-weight:700;color:var(--sub)}
+.adj{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.adj button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:7px 0;font:inherit;font-weight:700;font-size:14px;color:var(--navy);cursor:pointer}
+.adj button:hover{border-color:var(--navy)}
+.laps{list-style:none;margin:12px auto 0;padding:0;max-width:360px;max-height:180px;overflow:auto;text-align:left}
+.laps li{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 6px;font-variant-numeric:tabular-nums;font-weight:700}
+.laps li span{color:var(--sub);font-weight:500}
+
+/* 모둠 */
+.gbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.gbar .row{justify-content:flex-start}
+.gbar select,.gbar input{font:inherit;font-size:15px;font-weight:700;border:1.5px solid var(--line);border-radius:10px;padding:6px 8px;background:#fff}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.g{--c:var(--blue);border:2px solid var(--line);border-radius:20px;padding:12px;text-align:center;background:#fff;position:relative;overflow:hidden}
+.g::before{content:"";position:absolute;left:0;bottom:0;height:6px;width:var(--p,100%);background:var(--c);transition:width .25s linear}
+.g input.nm{font:inherit;font-weight:900;font-size:18px;color:var(--c);border:0;text-align:center;width:100%;background:none;padding:2px}
+.g input.nm:focus{outline:none;background:var(--bg);border-radius:8px}
+.g .t{font-family:'Jua',sans-serif;font-size:52px;line-height:1.1;color:var(--navy);font-variant-numeric:tabular-nums;margin:2px 0 6px}
+.g.warn{border-color:var(--orange)}.g.warn .t{color:var(--orange)}
+.g.end{border-color:var(--red);background:#fff4f5}.g.end .t{color:var(--red);animation:blink 1s steps(2) infinite}
+.g.run{border-color:var(--c)}
+.g .row{gap:5px}
+.g .mini{display:flex;gap:4px;justify-content:center;margin-top:6px}
+.g .mini button{border:1px solid var(--line);background:#fff;border-radius:8px;font:inherit;font-size:12px;font-weight:700;color:var(--sub);padding:2px 7px;cursor:pointer}
+
+/* 전체화면(TV) */
+body.tv header,body.tv .tabs,body.tv .side,body.tv .opts,body.tv footer,body.tv .fab-home,body.tv .hide-tv{display:none}
+body.tv #mGroup{min-height:100vh;display:flex;flex-direction:column}body.tv .groups{flex:1;align-content:center}
+body.tv{background:#fff}
+body.tv .main{grid-template-columns:1fr}
+body.tv .box{border:0}
+body.tv .ring{width:min(78vh,92vw)}
+body.tv .big{font-size:min(22vh,20vw)}
+body.tv .lbl{font-size:24px}
+body.tv .title-in{font-size:30px}
+body.tv .groups{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+body.tv .g .t{font-size:min(10vh,80px)}
+.exit-tv{display:none;position:fixed;right:14px;top:14px;z-index:60}
+body.tv .exit-tv{display:inline-flex}
+footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
+[hidden]{display:none!important}
+
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .hd{gap:10px;padding:8px 10px}.logo{width:46px;height:38px}.logo svg{width:38px}.hd p{display:none}
+  .go-home span,.home-btn span{display:none}.go-home,.home-btn{padding:8px}
+  .wrap{padding:0 10px}.box{padding:14px;border-radius:18px}.tabs button{padding:6px 12px;font-size:14px}
+  .groups{grid-template-columns:1fr 1fr}.g .t{font-size:38px}.g input.nm{font-size:15px}
+  .btn.go{min-width:96px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hd">
+    <a class="logo" href="index.html" title="처음으로">
+      <svg width="54" height="34" viewBox="0 0 54 34" aria-hidden="true"><g fill="none" stroke-width="4.2" stroke-linecap="round">
+        <path d="M5 30a22 22 0 0 1 44 0" stroke="#e63946"/><path d="M9.5 30a17.5 17.5 0 0 1 35 0" stroke="#f57c00"/>
+        <path d="M14 30a13 13 0 0 1 26 0" stroke="#ffc928"/><path d="M18.5 30a8.5 8.5 0 0 1 17 0" stroke="#1f9d74"/>
+        <path d="M23 30a4 4 0 0 1 8 0" stroke="#2f6fd6"/></g></svg>
+    </a>
+    <div>
+      <h1>꿈it(잇)다 <b>수업 타이머</b></h1>
+      <p>활동 시간·모둠 시간·발표 시간 재기 · 매탄중학교 진로상담실</p>
+    </div>
+    <div class="hd-btns"><a class="go-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a><a class="home-btn" href="https://claude.ai/artifact/4C5DnmqZek1H4vZpxEwwyL" target="_blank" rel="noopener" title="교사 보관함으로 가기"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>교사 보관함</span></a></div>
+  </div>
+  <div class="bar"></div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" id="tabs">
+    <button type="button" data-m="timer" class="on">⏱️ 타이머</button>
+    <button type="button" data-m="group">👥 모둠 타이머</button>
+    <button type="button" data-m="watch">⏲️ 스톱워치</button>
+  </div>
+
+  <!-- 타이머 -->
+  <section id="mTimer" class="main">
+    <div class="box stage" id="stage">
+      <input class="title-in" id="tTitle" maxlength="40" placeholder="활동 이름 (예: 제작계획서 쓰기)">
+      <div class="ring"><svg viewBox="0 0 200 200"><circle class="trk" cx="100" cy="100" r="90"/><circle class="val" id="tRing" cx="100" cy="100" r="90"/></svg>
+        <div class="mid"><div class="big" id="tBig">05:00</div><div class="lbl" id="tLbl">준비</div></div></div>
+      <div class="row" style="margin-top:14px">
+        <button type="button" class="btn go" id="tGo">시작</button>
+        <button type="button" class="btn" id="tReset">다시</button>
+        <button type="button" class="btn" id="tTv1">📺 전체화면</button>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="optVoice" checked>음성 안내</label>
+        <label><input type="checkbox" id="optBeep" checked>알림음</label>
+        <label><input type="checkbox" id="optHalf" checked>절반·1분 남음 알림</label>
+      </div>
+    </div>
+    <aside class="box side">
+      <h3>시간 고르기</h3>
+      <div class="presets" id="presets"></div>
+      <div class="setr"><input type="number" id="setM" min="0" max="180" value="5"><span>분</span><input type="number" id="setS" min="0" max="59" value="0"><span>초</span><button type="button" class="btn sm" id="setApply">맞추기</button></div>
+      <h3>더하기·빼기</h3>
+      <div class="adj">
+        <button type="button" data-a="-60">−1분</button><button type="button" data-a="-30">−30초</button>
+        <button type="button" data-a="30">+30초</button><button type="button" data-a="60">+1분</button>
+      </div>
+    </aside>
+  </section>
+
+  <!-- 모둠 타이머 -->
+  <section id="mGroup" class="box" hidden>
+    <div class="gbar">
+      <div class="row hide-tv">
+        <label style="font-weight:700;color:var(--sub)">모둠 수 <select id="gCount"></select></label>
+        <label style="font-weight:700;color:var(--sub)">시간 <input type="number" id="gMin" min="1" max="120" value="5" style="width:64px">분</label>
+        <button type="button" class="btn sm" id="gApply">모두 맞추기</button>
+      </div>
+      <div class="row">
+        <button type="button" class="btn go sm" id="gAll">모두 시작</button>
+        <button type="button" class="btn sm" id="gStop">모두 멈춤</button>
+        <button type="button" class="btn sm" id="gReset">모두 다시</button>
+        <button type="button" class="btn sm" id="tTv2">📺 전체화면</button>
+      </div>
+    </div>
+    <div class="groups" id="groups"></div>
+    <p style="color:var(--sub);font-size:13px;margin:12px 0 0;text-align:center" class="hide-tv">모둠 이름을 눌러 바꿀 수 있어요. 끝난 모둠은 이름을 불러 음성으로 알려 줘요.</p>
+  </section>
+
+  <!-- 스톱워치 -->
+  <section id="mWatch" class="box stage" hidden>
+    <div class="ring" style="width:min(380px,74vw)"><svg viewBox="0 0 200 200"><circle class="trk" cx="100" cy="100" r="90"/><circle class="val" id="wRing" cx="100" cy="100" r="90" style="stroke:var(--blue)"/></svg>
+      <div class="mid"><div class="big" id="wBig">00:00</div><div class="lbl" id="wLbl">0.0초</div></div></div>
+    <div class="row" style="margin-top:14px">
+      <button type="button" class="btn go" id="wGo">시작</button>
+      <button type="button" class="btn" id="wLap">기록</button>
+      <button type="button" class="btn" id="wReset">다시</button>
+      <button type="button" class="btn" id="tTv3">📺 전체화면</button>
+    </div>
+    <ol class="laps" id="laps"></ol>
+  </section>
+</main>
+<button type="button" class="btn exit-tv" id="exitTv">✕ 전체화면 끝내기</button>
+<footer>꿈it(잇)다 수업 타이머 · 매탄중학교 진로상담실</footer>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+  const fmt=s=>{s=Math.max(0,Math.ceil(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+pad(m):pad(m))+':'+pad(x)};
+  const say=s=>{s=Math.round(s);const m=Math.floor(s/60),x=s%60;return (m?m+'분 ':'')+(x?x+'초':'')||'0초'};
+  const ld=(k,d)=>{try{const v=localStorage.getItem('timer:'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+  const sv=(k,v)=>{try{localStorage.setItem('timer:'+k,JSON.stringify(v))}catch(e){}};
+  const C=2*Math.PI*90;['tRing','wRing'].forEach(id=>{$(id).style.strokeDasharray=C});
+
+  /* 소리·음성 */
+  let ac=null;
+  function beep(n=1,f=880){if(!$('optBeep').checked)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    for(let i=0;i<n;i++){const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+i*.35;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.32)}}catch(e){}}
+  let koVoice=null;
+  function pickVoice(){try{koVoice=speechSynthesis.getVoices().find(v=>/ko/i.test(v.lang))||null}catch(e){}}
+  if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+  function speak(t){if(!$('optVoice').checked||!('speechSynthesis' in window))return;try{const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';if(koVoice)u.voice=koVoice;u.rate=1;speechSynthesis.speak(u)}catch(e){}}
+  ['optVoice','optBeep','optHalf'].forEach(id=>{$(id).checked=ld(id,true);$(id).onchange=()=>sv(id,$(id).checked)});
+
+  /* 탭 */
+  const modes={timer:'mTimer',group:'mGroup',watch:'mWatch'};
+  function setMode(m){document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));for(const k in modes)$(modes[k]).hidden=k!==m;sv('mode',m)}
+  $('tabs').onclick=e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)};
+
+  /* ===== 타이머 ===== */
+  const PRE=[60,180,300,600,900,1200];
+  $('presets').innerHTML=PRE.map(s=>'<button type="button" data-s="'+s+'">'+(s/60)+'분</button>').join('');
+  let total=ld('total',300),left=total,endAt=0,run=false,tick=null,flags={};
+  $('tTitle').value=ld('title','');$('tTitle').oninput=()=>sv('title',$('tTitle').value);
+  function paint(){const st=$('stage');$('tBig').textContent=fmt(left);
+    $('tRing').style.strokeDashoffset=C*(1-(total?left/total:0));
+    st.classList.toggle('warn',run&&left<=Math.min(60,total*.2)&&left>0);st.classList.toggle('end',left<=0&&flags.done);
+    document.querySelectorAll('#presets button').forEach(b=>b.classList.toggle('on',+b.dataset.s===total));
+    $('tGo').textContent=run?'멈춤':(left<total&&left>0?'계속':'시작');$('tGo').classList.toggle('pause',run)}
+  function setTotal(s){s=Math.max(5,Math.min(3*3600,Math.round(s)));stop();total=s;left=s;flags={};sv('total',s);$('tLbl').textContent='준비';
+    $('setM').value=Math.floor(s/60);$('setS').value=s%60;paint()}
+  function loop(){left=(endAt-Date.now())/1000;
+    if($('optHalf').checked){if(total>=120&&!flags.half&&left<=total/2){flags.half=1;speak('절반 지났어요. '+say(left)+' 남았어요');beep(1,660)}
+      if(total>90&&!flags.one&&left<=60){flags.one=1;speak('1분 남았어요');beep(2,660)}}
+    if(!flags.ten&&left<=10&&total>20){flags.ten=1;$('tLbl').textContent='곧 끝나요!'}
+    if(left<=0){left=0;stop();flags.done=1;$('tLbl').textContent='시간 끝!';beep(3,988);
+      const t=$('tTitle').value.trim();speak((t?t+' ':'')+'시간이 끝났어요');}
+    paint()}
+  function start(){if(left<=0){left=total;flags={}}run=true;endAt=Date.now()+left*1000;$('tLbl').textContent=$('tTitle').value.trim()||'진행 중';
+    if(left===total)speak(($('tTitle').value.trim()?$('tTitle').value.trim()+', ':'')+say(total)+' 시작합니다');
+    clearInterval(tick);tick=setInterval(loop,200);paint()}
+  function stop(){run=false;clearInterval(tick);tick=null;paint()}
+  $('tGo').onclick=()=>{if(run){stop();$('tLbl').textContent='멈춤'}else start()};
+  $('tReset').onclick=()=>{stop();left=total;flags={};$('tLbl').textContent='준비';paint()};
+  $('presets').onclick=e=>{const b=e.target.closest('[data-s]');if(b)setTotal(+b.dataset.s)};
+  $('setApply').onclick=()=>setTotal((+$('setM').value||0)*60+(+$('setS').value||0));
+  document.querySelector('.adj').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const d=+b.dataset.a;
+    if(run){endAt+=d*1000;total=Math.max(total+d,5);left=Math.max(0,left+d)}else{total=Math.max(5,total+d);left=total;flags={};sv('total',total)}
+    $('setM').value=Math.floor(total/60);$('setS').value=total%60;paint()};
+
+  /* ===== 모둠 타이머 ===== */
+  const GC=['var(--blue)','var(--orange)','var(--green)','var(--purple)','var(--red)','#0f8fa8','#b8860b','var(--navy)'];
+  $('gCount').innerHTML=[2,3,4,5,6,7,8].map(n=>'<option>'+n+'</option>').join('');
+  let groups=ld('groups',null);
+  function mkGroups(n,sec){const old=groups||[];groups=Array.from({length:n},(_,i)=>({name:(old[i]&&old[i].name)||(i+1)+'모둠',total:sec,left:sec,run:false,endAt:0,done:false}));saveG()}
+  function saveG(){sv('groups',groups.map(g=>({name:g.name,total:g.total,left:g.total,run:false,endAt:0,done:false})))}
+  if(!groups)mkGroups(4,300);else groups.forEach(g=>{g.left=g.total;g.run=false;g.done=false});
+  $('gCount').value=groups.length;$('gMin').value=Math.round(groups[0].total/60);
+  function drawG(){$('groups').innerHTML=groups.map((g,i)=>'<div class="g" id="g'+i+'" style="--c:'+GC[i%GC.length]+'"><input class="nm" data-i="'+i+'" value="'+g.name.replace(/"/g,'&quot;')+'" maxlength="12"><div class="t"></div>'
+      +'<div class="row"><button type="button" class="btn sm" data-go="'+i+'">시작</button><button type="button" class="btn sm" data-rs="'+i+'">다시</button></div>'
+      +'<div class="mini"><button type="button" data-ad="'+i+'" data-v="-60">−1분</button><button type="button" data-ad="'+i+'" data-v="30">+30초</button><button type="button" data-ad="'+i+'" data-v="60">+1분</button></div></div>').join('');paintG()}
+  function paintG(){groups.forEach((g,i)=>{const el=$('g'+i);if(!el)return;el.querySelector('.t').textContent=fmt(g.left);
+    el.style.setProperty('--p',(g.total?g.left/g.total*100:0)+'%');
+    el.classList.toggle('run',g.run);el.classList.toggle('warn',g.run&&g.left<=60);el.classList.toggle('end',g.done);
+    const b=el.querySelector('[data-go]');b.textContent=g.run?'멈춤':(g.done?'끝':(g.left<g.total?'계속':'시작'))})}
+  let gTick=null;
+  function gLoop(){let any=false;groups.forEach(g=>{if(!g.run)return;any=true;g.left=(g.endAt-Date.now())/1000;
+      if(g.left<=0){g.left=0;g.run=false;g.done=true;beep(2,988);speak(g.name+' 시간이 끝났어요')}});
+    paintG();if(!any){clearInterval(gTick);gTick=null}}
+  function gStart(g){if(g.done||g.left<=0){g.left=g.total;g.done=false}g.run=true;g.endAt=Date.now()+g.left*1000;if(!gTick)gTick=setInterval(gLoop,200)}
+  $('groups').addEventListener('click',e=>{const t=e.target;
+    if(t.dataset.go!=null){const g=groups[+t.dataset.go];if(g.run){g.run=false}else gStart(g);paintG()}
+    else if(t.dataset.rs!=null){const g=groups[+t.dataset.rs];g.run=false;g.done=false;g.left=g.total;paintG()}
+    else if(t.dataset.ad!=null){const g=groups[+t.dataset.ad],d=+t.dataset.v;if(g.run)g.endAt+=d*1000;g.left=Math.max(0,g.left+d);g.total=Math.max(g.total+d,30);if(!g.run&&g.left<=0){g.left=g.total}paintG()}});
+  $('groups').addEventListener('input',e=>{if(e.target.dataset.i!=null){groups[+e.target.dataset.i].name=e.target.value||((+e.target.dataset.i+1)+'모둠');saveG()}});
+  $('gApply').onclick=()=>{mkGroups(+$('gCount').value,Math.max(1,+$('gMin').value||5)*60);drawG()};
+  $('gCount').onchange=$('gApply').onclick;
+  $('gAll').onclick=()=>{groups.forEach(g=>{if(!g.run)gStart(g)});speak('모둠 활동 시작합니다');paintG()};
+  $('gStop').onclick=()=>{groups.forEach(g=>g.run=false);paintG()};
+  $('gReset').onclick=()=>{groups.forEach(g=>{g.run=false;g.done=false;g.left=g.total});paintG()};
+  drawG();
+
+  /* ===== 스톱워치 ===== */
+  let wStart=0,wAcc=0,wRun=false,wTick=null,laps=[];
+  const wNow=()=>wAcc+(wRun?Date.now()-wStart:0);
+  function wPaint(){const ms=wNow(),s=ms/1000;$('wBig').textContent=fmt(Math.floor(s));$('wLbl').textContent=(s%60).toFixed(1)+'초';
+    $('wRing').style.strokeDashoffset=C*(1-(s%60)/60);$('wGo').textContent=wRun?'멈춤':(ms?'계속':'시작');$('wGo').classList.toggle('pause',wRun)}
+  $('wGo').onclick=()=>{if(wRun){wAcc=wNow();wRun=false;clearInterval(wTick)}else{wStart=Date.now();wRun=true;wTick=setInterval(wPaint,100)}wPaint()};
+  $('wReset').onclick=()=>{wRun=false;clearInterval(wTick);wAcc=0;laps=[];$('laps').innerHTML='';wPaint()};
+  $('wLap').onclick=()=>{const t=wNow();if(!t)return;const prev=laps.length?laps[laps.length-1]:0;laps.push(t);
+    $('laps').insertAdjacentHTML('afterbegin','<li><b>'+laps.length+'번</b>'+fmt(Math.floor(t/1000))+'<span>+'+((t-prev)/1000).toFixed(1)+'초</span></li>')};
+
+  /* 전체화면(TV) */
+  function tv(on){document.body.classList.toggle('tv',on);try{if(on&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
+      if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+  ['tTv1','tTv2','tTv3'].forEach(id=>$(id).onclick=()=>tv(true));
+  $('exitTv').onclick=()=>tv(false);
+  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('tv')});
+
+  /* 키보드: 스페이스 = 시작/멈춤, R = 다시, F = 전체화면, Esc = 전체화면 끝 */
+  document.addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+    const m=ld('mode','timer');
+    if(e.code==='Space'){e.preventDefault();(m==='watch'?$('wGo'):m==='group'?(groups.some(g=>g.run)?$('gStop'):$('gAll')):$('tGo')).click()}
+    else if(e.key==='r'||e.key==='R'){(m==='watch'?$('wReset'):m==='group'?$('gReset'):$('tReset')).click()}
+    else if(e.key==='f'||e.key==='F'){tv(!document.body.classList.contains('tv'))}
+    else if(e.key==='Escape')tv(false)});
+
+  setTotal(total);setMode(ld('mode','timer'));wPaint();
+})();
+</script>
+<a class="fab-home" href="index.html" title="홈으로"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>홈</span></a>
+</body>
+</html>
