@@ -152,7 +152,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
       </div>
       <div class="opts">
         <label><input type="checkbox" id="optVoice" checked>음성 안내</label>
-        <label><input type="checkbox" id="optBeep" checked>알림음</label>
+        <label><input type="checkbox" id="optBeep" checked>끝나기 5초 전 카운트다운</label>
         <label><input type="checkbox" id="optHalf" checked>절반·1분 남음 알림</label>
       </div>
     </div>
@@ -184,7 +184,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
       </div>
     </div>
     <div class="groups" id="groups"></div>
-    <p style="color:var(--sub);font-size:13px;margin:12px 0 0;text-align:center" class="hide-tv">모둠 이름을 눌러 바꿀 수 있어요. 끝난 모둠은 이름을 불러 음성으로 알려 줘요.</p>
+    <p style="color:var(--sub);font-size:13px;margin:12px 0 0;text-align:center" class="hide-tv">모둠 이름을 눌러 바꿀 수 있어요. 끝난 모둠은 이름을 불러 빠른 음성으로 알려 줘요.</p>
   </section>
 
   <!-- 스톱워치 -->
@@ -213,14 +213,12 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
   const sv=(k,v)=>{try{localStorage.setItem('timer:'+k,JSON.stringify(v))}catch(e){}};
   const C=2*Math.PI*90;['tRing','wRing'].forEach(id=>{$(id).style.strokeDasharray=C});
 
-  /* 소리·음성 */
-  let ac=null;
-  function beep(n=1,f=880){if(!$('optBeep').checked)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
-    for(let i=0;i<n;i++){const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+i*.35;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.25,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.32)}}catch(e){}}
+  /* 음성 알림 (빠른 템포) */
   let koVoice=null;
   function pickVoice(){try{koVoice=speechSynthesis.getVoices().find(v=>/ko/i.test(v.lang))||null}catch(e){}}
   if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
-  function speak(t){if(!$('optVoice').checked||!('speechSynthesis' in window))return;try{const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';if(koVoice)u.voice=koVoice;u.rate=1;speechSynthesis.speak(u)}catch(e){}}
+  function speak(t,cut){if(!$('optVoice').checked||!('speechSynthesis' in window))return;try{if(cut)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';if(koVoice)u.voice=koVoice;u.rate=1.45;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+  const CD=['','하나','둘','셋','넷','다섯'];
   ['optVoice','optBeep','optHalf'].forEach(id=>{$(id).checked=ld(id,true);$(id).onchange=()=>sv(id,$(id).checked)});
 
   /* 탭 */
@@ -241,11 +239,12 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
   function setTotal(s){s=Math.max(5,Math.min(3*3600,Math.round(s)));stop();total=s;left=s;flags={};sv('total',s);$('tLbl').textContent='준비';
     $('setM').value=Math.floor(s/60);$('setS').value=s%60;paint()}
   function loop(){left=(endAt-Date.now())/1000;
-    if($('optHalf').checked){if(total>=120&&!flags.half&&left<=total/2){flags.half=1;speak('절반 지났어요. '+say(left)+' 남았어요');beep(1,660)}
-      if(total>90&&!flags.one&&left<=60){flags.one=1;speak('1분 남았어요');beep(2,660)}}
+    if($('optHalf').checked){if(total>=120&&!flags.half&&left<=total/2){flags.half=1;speak('절반! '+say(left)+' 남았어요!')}
+      if(total>90&&!flags.one&&left<=60){flags.one=1;speak('1분 남았어요!')}}
+    {const c=Math.ceil(left);if($('optBeep').checked&&total>10&&c>=1&&c<=5&&flags.cd!==c){flags.cd=c;speak(CD[c],true)}}
     if(!flags.ten&&left<=10&&total>20){flags.ten=1;$('tLbl').textContent='곧 끝나요!'}
-    if(left<=0){left=0;stop();flags.done=1;$('tLbl').textContent='시간 끝!';beep(3,988);
-      const t=$('tTitle').value.trim();speak((t?t+' ':'')+'시간이 끝났어요');}
+    if(left<=0){left=0;stop();flags.done=1;$('tLbl').textContent='시간 끝!';
+      const t=$('tTitle').value.trim();speak('땡! 시간 끝!'+(t?' '+t+' 끝났어요!':''),true);}
     paint()}
   function start(){if(left<=0){left=total;flags={}}run=true;endAt=Date.now()+left*1000;$('tLbl').textContent=$('tTitle').value.trim()||'진행 중';
     if(left===total)speak(($('tTitle').value.trim()?$('tTitle').value.trim()+', ':'')+say(total)+' 시작합니다');
@@ -276,7 +275,7 @@ footer{text-align:center;color:var(--sub);font-size:13px;padding:24px 0 80px}
     const b=el.querySelector('[data-go]');b.textContent=g.run?'멈춤':(g.done?'끝':(g.left<g.total?'계속':'시작'))})}
   let gTick=null;
   function gLoop(){let any=false;groups.forEach(g=>{if(!g.run)return;any=true;g.left=(g.endAt-Date.now())/1000;
-      if(g.left<=0){g.left=0;g.run=false;g.done=true;beep(2,988);speak(g.name+' 시간이 끝났어요')}});
+      if(g.left<=0){g.left=0;g.run=false;g.done=true;speak(g.name+' 끝!')}});
     paintG();if(!any){clearInterval(gTick);gTick=null}}
   function gStart(g){if(g.done||g.left<=0){g.left=g.total;g.done=false}g.run=true;g.endAt=Date.now()+g.left*1000;if(!gTick)gTick=setInterval(gLoop,200)}
   $('groups').addEventListener('click',e=>{const t=e.target;
