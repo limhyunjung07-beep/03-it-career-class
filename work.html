@@ -265,6 +265,21 @@ body{background:#f4f3ef}
 .backbar .cur{font-weight:900;color:var(--navy);font-size:16px}
 @media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:480px){.tiles{grid-template-columns:1fr}}
+.items li.mine{position:relative}
+.items li.mine a{padding-right:44px}
+.rm-link{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--sub);font:inherit;font-size:18px;font-weight:700;width:30px;height:30px;border-radius:8px;cursor:pointer}
+.rm-link:hover{background:#fff;color:var(--red)}
+.rm-link.sure{background:var(--red);color:#fff;width:auto;padding:0 10px;font-size:12px;font-weight:900}
+.card-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ca-btn{font:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:#1a73e8;color:#fff;border:1px solid #1a73e8;border-radius:12px;padding:8px 14px;font-weight:900;font-size:14px}
+.ca-btn:hover{background:#1558b0}
+.ca-btn.ghost{background:#fff;color:var(--c);border-color:var(--cb)}
+.ca-btn.ghost:hover{border-color:var(--c);background:var(--cl)}
+.addlink{display:grid;gap:6px;margin-top:8px;background:var(--cl);border:1px solid var(--cb);border-radius:12px;padding:10px}
+.addlink input{font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:9px;padding:8px 10px;background:#fff;min-width:0}
+.addlink input:focus{outline:none;border-color:var(--c)}
+.al-btns{display:flex;justify-content:flex-end;align-items:center;gap:6px}
+.al-btns .pm-msg{margin-right:auto}
 .flow-btn{font:inherit;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--cl);color:var(--c);border:1px solid var(--cb);border-radius:12px;padding:10px 14px;font-weight:900;font-size:15px;margin-top:4px}
 .flow-btn:hover,.flow-btn.on{background:var(--c);color:#fff;border-color:var(--c)}
 .card .items a{flex-wrap:wrap;gap:2px 10px}.card .items small{margin-left:34px;width:100%}
@@ -495,7 +510,7 @@ const EXTRA_TILES=[{id:'pumui',icon:'🧾',name:'품의',sub:'구입처·품의 
   const COLORS=[['#2f6fd6','#e8f0fc','#c6d8f5'],['#1f9d74','#e6f6ef','#bfe6d6'],['#f57c00','#fff3e3','#fbd9b0'],['#7b4fd6','#efe9fb','#d7cbf3'],['#d6336c','#fdebf1','#f5c2d3']];
 
   let custom=load('work:custom',[]);
-  let tab=TABS[0].id, sel=null, editing=null, sureDel=false;
+  let tab=TABS[0].id, sel=null, editing=null, sureDel=false, addingLink=null, sureLink=null;
   const works=()=>BUILTIN.map(w=>({...w,builtin:true})).concat(custom.map(w=>({...w,builtin:false})));
   const inTab=t=>works().filter(w=>(w.tab||'contest')===t);
   const cvars=i=>{const c=COLORS[i%COLORS.length];return '--c:'+c[0]+';--cl:'+c[1]+';--cb:'+c[2]};
@@ -508,12 +523,17 @@ const EXTRA_TILES=[{id:'pumui',icon:'🧾',name:'품의',sub:'구입처·품의 
     $('tabTitle').textContent=t.name;$('tabSub').textContent=t.sub;
     $('workCards').innerHTML=list.map((w,i)=>{
       const tags=(w.tags||[]).map(x=>'<span class="tag">'+esc(x)+'</span>').join('');
-      const links=(w.links||[]).filter(l=>safeUrl(l.u)).map((l,k)=>'<li><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(k+1)+'</b>'+esc(l.t)+(l.s?'<small>'+esc(l.s)+'</small>':'')+'</a></li>').join('');
+      const base=(w.links||[]).filter(l=>safeUrl(l.u)),mine=load('work:links:'+w.id,[]).filter(l=>safeUrl(l.u));
+      const links=base.map((l,k)=>'<li><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(k+1)+'</b>'+esc(l.t)+(l.s?'<small>'+esc(l.s)+'</small>':'')+'</a></li>').join('')
+        +mine.map((l,k)=>{const key=w.id+':'+k;return '<li class="mine"><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(base.length+k+1)+'</b>'+esc(l.t)+'<small>'+esc(l.s||'추가한 자료')+'</small></a><button type="button" class="rm-link'+(sureLink===key?' sure':'')+'" data-rmlink="'+esc(key)+'" aria-label="'+esc(l.t)+' 목록에서 빼기">'+(sureLink===key?'빼기':'×')+'</button></li>'}).join('');
+      const dv=safeUrl(driveOf(w.tab||'contest'));
+      const act='<div class="card-act">'+(dv?'<a class="ca-btn" href="'+esc(dv)+'" target="_blank" rel="noopener">📤 드라이브에 파일 올리기</a>':'')+'<button type="button" class="ca-btn ghost" data-addlink="'+esc(w.id)+'">＋ 자료 추가</button></div>'
+        +(addingLink===w.id?'<form class="addlink" data-addform="'+esc(w.id)+'" autocomplete="off"><input name="t" placeholder="자료 이름 (예: 대회 결과)" aria-label="자료 이름"><input name="u" inputmode="url" placeholder="드라이브 파일 주소 (https://...)" aria-label="자료 주소"><div class="al-btns"><span class="pm-msg err" data-almsg></span><button type="button" class="btn ghost sm" data-alcancel>취소</button><button type="submit" class="btn sm">추가</button></div></form>':'');
       return '<section class="card" style="'+cvars(i)+'"><div class="in">'
         +'<div class="top"><span class="badge">업무 '+pad(i+1)+'</span>'+tags+'</div>'
         +'<h3>'+esc(w.title)+'</h3>'+(w.desc?'<p>'+esc(w.desc)+'</p>':'')
         +(stepsOf(w).length?'<button type="button" class="flow-btn'+(sel===w.id?' on':'')+'" data-pick="'+esc(w.id)+'">업무 흐름 보기 <span>'+(sel===w.id?'▴':'▾')+'</span></button>':'')
-        +(links?'<ul class="items">'+links+'</ul>':'')+'</div></section>';
+        +(links?'<ul class="items">'+links+'</ul>':'')+act+'</div></section>';
     }).join('')+'<button type="button" class="add-card" id="addWork"><div><span>+</span>새 업무 추가</div></button>';
     renderFlow();
   }
@@ -610,6 +630,25 @@ const EXTRA_TILES=[{id:'pumui',icon:'🧾',name:'품의',sub:'구입처·품의 
     if(e.target.closest('#addWork')){openEditor(null);return}
     const p=e.target.closest('[data-pick]');
     if(p){sel=sel===p.dataset.pick?null:p.dataset.pick;history.replaceState(null,'','#'+(sel?'w-'+sel:'t-'+tab));renderTab();if(sel)$('flowView').scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+
+  /* 카드 자료 추가 (드라이브 파일 주소를 카드에 등록) */
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('[data-addlink]');
+    if(a){addingLink=addingLink===a.dataset.addlink?null:a.dataset.addlink;sureLink=null;renderTab();const f=document.querySelector('[data-addform] input');if(f)f.focus();return}
+    if(e.target.closest('[data-alcancel]')){addingLink=null;renderTab();return}
+    const r=e.target.closest('[data-rmlink]');
+    if(r){const key=r.dataset.rmlink;if(sureLink!==key){sureLink=key;renderTab();return}
+      const i=key.lastIndexOf(':'),id=key.slice(0,i),k=+key.slice(i+1);const arr=load('work:links:'+id,[]);arr.splice(k,1);store('work:links:'+id,arr);sureLink=null;renderTab()}
+  });
+  document.addEventListener('submit',e=>{
+    const f=e.target.closest('[data-addform]');if(!f)return;e.preventDefault();
+    const t=f.t.value.trim();let u=f.u.value.trim();if(u&&!/^https?:\/\//i.test(u))u='https://'+u;
+    const msg=f.querySelector('[data-almsg]');
+    if(!t){msg.textContent='자료 이름을 적어 주세요.';f.t.focus();return}
+    if(!safeUrl(u)){msg.textContent='파일 주소를 붙여 넣어 주세요.';f.u.focus();return}
+    const id=f.dataset.addform,arr=load('work:links:'+id,[]);
+    arr.push({t,u,s:/drive\.google\.com|docs\.google\.com/i.test(u)?'구글 드라이브':'추가한 자료'});store('work:links:'+id,arr);addingLink=null;renderTab();
   });
 
   /* 업무 추가·수정 */
