@@ -526,9 +526,7 @@ const EXTRA_TILES=[{id:'pumui',icon:'🧾',name:'품의',sub:'구입처·품의 
       const base=(w.links||[]).filter(l=>safeUrl(l.u)),mine=load('work:links:'+w.id,[]).filter(l=>safeUrl(l.u));
       const links=base.map((l,k)=>'<li><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(k+1)+'</b>'+esc(l.t)+(l.s?'<small>'+esc(l.s)+'</small>':'')+'</a></li>').join('')
         +mine.map((l,k)=>{const key=w.id+':'+k;return '<li class="mine"><a href="'+esc(l.u)+'" target="_blank" rel="noopener"><b>'+(base.length+k+1)+'</b>'+esc(l.t)+'<small>'+esc(l.s||'추가한 자료')+'</small></a><button type="button" class="rm-link'+(sureLink===key?' sure':'')+'" data-rmlink="'+esc(key)+'" aria-label="'+esc(l.t)+' 목록에서 빼기">'+(sureLink===key?'빼기':'×')+'</button></li>'}).join('');
-      const dv=safeUrl(driveOf(w.tab||'contest'));
-      const act='<div class="card-act">'+(dv?'<a class="ca-btn" href="'+esc(dv)+'" target="_blank" rel="noopener">📤 드라이브에 파일 올리기</a>':'')+'<button type="button" class="ca-btn ghost" data-addlink="'+esc(w.id)+'">＋ 자료 추가</button></div>'
-        +(addingLink===w.id?'<form class="addlink" data-addform="'+esc(w.id)+'" autocomplete="off"><input name="t" placeholder="자료 이름 (예: 대회 결과)" aria-label="자료 이름"><input name="u" inputmode="url" placeholder="드라이브 파일 주소 (https://...)" aria-label="자료 주소"><div class="al-btns"><span class="pm-msg err" data-almsg></span><button type="button" class="btn ghost sm" data-alcancel>취소</button><button type="submit" class="btn sm">추가</button></div></form>':'');
+      const act='';
       return '<section class="card" style="'+cvars(i)+'"><div class="in">'
         +'<div class="top"><span class="badge">업무 '+pad(i+1)+'</span>'+tags+'</div>'
         +'<h3>'+esc(w.title)+'</h3>'+(w.desc?'<p>'+esc(w.desc)+'</p>':'')
