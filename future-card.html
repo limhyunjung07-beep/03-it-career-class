@@ -217,6 +217,29 @@ input[type=text]:focus{ outline:none; border-color:var(--accent); box-shadow:0 0
 .btn.primary{ background:var(--ui-ink); color:#fff; }
 .btn[disabled]{ opacity:.6; cursor:progress; }
 
+/* ---------- 반 고르기 ---------- */
+#classDlg{ width:min(94vw, 560px); text-align:center; padding:22px 18px 18px; }
+#classDlg h3{ font-size:1.35rem; margin:0 0 4px; }
+#classDlg .sub{ margin:0 0 14px; color:var(--ui-sub); font-size:.95rem; word-break:keep-all; }
+#classDlg .sub b{ color:#9a4a14; }
+.cls-pick{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.cls-pick button{ min-height:64px; border-radius:14px; border:1.5px solid var(--line); background:#fff; color:var(--ui-ink); font:inherit; font-size:1.3rem; font-weight:800; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; }
+.cls-pick button small{ font-size:.72rem; font-weight:600; color:var(--ui-sub); }
+.cls-pick button[aria-pressed="true"]{ background:#f5b301; border-color:#f5b301; color:#1d2b53; box-shadow:0 0 0 3px rgba(245,179,1,.35); }
+.cls-pick button[aria-pressed="true"] small{ color:#1d2b53; }
+.cls-pick button:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+.cls-confirm{ margin-top:16px; padding:14px 12px 12px; border-radius:14px; background:#fff6dd; border:1.5px solid #f5b301; }
+.cls-confirm p{ margin:0; font-weight:700; }
+.cls-confirm p b{ font-size:1.3rem; color:#9a4a14; }
+.cls-confirm .warn2{ margin-top:4px; font-size:.86rem; color:var(--ui-sub); font-weight:600; }
+.cls-confirm .actions{ margin-top:12px; }
+.my-class{ display:inline-flex; align-items:center; gap:6px; margin-top:8px; min-height:40px; padding:0 14px; border-radius:999px; border:0; background:#f5b301; color:#1d2b53; font:inherit; font-weight:800; font-size:.95rem; cursor:pointer; }
+.my-class small{ font-weight:600; font-size:.78rem; opacity:.8; text-decoration:underline; }
+.qr-grid.one{ grid-template-columns:minmax(0,200px); justify-content:center; max-width:none; }
+.qr-grid.one .qr-card{ border-color:#f5b301; box-shadow:0 0 0 2px #f5b301 inset; padding:10px 10px 8px; }
+.qr-grid.one .qr-card strong{ font-size:1.05rem; }
+.classes.one{ grid-template-columns:1fr; }
+
 /* ---------- 저장 대화상자 ---------- */
 dialog{
   width:min(92vw, 520px); max-height:92vh; border:0; border-radius:18px; padding:18px;
@@ -264,6 +287,7 @@ dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
   <div class="ttl">
     <h1>20년 후 나의 명함</h1>
     <p>2046년, 나는 어떤 일을 하고 있을까요? 상상하며 명함을 만들어 보세요.</p>
+    <button type="button" class="my-class" id="myClassBtn" hidden></button>
   </div>
   <button type="button" class="page-qr" id="pageQr" aria-label="이 페이지 QR 코드 크게 보기"><svg viewBox="0 0 41 41" shape-rendering="crispEdges" aria-hidden="true"><rect width="41" height="41" fill="#fff"/><path fill="#111" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h2v1h-2zM26 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h3v1h-3zM15 3h1v1h-1zM17 3h3v1h-3zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM26 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM16 6h1v1h-1zM18 6h5v1h-5zM24 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM14 7h3v1h-3zM19 7h2v1h-2zM23 7h1v1h-1zM25 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM17 9h1v1h-1zM22 9h1v1h-1zM27 9h4v1h-4zM2 10h1v1h-1zM5 10h7v1h-7zM13 10h2v1h-2zM17 10h2v1h-2zM20 10h3v1h-3zM26 10h1v1h-1zM28 10h1v1h-1zM31 10h1v1h-1zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h4v1h-4zM7 11h1v1h-1zM9 11h2v1h-2zM13 11h2v1h-2zM19 11h1v1h-1zM22 11h1v1h-1zM24 11h2v1h-2zM29 11h1v1h-1zM33 11h2v1h-2zM36 11h2v1h-2zM2 12h1v1h-1zM7 12h2v1h-2zM10 12h2v1h-2zM13 12h2v1h-2zM16 12h1v1h-1zM19 12h2v1h-2zM23 12h1v1h-1zM25 12h2v1h-2zM29 12h1v1h-1zM33 12h1v1h-1zM38 12h1v1h-1zM2 13h6v1h-6zM9 13h4v1h-4zM15 13h3v1h-3zM19 13h1v1h-1zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h2v1h-2zM31 13h2v1h-2zM35 13h4v1h-4zM3 14h7v1h-7zM11 14h4v1h-4zM21 14h2v1h-2zM24 14h3v1h-3zM29 14h2v1h-2zM32 14h2v1h-2zM38 14h1v1h-1zM7 15h1v1h-1zM9 15h4v1h-4zM14 15h2v1h-2zM17 15h4v1h-4zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h4v1h-4zM34 15h2v1h-2zM5 16h4v1h-4zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h4v1h-4zM19 16h1v1h-1zM21 16h4v1h-4zM26 16h4v1h-4zM31 16h1v1h-1zM34 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM9 17h2v1h-2zM14 17h1v1h-1zM18 17h3v1h-3zM24 17h3v1h-3zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h2v1h-2zM5 18h1v1h-1zM7 18h2v1h-2zM11 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM18 18h2v1h-2zM22 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM5 19h3v1h-3zM10 19h2v1h-2zM13 19h4v1h-4zM18 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM27 19h3v1h-3zM31 19h1v1h-1zM33 19h1v1h-1zM36 19h1v1h-1zM7 20h2v1h-2zM11 20h1v1h-1zM17 20h1v1h-1zM22 20h1v1h-1zM25 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM34 20h2v1h-2zM38 20h1v1h-1zM4 21h4v1h-4zM12 21h1v1h-1zM14 21h2v1h-2zM26 21h7v1h-7zM35 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM6 22h3v1h-3zM10 22h2v1h-2zM15 22h1v1h-1zM17 22h4v1h-4zM22 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM31 22h5v1h-5zM2 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM9 23h4v1h-4zM14 23h1v1h-1zM16 23h2v1h-2zM20 23h2v1h-2zM24 23h2v1h-2zM28 23h2v1h-2zM34 23h1v1h-1zM36 23h1v1h-1zM2 24h1v1h-1zM8 24h1v1h-1zM12 24h3v1h-3zM17 24h4v1h-4zM22 24h4v1h-4zM27 24h7v1h-7zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM5 25h3v1h-3zM11 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM19 25h1v1h-1zM24 25h2v1h-2zM30 25h1v1h-1zM32 25h5v1h-5zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h2v1h-2zM7 26h2v1h-2zM11 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM11 27h3v1h-3zM15 27h2v1h-2zM18 27h2v1h-2zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h3v1h-3zM31 27h1v1h-1zM33 27h3v1h-3zM2 28h3v1h-3zM7 28h2v1h-2zM10 28h1v1h-1zM12 28h1v1h-1zM15 28h1v1h-1zM18 28h2v1h-2zM21 28h1v1h-1zM28 28h2v1h-2zM31 28h1v1h-1zM33 28h2v1h-2zM36 28h3v1h-3zM2 29h1v1h-1zM11 29h7v1h-7zM22 29h1v1h-1zM25 29h2v1h-2zM29 29h4v1h-4zM34 29h3v1h-3zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h2v1h-2zM12 30h3v1h-3zM16 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM24 30h14v1h-14zM10 31h1v1h-1zM13 31h1v1h-1zM16 31h3v1h-3zM21 31h4v1h-4zM26 31h1v1h-1zM28 31h3v1h-3zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM16 32h2v1h-2zM21 32h3v1h-3zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM37 32h2v1h-2zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM17 33h1v1h-1zM19 33h3v1h-3zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM38 33h1v1h-1zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h2v1h-2zM17 34h1v1h-1zM21 34h1v1h-1zM26 34h1v1h-1zM29 34h6v1h-6zM37 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h1v1h-1zM22 35h4v1h-4zM28 35h1v1h-1zM30 35h3v1h-3zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h3v1h-3zM17 36h4v1h-4zM22 36h2v1h-2zM25 36h1v1h-1zM28 36h4v1h-4zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM15 37h2v1h-2zM18 37h3v1h-3zM22 37h1v1h-1zM25 37h1v1h-1zM29 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM17 38h1v1h-1zM20 38h1v1h-1zM28 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM38 38h1v1h-1z"/></svg><small>누르면 크게 보여요</small></button>
   <nav class="nav" aria-label="사이트 이동">
@@ -341,12 +365,12 @@ dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
     <h2><span class="num">4</span>우리 반 패들렛에 올려요</h2>
     <ol class="padlet-steps">
       <li><span>위의 <b>PNG로 저장</b>을 눌러 명함 이미지를 저장해요.</span></li>
-      <li><span>아래에서 <b>우리 반 QR</b>을 휴대폰 카메라로 찍거나, 눌러서 패들렛을 열어요.</span></li>
+      <li><span>아래 <b data-cls-name>우리 반</b> QR을 휴대폰 카메라로 찍거나, 눌러서 패들렛을 열어요.</span></li>
       <li><span>패들렛 오른쪽 아래 <b>＋</b> 버튼을 누르고, 저장한 명함 이미지를 올려요.</span></li>
       <li><span>제목에 <b>번호와 이름</b>(예: 15 한서윤)을 쓰고 <b>게시</b>를 눌러요.</span></li>
     </ol>
     <div class="qr-grid" data-classes="qr" aria-label="반별 패들렛 QR"></div>
-    <p class="qr-tip">휴대폰으로 하고 있다면 우리 반 QR을 눌러도 바로 들어가요.</p>
+    <p class="qr-tip">휴대폰으로 하고 있다면 QR을 눌러도 바로 들어가요.</p>
     <p class="padlet-msg" data-padlet-msg aria-live="polite"></p>
   </section>
 </main>
@@ -355,6 +379,20 @@ dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
   <div class="big-qr-box"><svg viewBox="0 0 41 41" shape-rendering="crispEdges" aria-hidden="true"><rect width="41" height="41" fill="#fff"/><path fill="#111" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h2v1h-2zM26 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h3v1h-3zM15 3h1v1h-1zM17 3h3v1h-3zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h2v1h-2zM27 4h1v1h-1zM29 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM26 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM16 6h1v1h-1zM18 6h5v1h-5zM24 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM14 7h3v1h-3zM19 7h2v1h-2zM23 7h1v1h-1zM25 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM17 9h1v1h-1zM22 9h1v1h-1zM27 9h4v1h-4zM2 10h1v1h-1zM5 10h7v1h-7zM13 10h2v1h-2zM17 10h2v1h-2zM20 10h3v1h-3zM26 10h1v1h-1zM28 10h1v1h-1zM31 10h1v1h-1zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h4v1h-4zM7 11h1v1h-1zM9 11h2v1h-2zM13 11h2v1h-2zM19 11h1v1h-1zM22 11h1v1h-1zM24 11h2v1h-2zM29 11h1v1h-1zM33 11h2v1h-2zM36 11h2v1h-2zM2 12h1v1h-1zM7 12h2v1h-2zM10 12h2v1h-2zM13 12h2v1h-2zM16 12h1v1h-1zM19 12h2v1h-2zM23 12h1v1h-1zM25 12h2v1h-2zM29 12h1v1h-1zM33 12h1v1h-1zM38 12h1v1h-1zM2 13h6v1h-6zM9 13h4v1h-4zM15 13h3v1h-3zM19 13h1v1h-1zM24 13h1v1h-1zM26 13h1v1h-1zM28 13h2v1h-2zM31 13h2v1h-2zM35 13h4v1h-4zM3 14h7v1h-7zM11 14h4v1h-4zM21 14h2v1h-2zM24 14h3v1h-3zM29 14h2v1h-2zM32 14h2v1h-2zM38 14h1v1h-1zM7 15h1v1h-1zM9 15h4v1h-4zM14 15h2v1h-2zM17 15h4v1h-4zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h4v1h-4zM34 15h2v1h-2zM5 16h4v1h-4zM10 16h1v1h-1zM12 16h1v1h-1zM14 16h4v1h-4zM19 16h1v1h-1zM21 16h4v1h-4zM26 16h4v1h-4zM31 16h1v1h-1zM34 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM9 17h2v1h-2zM14 17h1v1h-1zM18 17h3v1h-3zM24 17h3v1h-3zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h2v1h-2zM5 18h1v1h-1zM7 18h2v1h-2zM11 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM18 18h2v1h-2zM22 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM5 19h3v1h-3zM10 19h2v1h-2zM13 19h4v1h-4zM18 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM27 19h3v1h-3zM31 19h1v1h-1zM33 19h1v1h-1zM36 19h1v1h-1zM7 20h2v1h-2zM11 20h1v1h-1zM17 20h1v1h-1zM22 20h1v1h-1zM25 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM34 20h2v1h-2zM38 20h1v1h-1zM4 21h4v1h-4zM12 21h1v1h-1zM14 21h2v1h-2zM26 21h7v1h-7zM35 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM6 22h3v1h-3zM10 22h2v1h-2zM15 22h1v1h-1zM17 22h4v1h-4zM22 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM31 22h5v1h-5zM2 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM9 23h4v1h-4zM14 23h1v1h-1zM16 23h2v1h-2zM20 23h2v1h-2zM24 23h2v1h-2zM28 23h2v1h-2zM34 23h1v1h-1zM36 23h1v1h-1zM2 24h1v1h-1zM8 24h1v1h-1zM12 24h3v1h-3zM17 24h4v1h-4zM22 24h4v1h-4zM27 24h7v1h-7zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM5 25h3v1h-3zM11 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM19 25h1v1h-1zM24 25h2v1h-2zM30 25h1v1h-1zM32 25h5v1h-5zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h2v1h-2zM7 26h2v1h-2zM11 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM18 26h3v1h-3zM22 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM11 27h3v1h-3zM15 27h2v1h-2zM18 27h2v1h-2zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h3v1h-3zM31 27h1v1h-1zM33 27h3v1h-3zM2 28h3v1h-3zM7 28h2v1h-2zM10 28h1v1h-1zM12 28h1v1h-1zM15 28h1v1h-1zM18 28h2v1h-2zM21 28h1v1h-1zM28 28h2v1h-2zM31 28h1v1h-1zM33 28h2v1h-2zM36 28h3v1h-3zM2 29h1v1h-1zM11 29h7v1h-7zM22 29h1v1h-1zM25 29h2v1h-2zM29 29h4v1h-4zM34 29h3v1h-3zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h2v1h-2zM12 30h3v1h-3zM16 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM24 30h14v1h-14zM10 31h1v1h-1zM13 31h1v1h-1zM16 31h3v1h-3zM21 31h4v1h-4zM26 31h1v1h-1zM28 31h3v1h-3zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM16 32h2v1h-2zM21 32h3v1h-3zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM37 32h2v1h-2zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM17 33h1v1h-1zM19 33h3v1h-3zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM38 33h1v1h-1zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h2v1h-2zM17 34h1v1h-1zM21 34h1v1h-1zM26 34h1v1h-1zM29 34h6v1h-6zM37 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h1v1h-1zM22 35h4v1h-4zM28 35h1v1h-1zM30 35h3v1h-3zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h3v1h-3zM17 36h4v1h-4zM22 36h2v1h-2zM25 36h1v1h-1zM28 36h4v1h-4zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM15 37h2v1h-2zM18 37h3v1h-3zM22 37h1v1h-1zM25 37h1v1h-1zM29 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM17 38h1v1h-1zM20 38h1v1h-1zM28 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM38 38h1v1h-1z"/></svg></div>
   <p class="big-qr-cap">휴대폰 카메라로 찍어서 명함 만들기에 들어오세요</p>
   <button type="button" class="btn primary" id="bigQrClose">닫기</button>
+</dialog>
+
+<dialog id="classDlg" aria-labelledby="clsTitle">
+  <h3 id="clsTitle">먼저 우리 반을 골라요</h3>
+  <p class="sub">1학년 몇 반인가요? 마지막에 <b>고른 반의 패들렛</b>으로만 명함을 올릴 수 있어요.</p>
+  <div class="cls-pick" id="clsPick" role="group" aria-label="1학년 반 고르기"></div>
+  <div class="cls-confirm" id="clsConfirm" hidden>
+    <p><b id="clsText"></b> 맞나요?</p>
+    <p class="warn2">다른 반을 고르면 다른 반 패들렛에 올라가요!</p>
+    <div class="actions">
+      <button type="button" class="btn" id="clsNo">다시 고를래요</button>
+      <button type="button" class="btn primary" id="clsYes">네, 시작할게요</button>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="saveDlg" aria-labelledby="dlgTitle">
@@ -775,8 +813,7 @@ dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
     7: { url: 'https://padlet.com/maetant240061/1-7-w3t7gjs8oonaba7i', qr: [37, 'M2 2h7v1h-7zM11 2h2v1h-2zM15 2h2v1h-2zM19 2h4v1h-4zM24 2h2v1h-2zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h3v1h-3zM20 3h1v1h-1zM22 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h2v1h-2zM17 4h1v1h-1zM23 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h3v1h-3zM16 5h3v1h-3zM20 5h1v1h-1zM24 5h1v1h-1zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h1v1h-1zM20 6h4v1h-4zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h3v1h-3zM17 7h2v1h-2zM22 7h3v1h-3zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h4v1h-4zM17 9h1v1h-1zM21 9h3v1h-3zM25 9h2v1h-2zM2 10h1v1h-1zM4 10h5v1h-5zM13 10h1v1h-1zM15 10h1v1h-1zM17 10h3v1h-3zM26 10h1v1h-1zM28 10h5v1h-5zM6 11h2v1h-2zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM21 11h2v1h-2zM25 11h1v1h-1zM28 11h2v1h-2zM31 11h4v1h-4zM4 12h1v1h-1zM6 12h5v1h-5zM13 12h2v1h-2zM17 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM24 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM32 12h1v1h-1zM3 13h1v1h-1zM5 13h2v1h-2zM9 13h5v1h-5zM16 13h3v1h-3zM20 13h1v1h-1zM22 13h3v1h-3zM27 13h2v1h-2zM30 13h5v1h-5zM7 14h3v1h-3zM11 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM20 14h3v1h-3zM24 14h2v1h-2zM27 14h1v1h-1zM30 14h2v1h-2zM33 14h2v1h-2zM2 15h2v1h-2zM6 15h2v1h-2zM9 15h2v1h-2zM16 15h3v1h-3zM20 15h2v1h-2zM25 15h1v1h-1zM27 15h3v1h-3zM32 15h3v1h-3zM5 16h1v1h-1zM7 16h2v1h-2zM10 16h1v1h-1zM14 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM26 16h3v1h-3zM30 16h4v1h-4zM4 17h4v1h-4zM11 17h6v1h-6zM18 17h1v1h-1zM20 17h1v1h-1zM23 17h1v1h-1zM25 17h4v1h-4zM32 17h1v1h-1zM2 18h2v1h-2zM7 18h4v1h-4zM12 18h2v1h-2zM16 18h1v1h-1zM18 18h2v1h-2zM24 18h4v1h-4zM29 18h2v1h-2zM34 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h6v1h-6zM16 19h1v1h-1zM19 19h4v1h-4zM25 19h1v1h-1zM27 19h3v1h-3zM31 19h2v1h-2zM34 19h1v1h-1zM2 20h3v1h-3zM6 20h3v1h-3zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h4v1h-4zM19 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM26 20h2v1h-2zM29 20h2v1h-2zM32 20h1v1h-1zM6 21h1v1h-1zM10 21h2v1h-2zM13 21h1v1h-1zM15 21h1v1h-1zM19 21h6v1h-6zM29 21h5v1h-5zM5 22h1v1h-1zM7 22h2v1h-2zM14 22h1v1h-1zM17 22h2v1h-2zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h1v1h-1zM30 22h2v1h-2zM2 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM17 23h1v1h-1zM20 23h4v1h-4zM25 23h1v1h-1zM27 23h2v1h-2zM31 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM6 24h1v1h-1zM8 24h2v1h-2zM13 24h3v1h-3zM17 24h2v1h-2zM20 24h1v1h-1zM31 24h3v1h-3zM2 25h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM11 25h1v1h-1zM13 25h2v1h-2zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h3v1h-3zM30 25h1v1h-1zM32 25h2v1h-2zM2 26h1v1h-1zM4 26h3v1h-3zM8 26h2v1h-2zM11 26h2v1h-2zM15 26h5v1h-5zM24 26h1v1h-1zM26 26h6v1h-6zM33 26h1v1h-1zM10 27h3v1h-3zM14 27h2v1h-2zM20 27h2v1h-2zM26 27h1v1h-1zM30 27h1v1h-1zM32 27h3v1h-3zM2 28h7v1h-7zM14 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM24 28h3v1h-3zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM14 29h2v1h-2zM17 29h2v1h-2zM22 29h2v1h-2zM25 29h2v1h-2zM30 29h3v1h-3zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM14 30h1v1h-1zM17 30h1v1h-1zM20 30h2v1h-2zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h1v1h-1zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h2v1h-2zM17 31h3v1h-3zM21 31h2v1h-2zM25 31h3v1h-3zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h6v1h-6zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h2v1h-2zM31 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h1v1h-1zM23 33h2v1h-2zM27 33h1v1h-1zM30 33h1v1h-1zM32 33h1v1h-1zM2 34h7v1h-7zM10 34h4v1h-4zM16 34h1v1h-1zM18 34h2v1h-2zM24 34h6v1h-6zM33 34h1v1h-1z'] },
     8: { url: 'https://padlet.com/maetant240061/1-8-9cwramh32yse37xp', qr: [37, 'M2 2h7v1h-7zM11 2h2v1h-2zM15 2h2v1h-2zM20 2h6v1h-6zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h2v1h-2zM17 4h1v1h-1zM20 4h1v1h-1zM23 4h2v1h-2zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h5v1h-5zM16 5h3v1h-3zM20 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM14 6h1v1h-1zM17 6h1v1h-1zM20 6h7v1h-7zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h3v1h-3zM17 7h2v1h-2zM23 7h2v1h-2zM26 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h5v1h-5zM17 9h1v1h-1zM23 9h1v1h-1zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM13 10h1v1h-1zM15 10h1v1h-1zM17 10h3v1h-3zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h5v1h-5zM6 11h2v1h-2zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM28 11h2v1h-2zM31 11h4v1h-4zM2 12h1v1h-1zM4 12h1v1h-1zM7 12h5v1h-5zM13 12h2v1h-2zM17 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM32 12h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h5v1h-5zM16 13h3v1h-3zM20 13h1v1h-1zM22 13h2v1h-2zM27 13h2v1h-2zM30 13h5v1h-5zM2 14h1v1h-1zM5 14h1v1h-1zM7 14h4v1h-4zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM20 14h3v1h-3zM24 14h4v1h-4zM29 14h3v1h-3zM33 14h2v1h-2zM2 15h6v1h-6zM10 15h1v1h-1zM13 15h2v1h-2zM16 15h3v1h-3zM20 15h3v1h-3zM24 15h2v1h-2zM27 15h2v1h-2zM32 15h3v1h-3zM4 16h2v1h-2zM7 16h2v1h-2zM10 16h1v1h-1zM13 16h2v1h-2zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM6 17h2v1h-2zM11 17h2v1h-2zM15 17h2v1h-2zM18 17h1v1h-1zM20 17h4v1h-4zM27 17h4v1h-4zM32 17h1v1h-1zM2 18h2v1h-2zM7 18h2v1h-2zM10 18h1v1h-1zM12 18h2v1h-2zM16 18h1v1h-1zM18 18h2v1h-2zM24 18h4v1h-4zM29 18h2v1h-2zM34 18h1v1h-1zM2 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h6v1h-6zM16 19h1v1h-1zM19 19h4v1h-4zM25 19h1v1h-1zM27 19h3v1h-3zM31 19h2v1h-2zM34 19h1v1h-1zM2 20h3v1h-3zM6 20h3v1h-3zM10 20h3v1h-3zM14 20h2v1h-2zM17 20h1v1h-1zM19 20h1v1h-1zM22 20h2v1h-2zM26 20h2v1h-2zM29 20h2v1h-2zM32 20h1v1h-1zM3 21h1v1h-1zM6 21h1v1h-1zM10 21h1v1h-1zM13 21h1v1h-1zM15 21h2v1h-2zM19 21h6v1h-6zM27 21h7v1h-7zM2 22h2v1h-2zM5 22h4v1h-4zM10 22h3v1h-3zM16 22h3v1h-3zM21 22h2v1h-2zM24 22h1v1h-1zM26 22h2v1h-2zM30 22h2v1h-2zM2 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM9 23h2v1h-2zM12 23h1v1h-1zM16 23h2v1h-2zM20 23h2v1h-2zM23 23h3v1h-3zM27 23h3v1h-3zM31 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h2v1h-2zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM31 24h3v1h-3zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h3v1h-3zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h2v1h-2zM26 25h1v1h-1zM30 25h1v1h-1zM32 25h2v1h-2zM2 26h1v1h-1zM4 26h3v1h-3zM8 26h1v1h-1zM11 26h2v1h-2zM15 26h5v1h-5zM24 26h1v1h-1zM26 26h6v1h-6zM33 26h1v1h-1zM10 27h3v1h-3zM14 27h2v1h-2zM20 27h2v1h-2zM23 27h1v1h-1zM26 27h1v1h-1zM30 27h1v1h-1zM32 27h3v1h-3zM2 28h7v1h-7zM11 28h2v1h-2zM14 28h2v1h-2zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM25 28h2v1h-2zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h2v1h-2zM14 29h5v1h-5zM22 29h5v1h-5zM30 29h3v1h-3zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h1v1h-1zM14 30h4v1h-4zM20 30h3v1h-3zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h1v1h-1zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h2v1h-2zM17 31h3v1h-3zM21 31h1v1h-1zM25 31h3v1h-3zM30 31h1v1h-1zM33 31h2v1h-2zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h3v1h-3zM14 32h2v1h-2zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h3v1h-3zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h1v1h-1zM22 33h3v1h-3zM30 33h1v1h-1zM32 33h1v1h-1zM2 34h7v1h-7zM10 34h3v1h-3zM16 34h1v1h-1zM18 34h2v1h-2zM24 34h3v1h-3zM28 34h2v1h-2zM33 34h1v1h-1z'] }
   };
-  let myClass = '';
-  try { myClass = localStorage.getItem('futureCardClass') || ''; } catch (e) {}
+  let myClass = '', pickCls = '';
   function qrSVG(q) {
     const NS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(NS, 'svg');
@@ -786,34 +823,65 @@ dialog .padlet-box p{ margin:0; font-weight:700; text-align:center; }
     const path = document.createElementNS(NS, 'path'); path.setAttribute('d', q[1]); path.setAttribute('fill', '#111');
     svg.append(bg, path); return svg;
   }
-  function pick(n, box, ok) {
-    myClass = String(n);
-    try { localStorage.setItem('futureCardClass', myClass); } catch (er) {}
-    const msg = box.parentElement.querySelector('[data-padlet-msg]');
-    if (msg) msg.textContent = ok ? '' : n + '반 패들렛은 아직 준비 중이에요. 선생님이 알려 준 주소로 들어가세요.';
-    drawClasses();
-  }
+  /* 고른 반의 패들렛만 보여 줘요 (다른 반 패들렛으로 들어가는 것을 막기 위해) */
   function drawClasses() {
+    document.querySelectorAll('[data-cls-name]').forEach(el => { el.textContent = myClass ? `1학년 ${myClass}반` : '우리 반'; });
     document.querySelectorAll('[data-classes]').forEach(box => {
       const asQR = box.dataset.classes === 'qr';
-      box.replaceChildren(...Object.keys(PADLET).map(n => {
-        const item = PADLET[n], url = (item.url || '').trim();
-        const a = document.createElement('a');
-        a.className = (asQR ? 'qr-card' : 'cls') + (String(n) === myClass ? ' mine' : '');
-        if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label', n + '반 패들렛 열기 (새 창)'); }
-        else { a.setAttribute('aria-disabled', 'true'); a.setAttribute('role', 'link'); a.tabIndex = 0; }
-        if (asQR) {
-          const h = document.createElement('strong'); h.textContent = n + '반';
-          const q = document.createElement('span'); q.className = 'qr-img';
-          if (url && item.qr) q.append(qrSVG(item.qr)); else q.textContent = '준비 중';
-          a.append(h, q);
-        } else a.textContent = n + '반';
-        a.addEventListener('click', e => { if (!url) e.preventDefault(); pick(n, box, !!url); });
-        return a;
-      }));
+      box.classList.add('one');
+      const msg = box.parentElement.querySelector('[data-padlet-msg]');
+      if (!myClass) { box.replaceChildren(); return; }
+      const item = PADLET[myClass] || {}, url = (item.url || '').trim();
+      if (msg) msg.textContent = url ? '' : `1학년 ${myClass}반 패들렛은 아직 준비 중이에요. 선생님이 알려 준 주소로 들어가세요.`;
+      if (!url) { box.replaceChildren(); return; }
+      const a = document.createElement('a');
+      a.className = (asQR ? 'qr-card' : 'cls') + ' mine';
+      a.href = url; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', `1학년 ${myClass}반 패들렛 열기 (새 창)`);
+      if (asQR) {
+        const h = document.createElement('strong'); h.textContent = `1학년 ${myClass}반 패들렛`;
+        const q = document.createElement('span'); q.className = 'qr-img';
+        if (item.qr) q.append(qrSVG(item.qr));
+        a.append(h, q);
+      } else a.textContent = `1학년 ${myClass}반 패들렛 열기`;
+      box.replaceChildren(a);
     });
   }
+
+  /* ---------- 반 고르기 ---------- */
+  const classDlg = $('classDlg');
+  function drawPick() {
+    $('clsPick').replaceChildren(...Object.keys(PADLET).map(n => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.innerHTML = `${n}반<small>1학년</small>`;
+      b.setAttribute('aria-label', `1학년 ${n}반`);
+      b.setAttribute('aria-pressed', pickCls === n ? 'true' : 'false');
+      b.addEventListener('click', () => { pickCls = n; drawPick(); $('clsYes').focus(); });
+      return b;
+    }));
+    $('clsConfirm').hidden = !pickCls;
+    if (pickCls) $('clsText').textContent = `1학년 ${pickCls}반`;
+  }
+  function openPick() {
+    pickCls = myClass; drawPick();
+    if (typeof classDlg.showModal === 'function') classDlg.showModal(); else classDlg.setAttribute('open', '');
+  }
+  classDlg.addEventListener('cancel', e => { if (!myClass) e.preventDefault(); });
+  classDlg.addEventListener('close', () => { if (!myClass) setTimeout(openPick, 0); });   // 반을 고르기 전에는 닫히지 않아요
+  $('clsNo').addEventListener('click', () => { pickCls = ''; drawPick(); });
+  $('clsYes').addEventListener('click', () => {
+    if (!pickCls) return;
+    myClass = pickCls;
+    const btn = $('myClassBtn');
+    btn.innerHTML = `🏫 1학년 ${myClass}반 <small>반 바꾸기</small>`;
+    btn.setAttribute('aria-label', `지금 1학년 ${myClass}반. 누르면 반을 다시 골라요`);
+    btn.hidden = false;
+    typeof classDlg.close === 'function' ? classDlg.close() : classDlg.removeAttribute('open');
+    drawClasses();
+  });
+  $('myClassBtn').addEventListener('click', openPick);
   drawClasses();
+  openPick();
 
   /* ---------- 페이지 QR 크게 보기 ---------- */
   const bigQr = $('bigQr');
