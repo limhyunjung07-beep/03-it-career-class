@@ -331,6 +331,20 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   .today li em,.today li small{font-size:10.5px}
   .today li.ed::after{right:5px;font-size:9px}
   .today h4{font-size:11.5px}}
+.quick h3{position:relative}
+.qedit{margin-left:auto;font:inherit;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;color:var(--sub);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:1px 10px;cursor:pointer}
+.qedit:hover{border-color:var(--navy);color:var(--navy)}
+.qedit.on{background:var(--green);border-color:var(--green);color:#fff}
+.qlist .ql{--qc:var(--blue)}
+.qlist div.ql{display:flex;align-items:center;gap:6px;color:var(--ink);background:#fff;border:1.5px dashed var(--line);border-radius:10px;padding:4px 6px;min-width:0}
+.qlist.editing li[draggable]{cursor:grab}
+.qlist li.drag{opacity:.4}.qlist li.over .ql{border-color:var(--green);border-style:solid}
+.qlist .qg{color:#c9ced9;font-size:11px;flex:none;user-select:none}
+.qlist .qb{flex:none;border:0;background:none;cursor:pointer;font-size:12px;padding:0 2px;color:var(--sub)}
+.qlist .qb:first-of-type{margin-left:auto}
+.qadd{width:100%;font:inherit;font-size:13px;font-weight:700;color:var(--green);background:#f1faf6;border:1.5px dashed #9fd8c2;border-radius:10px;padding:6px;cursor:pointer}
+.qtools{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;color:var(--sub)}
+.qtools button{border:0;background:none;font:inherit;font-weight:700;color:var(--red);cursor:pointer;text-decoration:underline;padding:0}
 </style>
 </head>
 <body>
@@ -375,8 +389,9 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     </a>
   </div>
   <aside class="quick" aria-label="자주 쓰는 바로가기">
-    <h3><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>바로가기</h3>
+    <h3><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>바로가기<button type="button" class="qedit" id="qEdit" title="바로가기 고치기">편집</button></h3>
     <ul class="qlist" id="qlist"></ul>
+    <div class="qtools" id="qTools" hidden><span>⋮⋮을 끌어 순서를 바꿔요</span><button type="button" id="qReset">처음 목록으로</button></div>
   </aside>
   <aside class="todo" aria-label="To-do list">
     <h3><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>To-do list <span class="tdn" id="tdCount"></span></h3>
@@ -386,6 +401,14 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   </aside>
   </div>
 </main>
+<dialog class="ev" id="qlDlg"><form id="qlForm">
+  <h3 id="qlTitle">바로가기 고치기</h3>
+  <label>이름<input name="name" required maxlength="30" placeholder="예) 나이스"></label>
+  <label>주소<input name="url" required placeholder="https://..."></label>
+  <div class="r2"><label>아이콘 글자<input name="mark" maxlength="2" placeholder="비우면 첫 글자"></label><label>색<select name="color"></select></label></div>
+  <label>설명 (마우스를 올리면 보여요)<input name="desc" maxlength="60"></label>
+  <div class="bt"><button type="button" id="qlMove">맨 위로</button><span class="sp"></span><button type="button" id="qlCancel">취소</button><button type="submit" class="main">저장</button></div>
+</form></dialog>
 <dialog class="ev" id="evDlg"><form id="evForm">
   <h3 id="evTitle">일정 고치기</h3>
   <label>제목<input name="title" required maxlength="60"></label>
@@ -496,17 +519,66 @@ const QUICK_LINKS=[
   {name:'수업 도구', desc:'수업용 타이머·이해도 체크·소음 신호등', url:'https://jbot.kr/tools?staff=1', mark:'도', color:'blue'},
 ];
 (function(){
-  const C={blue:'var(--blue)',green:'var(--green)',orange:'var(--orange)',red:'var(--red)',navy:'var(--navy)'};
-  const ul=document.getElementById('qlist');
-  QUICK_LINKS.forEach(l=>{
-    const li=document.createElement('li');const a=document.createElement('a');
-    a.href=l.url;a.target='_blank';a.rel='noopener';a.style.setProperty('--qc',C[l.color]||C.blue);
-    a.title=l.desc?l.name+' · '+l.desc:l.name;
-    a.innerHTML='<span class="qi"></span><b></b><span class="ar">↗</span>';
-    a.querySelector('.qi').textContent=l.mark||l.name.slice(0,1);
-    a.querySelector('b').textContent=l.name;
-    li.appendChild(a);ul.appendChild(li);
+  /* 바로가기: 고치거나 추가한 목록은 이 브라우저에 저장. 코드에 새로 넣은 기본 바로가기는 저장된 목록 뒤에 자동으로 붙어요. */
+  const C={blue:'var(--blue)',green:'var(--green)',orange:'var(--orange)',red:'var(--red)',navy:'var(--navy)',purple:'#8e44ad'};
+  const CN={blue:'파랑',green:'초록',orange:'주황',red:'빨강',navy:'남색',purple:'보라'};
+  const K='quick:links',KK='quick:known',$=id=>document.getElementById(id);
+  const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+  const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+  const uid=()=>'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  let links=ld(K,null),editing=false,dragI=null,cur=null;
+  if(links){const known=new Set(ld(KK,[]));QUICK_LINKS.forEach(l=>{if(!known.has(l.url)&&!links.some(x=>x.url===l.url))links.push({...l,id:uid()})})}
+  else links=QUICK_LINKS.map(l=>({...l,id:uid()}));
+  links.forEach(l=>{if(!l.id)l.id=uid()});
+  function save(){sv(K,links);sv(KK,QUICK_LINKS.map(l=>l.url))}
+  if(ld(K,null))save();
+  const ul=$('qlist');
+  function render(){
+    ul.innerHTML='';ul.classList.toggle('editing',editing);
+    links.forEach((l,i)=>{
+      const li=document.createElement('li');
+      const a=document.createElement(editing?'div':'a');
+      if(!editing){a.href=l.url;a.target='_blank';a.rel='noopener'}
+      else{li.draggable=true;li.dataset.i=i}
+      a.className='ql';a.style.setProperty('--qc',C[l.color]||C.blue);
+      a.title=l.desc?l.name+' · '+l.desc:l.name;
+      a.innerHTML=(editing?'<span class="qg" title="끌어서 순서 바꾸기">⋮⋮</span>':'')+'<span class="qi"></span><b></b>'+(editing?'<button type="button" class="qb" data-ed="'+i+'" title="고치기">✏️</button><button type="button" class="qb" data-del="'+i+'" title="지우기">✕</button>':'<span class="ar">↗</span>');
+      a.querySelector('.qi').textContent=l.mark||l.name.slice(0,1);
+      a.querySelector('b').textContent=l.name;
+      li.appendChild(a);ul.appendChild(li);
+    });
+    if(editing){const li=document.createElement('li');li.innerHTML='<button type="button" class="qadd" id="qAdd">＋ 바로가기 추가</button>';ul.appendChild(li)}
+    $('qTools').hidden=!editing;$('qEdit').textContent=editing?'완료':'편집';$('qEdit').classList.toggle('on',editing);
+  }
+  $('qEdit').onclick=()=>{editing=!editing;render()};
+  $('qReset').onclick=()=>{if(confirm('바로가기를 처음 목록으로 되돌릴까요? 추가하거나 고친 내용이 사라져요.')){localStorage.removeItem(K);links=QUICK_LINKS.map(l=>({...l,id:uid()}));render()}};
+  ul.addEventListener('click',e=>{
+    const ed=e.target.closest('[data-ed]'),del=e.target.closest('[data-del]');
+    if(e.target.closest('#qAdd')){openDlg(null);return}
+    if(ed){openDlg(+ed.dataset.ed);return}
+    if(del){const l=links[+del.dataset.del];if(confirm('「'+l.name+'」 바로가기를 지울까요?')){links.splice(+del.dataset.del,1);save();render()}}
   });
+  ul.addEventListener('dragstart',e=>{const li=e.target.closest('li[data-i]');if(!li)return;dragI=+li.dataset.i;li.classList.add('drag');try{e.dataTransfer.setData('text/plain',String(dragI))}catch(_){}});
+  ul.addEventListener('dragend',()=>{dragI=null;ul.querySelectorAll('.drag,.over').forEach(x=>x.classList.remove('drag','over'))});
+  ul.addEventListener('dragover',e=>{const li=e.target.closest('li[data-i]');if(!li||dragI==null)return;e.preventDefault();ul.querySelectorAll('.over').forEach(x=>x.classList.remove('over'));li.classList.add('over')});
+  ul.addEventListener('drop',e=>{const li=e.target.closest('li[data-i]');if(!li||dragI==null)return;e.preventDefault();const to=+li.dataset.i;if(to===dragI)return;
+    const [m]=links.splice(dragI,1);links.splice(to,0,m);save();render()});
+  /* 고치기·추가 창 */
+  const dlg=$('qlDlg'),f=$('qlForm');
+  f.color.innerHTML=Object.keys(C).map(k=>'<option value="'+k+'">'+CN[k]+'</option>').join('');
+  function openDlg(i){cur=i;const l=i==null?{name:'',url:'',desc:'',mark:'',color:'blue'}:links[i];
+    $('qlTitle').textContent=i==null?'바로가기 추가':'바로가기 고치기';
+    f.name.value=l.name;f.url.value=l.url;f.desc.value=l.desc||'';f.mark.value=l.mark||'';f.color.value=C[l.color]?l.color:'blue';
+    $('qlMove').hidden=i==null;dlg.showModal();f.name.focus()}
+  f.addEventListener('submit',e=>{e.preventDefault();
+    let url=f.url.value.trim();if(url&&!/^(https?:)?\/\/|^[\w.-]+\.html|^#/i.test(url))url='https://'+url;
+    const d={name:f.name.value.trim(),url,desc:f.desc.value.trim(),mark:(f.mark.value.trim()||f.name.value.trim().slice(0,1)).slice(0,2),color:f.color.value};
+    if(!d.name||!d.url)return;
+    if(cur==null)links.push({...d,id:uid()});else Object.assign(links[cur],d);
+    save();dlg.close();render()});
+  $('qlCancel').onclick=()=>dlg.close();
+  $('qlMove').onclick=()=>{if(cur==null||cur===0)return;const [m]=links.splice(cur,1);links.unshift(m);save();dlg.close();render()};
+  render();
 })();
 </script>
 <script>
