@@ -343,8 +343,18 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
 .qlist .qb{flex:none;border:0;background:none;cursor:pointer;font-size:12px;padding:0 2px;color:var(--sub)}
 .qlist .qb:first-of-type{margin-left:auto}
 .qadd{width:100%;font:inherit;font-size:13px;font-weight:700;color:var(--green);background:#f1faf6;border:1.5px dashed #9fd8c2;border-radius:10px;padding:6px;cursor:pointer}
+.qtools[hidden]{display:none}
 .qtools{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;color:var(--sub)}
 .qtools button{border:0;background:none;font:inherit;font-weight:700;color:var(--red);cursor:pointer;text-decoration:underline;padding:0}
+/* 칸 제목(수업·상담·보강 | 업무·출장)은 맨 위에 한 번만 */
+.today .colhead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2px 12px;padding:0 9px 2px;position:sticky;top:0;z-index:1}
+.today .colhead h4{margin:0;padding:3px 8px;border-radius:8px;background:var(--navy);color:#fff;font-size:12.5px;display:flex;align-items:center;gap:6px}
+.today .colhead h4 i{background:#fff;color:var(--navy)}
+.today .colhead h4:last-child{background:#5b6275}
+.today .colhead h4:last-child i{color:#5b6275}
+.today .day .cols{margin-top:2px}
+.today .none{color:#b6bccb;padding:1px 6px}
+@media (max-width:560px){.today .colhead{order:2;padding:0 2px 2px;gap:2px 6px}.today .colhead h4{font-size:11.5px;padding:2px 6px}.today{display:flex;flex-direction:column}.today .dtabs{order:1}.today .day{order:3}}
 </style>
 </head>
 <body>
@@ -451,16 +461,16 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
     let h='<div class="day d'+idx+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')'+(isToday?'<span class="hint">✏️ 누르면 고칠 수 있어요</span>':'')+'</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
-    h+='<div class="cols"><div><h4><i>1</i>수업·상담·보강</h4><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">수업·상담·보강이 없어요</li>')+'</ul>';
-    h+='</div><div><h4><i>2</i>업무·출장</h4><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
-      '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">업무·출장이 없어요</li>')+'</ul></div></div></div>';
+    h+='<div class="cols"><div><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">—</li>')+'</ul>';
+    h+='</div><div><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
+      '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">—</li>')+'</ul></div></div></div>';
     return h;
   }
   function render(){
     const d=new Date(),t=new Date(d);t.setDate(d.getDate()+1);
     const t2=new Date(d);t2.setDate(d.getDate()+2);
     const days=[[d,'오늘'],[t,'내일'],[t2,'모레']];
-    box.innerHTML='<div class="dtabs" role="tablist">'+days.map(([x,l],i)=>'<button type="button" role="tab" data-sel="'+i+'" aria-selected="'+(daySel===i)+'">'+l+' <small>'+(x.getMonth()+1)+'. '+x.getDate()+'.('+W[x.getDay()]+')</small></button>').join('')+'</div>'
+    box.innerHTML='<div class="colhead"><h4><i>1</i>수업·상담·보강</h4><h4><i>2</i>업무·출장</h4></div><div class="dtabs" role="tablist">'+days.map(([x,l],i)=>'<button type="button" role="tab" data-sel="'+i+'" aria-selected="'+(daySel===i)+'">'+l+' <small>'+(x.getMonth()+1)+'. '+x.getDate()+'.('+W[x.getDay()]+')</small></button>').join('')+'</div>'
       +days.map(([x,l],i)=>dayBlock(x,l,i===0,i)).join('');
     box.dataset.sel=daySel;
   }
