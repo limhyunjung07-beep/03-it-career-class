@@ -492,7 +492,7 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
     const ul1='<ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">—</li>')+'</ul>';
     const ul2='<ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
       '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">—</li>')+'</ul>';
-    let h='<div class="trow d'+idx+'"><div class="tdate"><span class="tag">'+label+'</span><b>'+(d.getMonth()+1)+'.'+d.getDate()+'.<span>('+W[d.getDay()]+')</span></b>'+(info.holiday?'<small>'+esc(info.holiday)+'</small>':'')+'<button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋ 추가</button></div>'
+    let h='<div class="trow d'+idx+'"><div class="tdate">'+(isToday?'<span class="tag">'+label+'</span>':'')+'<b>'+(d.getMonth()+1)+'.'+d.getDate()+'.<span>('+W[d.getDay()]+')</span></b>'+(info.holiday?'<small>'+esc(info.holiday)+'</small>':'')+'<button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋ 추가</button></div>'
       +'<div class="tcell">'+ul1+'</div><div class="tcell">'+ul2+'</div></div>';
     return h;
   }
