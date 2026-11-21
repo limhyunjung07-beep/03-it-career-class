@@ -355,6 +355,34 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
 .today .day .cols{margin-top:2px}
 .today .none{color:#b6bccb;padding:1px 6px}
 @media (max-width:560px){.today .colhead{order:2;padding:0 2px 2px;gap:2px 6px}.today .colhead h4{font-size:11.5px;padding:2px 6px}.today{display:flex;flex-direction:column}.today .dtabs{order:1}.today .day{order:3}}
+/* ===== 표 모양: 일정 | 수업·상담·보강 | 업무·출장 ===== */
+.today{display:block!important;padding:0!important;gap:0!important;border:1.5px solid #b9c2d6!important;border-radius:12px!important;overflow:hidden;background:#fff}
+.today .dtabs{display:none!important}
+.today .thead,.today .trow{display:grid;grid-template-columns:86px minmax(0,1fr) minmax(0,1fr)}
+.today .thead>div{background:var(--navy);color:#fff;font-weight:700;font-size:13px;text-align:center;padding:5px 4px;border-left:1px solid rgba(255,255,255,.25)}
+.today .thead>div:first-child{border-left:0}
+.today .trow{border-top:1px solid #c9d1e2}
+.today .trow>div{border-left:1px solid #c9d1e2;padding:5px 6px;min-width:0}
+.today .trow>div:first-child{border-left:0}
+.today .trow.d0{background:#eaf7f1}.today .trow.d1{background:#ecf2fc}.today .trow.d2{background:#f4eefa}
+.today .tdate{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center}
+.today .tdate .tag{font-size:11px;padding:0 8px;margin:0}
+.today .tdate b{font-size:15px;color:var(--navy);line-height:1.2;font-variant-numeric:tabular-nums}
+.today .tdate b span{font-size:12px;font-weight:500;margin-left:1px}
+.today .tdate small{font-size:10.5px;color:var(--sub);line-height:1.2}
+.today .tdate .add{margin:2px 0 0;font-size:10.5px;padding:0 7px;line-height:17px}
+.today .trow .tag{background:#fff;border:1.5px solid currentColor}
+.today .trow.d1 .tag,.today .trow.d1 .add{color:var(--blue);border-color:var(--blue);background:#fff}
+.today .trow.d2 .tag,.today .trow.d2 .add{color:#8e44ad;border-color:#8e44ad;background:#fff}
+.today .trow.d0 .tag{background:var(--green);color:#fff;border-color:var(--green)}
+.today .tcell ul{gap:3px}
+.today .tcell .none{color:#b6bccb;text-align:center;padding:4px 0;background:none}
+@media (max-width:560px){
+  .today .thead,.today .trow{grid-template-columns:58px minmax(0,1fr) minmax(0,1fr)}
+  .today .thead>div{font-size:11.5px;padding:4px 2px;letter-spacing:-.04em}
+  .today .trow>div{padding:4px 3px}
+  .today .tdate b{font-size:13px}.today .tdate small{display:none}
+  .today .tdate .add{font-size:10px;padding:0 5px}}
 </style>
 </head>
 <body>
@@ -460,17 +488,18 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
       .sort((a,b)=>a.m-b.m);
     const nC=cs.filter(e=>e.cat==='counsel').length;
     const sum=info.holiday?esc(info.holiday):'수업 '+act+'시간'+(nC?' · 상담 '+nC+'건':'');
-    let h='<div class="day d'+idx+(isToday?'':' next')+'"><div class="th"><span><span class="tag">'+label+'</span>'+(d.getMonth()+1)+'. '+d.getDate()+'.('+W[d.getDay()]+')'+(isToday?'<span class="hint">✏️ 누르면 고칠 수 있어요</span>':'')+'</span><span><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋</button></span></div>';
-    h+='<div class="cols"><div><ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">—</li>')+'</ul>';
-    h+='</div><div><ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
-      '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">—</li>')+'</ul></div></div></div>';
+    const ul1='<ul>'+(rows.length?rows.map(r=>r.html).join(''):'<li class="none">—</li>')+'</ul>';
+    const ul2='<ul>'+(others.length?others.sort((a,b)=>evMin(a.time)-evMin(b.time)).map(e=>
+      '<li tabindex="0" class="ed" data-k="'+esc(e.key)+'" title="'+esc(e.title+(e.time?' · '+e.time:''))+' · 눌러서 고치기"><span class="dot" style="background:'+((CATS[e.cat]||CATS.etc).c)+'"></span><b>'+esc(e.title)+'</b>'+(e.time?'<small>'+esc(e.time)+'</small>':'')+'</li>').join(''):'<li class="none">—</li>')+'</ul>';
+    let h='<div class="trow d'+idx+'"><div class="tdate"><span class="tag">'+label+'</span><b>'+(d.getMonth()+1)+'.'+d.getDate()+'.<span>('+W[d.getDay()]+')</span></b><small>'+sum+'</small><button type="button" class="add" data-add="'+ds+'" title="이 날에 일정 추가">＋ 추가</button></div>'
+      +'<div class="tcell">'+ul1+'</div><div class="tcell">'+ul2+'</div></div>';
     return h;
   }
   function render(){
     const d=new Date(),t=new Date(d);t.setDate(d.getDate()+1);
     const t2=new Date(d);t2.setDate(d.getDate()+2);
     const days=[[d,'오늘'],[t,'내일'],[t2,'모레']];
-    box.innerHTML='<div class="colhead"><h4><i>1</i>수업·상담·보강</h4><h4><i>2</i>업무·출장</h4></div><div class="dtabs" role="tablist">'+days.map(([x,l],i)=>'<button type="button" role="tab" data-sel="'+i+'" aria-selected="'+(daySel===i)+'">'+l+' <small>'+(x.getMonth()+1)+'. '+x.getDate()+'.('+W[x.getDay()]+')</small></button>').join('')+'</div>'
+    box.innerHTML='<div class="thead"><div>일정</div><div>수업·상담·보강</div><div>업무·출장</div></div><div class="dtabs" role="tablist" hidden>'+days.map(([x,l],i)=>'<button type="button" role="tab" data-sel="'+i+'" aria-selected="'+(daySel===i)+'">'+l+' <small>'+(x.getMonth()+1)+'. '+x.getDate()+'.('+W[x.getDay()]+')</small></button>').join('')+'</div>'
       +days.map(([x,l],i)=>dayBlock(x,l,i===0,i)).join('');
     box.dataset.sel=daySel;
   }
