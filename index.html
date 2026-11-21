@@ -383,6 +383,10 @@ dialog.ev::backdrop{background:rgba(29,43,83,.45)}
   .today .trow>div{padding:4px 3px}
   .today .tdate b{font-size:13px}.today .tdate small{display:none}
   .today .tdate .add{font-size:10px;padding:0 5px}}
+/* ＋ 추가: 평소엔 숨기고, 그 줄에 마우스를 올리면 보여요 (터치 화면은 늘 보임) */
+@media (hover:hover){
+  .today .tdate .add{opacity:0;transform:scale(.9);transition:opacity .15s,transform .15s}
+  .today .trow:hover .tdate .add,.today .tdate .add:focus-visible{opacity:1;transform:none}}
 </style>
 </head>
 <body>
