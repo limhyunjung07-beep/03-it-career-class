@@ -44,9 +44,9 @@ const SCHED={
   saveEvent(ev,data){
     if(ev&&ev.fid){const ed=this.edits();ed[ev.fid]=data;this.save('schedule:fixedEdits',ed)}
     else{const m=this.mine(),x=ev&&m.find(y=>y.id===ev.id);
-      if(x)Object.assign(x,data);else m.push({id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...data});
-      this.save('schedule:events',m)}
-    this.refresh();
+      let k;if(x){Object.assign(x,data);k=x.id}else{k='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);m.push({id:k,...data})}
+      this.save('schedule:events',m);this.refresh();return k}
+    this.refresh();return ev.fid;
   },
   deleteEvent(ev){
     if(ev.fid){const ed=this.edits();ed[ev.fid]={deleted:true};this.save('schedule:fixedEdits',ed)}
@@ -56,6 +56,57 @@ const SCHED={
   resetFixed(fid){const ed=this.edits();delete ed[fid];this.save('schedule:fixedEdits',ed);this.refresh()}
 };
 SCHED.refresh();
+
+/* ===== 일정 관련 파일: 이 컴퓨터의 이 브라우저(IndexedDB)에 저장 ===== */
+const SFILES={
+  _db:null,
+  open(){if(!this._db)this._db=new Promise((res,rej)=>{if(!window.indexedDB)return rej(new Error('이 브라우저는 파일 저장을 지원하지 않아요'));
+    const r=indexedDB.open('schedule-files',1);r.onupgradeneeded=()=>{const s=r.result.createObjectStore('files',{keyPath:'id'});s.createIndex('key','key')};
+    r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error||new Error('파일 저장소를 열지 못했어요'))});return this._db},
+  async list(key){const db=await this.open();return new Promise((res,rej)=>{const q=db.transaction('files').objectStore('files').index('key').getAll(key);q.onsuccess=()=>res(q.result.sort((a,b)=>a.at-b.at));q.onerror=()=>rej(q.error)})},
+  async _put(fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('files','readwrite');fn(t.objectStore('files'));t.oncomplete=()=>res();t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error||new Error('저장 공간이 부족할 수 있어요'))})},
+  async add(key,file){const rec={id:'fl'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),key,name:file.name,size:file.size,type:file.type||'',at:Date.now(),blob:file};
+    await this._put(s=>s.put(rec));this._bump(key,1);return rec},
+  async remove(rec){await this._put(s=>s.delete(rec.id));this._bump(rec.key,-1)},
+  async removeAll(key){for(const r of await this.list(key))await this.remove(r)},
+  count(key){return (SCHED.load('schedule:fileCount',{})[key])||0},
+  _bump(key,d){const c=SCHED.load('schedule:fileCount',{});c[key]=Math.max(0,(c[key]||0)+d);if(!c[key])delete c[key];SCHED.save('schedule:fileCount',c)}
+};
+/* 일정 고치기 창 안의 '관련 파일' 칸. getKey(): 지금 고치는 일정의 키(새 일정이면 null) */
+function scheduleFilesUI(box,getKey,onChange){
+  const pend=[];let key=null,list=[];
+  const E=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const sz=b=>b>1048576?(b/1048576).toFixed(1)+'MB':Math.max(1,Math.round(b/1024))+'KB';
+  async function draw(){
+    key=getKey();list=[];let err='';
+    if(key){try{list=await SFILES.list(key)}catch(e){err=e.message||String(e)}}
+    box.innerHTML='<div class="sf-head"><span>📎 관련 파일</span><button type="button" class="sf-add">＋ 파일 올리기</button><input type="file" multiple hidden></div><ul class="sf-list">'
+      +list.map(r=>'<li><button type="button" class="sf-open" data-id="'+r.id+'" title="눌러서 열기·내려받기">'+E(r.name)+'</button><small>'+sz(r.size)+'</small><button type="button" class="sf-del" data-id="'+r.id+'" title="파일 지우기" aria-label="'+E(r.name)+' 지우기">✕</button></li>').join('')
+      +pend.map((f,i)=>'<li class="pend"><span>'+E(f.name)+'</span><small>저장하면 올라가요</small><button type="button" class="sf-del" data-p="'+i+'" aria-label="빼기">✕</button></li>').join('')
+      +(!list.length&&!pend.length?'<li class="sf-empty">'+(err?E(err):'올린 파일이 없어요')+'</li>':'')
+      +'</ul><p class="sf-note">파일은 이 컴퓨터의 이 브라우저에만 저장돼요.</p>';
+  }
+  box.addEventListener('click',async e=>{
+    if(e.target.closest('.sf-add')){box.querySelector('input[type=file]').click();return}
+    const o=e.target.closest('.sf-open');
+    if(o){const r=list.find(x=>x.id===o.dataset.id);if(!r)return;const u=URL.createObjectURL(r.blob);
+      if(/^(image\/|application\/pdf|text\/plain)/.test(r.type))window.open(u,'_blank');
+      else{const a=document.createElement('a');a.href=u;a.download=r.name;document.body.appendChild(a);a.click();a.remove()}
+      setTimeout(()=>URL.revokeObjectURL(u),60000);return}
+    const d=e.target.closest('.sf-del');if(!d)return;
+    if(d.dataset.p!=null){pend.splice(+d.dataset.p,1);draw();return}
+    const r=list.find(x=>x.id===d.dataset.id);
+    if(r&&confirm('‘'+r.name+'’ 파일을 지울까요?')){await SFILES.remove(r);await draw();onChange&&onChange()}
+  });
+  box.addEventListener('change',async e=>{
+    if(!e.target.matches('input[type=file]'))return;const fs=[...e.target.files];e.target.value='';
+    if(!key){pend.push(...fs);draw();return}
+    for(const f of fs){try{await SFILES.add(key,f)}catch(err){alert('‘'+f.name+'’을(를) 저장하지 못했어요: '+(err&&err.message||err))}}
+    await draw();onChange&&onChange();
+  });
+  return {draw,reset(){pend.length=0;return draw()},
+    async commit(k){for(const f of pend.splice(0)){try{await SFILES.add(k,f)}catch(err){alert('‘'+f.name+'’을(를) 저장하지 못했어요: '+(err&&err.message||err))}}}};
+}
 
 
 /* ▼ 내 시간표: 요일(월~금)마다 교시 번호: '수업 이름'. 'x' = 수업 불가(비움 표시) */
@@ -234,8 +285,7 @@ function scheduleDay(ds){
   const evs=FIXED.concat(mine);
   const blocker=(p,grade)=>{
     if(HOL[ds.slice(5)])return HOL[ds.slice(5)];
-    for(const e of evs){if(!onDay(e,ds))continue;if(e.off)return e.title;
-      if(e.last&&e.last[grade]&&p>e.last[grade])return grade+'학년 '+e.last[grade]+'교시 후 하교'}
+    /* 출장·행사 일정이 있어도 수업은 그대로 둬요(줄 긋지 않음). 공휴일·휴강만 '수업 없음' */
     return '';
   };
   /* 반별 수업 */

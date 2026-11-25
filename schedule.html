@@ -110,7 +110,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 .tt thead th.tcol em{color:#fff}
 .tt td i{display:block;font-style:normal;font-size:11px;font-weight:700;line-height:1.3;margin-top:2px}
 .tt td i.pl{color:var(--green)}
-.tt td.blk b{background:#eef0f4!important;color:var(--sub)!important;text-decoration:line-through}
+.tt td.blk b{background:#eef0f4!important;color:var(--sub)!important}
 .tt td.blk i{color:var(--red)}
 .tt td.offday{background:repeating-linear-gradient(45deg,#fff 0 6px,#f6f7fa 6px 12px)}
 .tt-head h3{margin:0;font-family:'Jua',sans-serif;font-weight:400;font-size:26px;color:var(--navy)}
@@ -164,7 +164,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 .cp-warn b{display:block;margin-bottom:2px}
 .cp-warn:empty{display:none}
 .period.off{border-style:solid;border-color:var(--line);background:#f4f5f8;opacity:.75}
-.period.off b{text-decoration:line-through;color:var(--sub)}
+.period.off b{color:var(--sub)}
 .period .why{grid-column:2;font-size:12px;color:var(--red);font-weight:700}
 .cell.done{border-color:#bfe6d6;background:#f1faf6}
 .cell.done b{color:var(--green)}
@@ -198,6 +198,23 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   .ev{font-size:0;height:6px;padding:0;border-radius:3px}.ev.fixed{border:0;background:var(--c);opacity:.55}.more{font-size:10px}.hname{display:none}
   .cal-head h3{font-size:24px}.row2{grid-template-columns:1fr}}
 @media print{.go-home,.home-btn,.fab-home,.side,.filters,.title-row .btn,.nav{display:none}.layout{grid-template-columns:1fr}}
+/* 일정 관련 파일 */
+.sfiles{border:1.5px dashed var(--line);border-radius:12px;padding:8px 10px;margin:4px 0 8px}
+.sf-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:700;color:var(--sub)}
+.sf-head .sf-add{font:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--green);background:#fff;color:var(--green);border-radius:999px;padding:2px 10px;cursor:pointer}
+.sf-head .sf-add:hover{background:var(--green);color:#fff}
+.sf-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px}
+.sf-list li{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:8px;padding:3px 8px;font-size:13px;min-width:0}
+.sf-list .sf-open{flex:1;min-width:0;text-align:left;font:inherit;font-weight:700;color:var(--navy);background:none;border:0;padding:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sf-list .sf-open:hover{text-decoration:underline;color:var(--green)}
+.sf-list li>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sf-list small{flex:none;color:var(--sub);font-size:11px}
+.sf-list .sf-del{flex:none;font:inherit;font-size:12px;border:0;background:none;color:var(--sub);cursor:pointer;padding:0 2px}
+.sf-list .sf-del:hover{color:var(--red)}
+.sf-list .sf-empty{background:none;color:var(--sub);font-size:12px;padding:2px 0}
+.sf-list .pend{opacity:.75}
+.sf-note{margin:6px 0 0;font-size:11px;color:var(--sub)}
+.clip-n{flex:none;font-size:11px;font-weight:700;color:var(--green)}
 </style>
 </head>
 <body>
@@ -299,6 +316,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
   <label class="fld"><span>시간 (선택)</span><input name="time" maxlength="30" placeholder="예) 15:00 / 5교시"></label>
   <div class="fld"><span>분류</span><div class="cats" id="formCats"></div></div>
   <label class="fld"><span>메모 (선택)</span><textarea name="memo" rows="3" maxlength="500" placeholder="장소, 준비물, 링크 등"></textarea></label>
+  <div class="sfiles" id="formFiles"></div>
   <div class="dlg-btns">
     <button type="button" class="btn danger" id="delBtn">삭제</button>
     <button type="button" class="btn" id="origBtn" hidden>원래대로</button>
@@ -500,6 +518,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
 
   const form=$('#form');
   $('#formCats').innerHTML=Object.entries(CATS).map(([k,v])=>'<label style="--c:'+v.c+'"><input type="radio" name="cat" value="'+k+'">'+v.name+'</label>').join('');
+  const FUI=scheduleFilesUI(document.getElementById('formFiles'),()=>editing?(editing.fid||editing.id):null,()=>renderAll());
   function openForm(ev,date){
     editing=ev||null;form.reset();
     $('#formTitle').innerHTML=ev?'일정 고치기'+(ev.fid?'<span class="lock">고정 일정</span>':''):'일정 추가';
@@ -509,7 +528,7 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
     form.title.value=v.title||'';form.start.value=v.start;form.end.value=v.end||'';
     form.time.value=v.time||'';form.memo.value=v.memo||'';
     form.querySelector('[name=cat][value="'+(CATS[v.cat]?v.cat:'etc')+'"]').checked=true;
-    $('#dlg').showModal();form.title.focus();
+    FUI.reset();$('#dlg').showModal();form.title.focus();
   }
   form.addEventListener('submit',e=>{
     e.preventDefault();
@@ -519,18 +538,20 @@ dialog::backdrop{background:rgba(29,43,83,.45)}
     if(end===start)end='';
     const data={title:f.get('title').trim(),start,end,time:f.get('time').trim(),cat:f.get('cat')||'etc',memo:f.get('memo').trim()};
     if(!data.title)return;
-    if(editing&&editing.fid){SCHED.saveEvent(editing,data)}
-    else if(editing)Object.assign(editing,data);
-    else mine.push({id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...data});
-    save(KEY,mine);$('#dlg').close();
+    let fk;
+    if(editing&&editing.fid){SCHED.saveEvent(editing,data);fk=editing.fid}
+    else if(editing){Object.assign(editing,data);fk=editing.id}
+    else{fk='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);mine.push({id:fk,...data})}
+    save(KEY,mine);$('#dlg').close();FUI.commit(fk).then(()=>renderAll());
     sel=start;const d=parse(start);view=new Date(d.getFullYear(),d.getMonth(),1);
     renderAll();
   });
   $('#cancelBtn').onclick=()=>$('#dlg').close();
   $('#delBtn').onclick=()=>{
     if(!editing||!confirm('이 일정을 지울까요?'))return;
+    const fk=editing.fid||editing.id;
     if(editing.fid)SCHED.deleteEvent(editing);else{mine=mine.filter(x=>x!==editing);save(KEY,mine)}
-    $('#dlg').close();renderAll();
+    $('#dlg').close();SFILES.removeAll(fk).catch(()=>{}).then(()=>renderAll());renderAll();
   };
   $('#restoreTT').onclick=()=>{const n=Object.values(SCHED.ttEdits()).reduce((a,r)=>a+Object.keys(r).length,0)+Object.values(SCHED.dayEdits()).reduce((a,r)=>a+Object.keys(r).length,0);
     if(!n){alert('바꾼 수업이 없어요.');return}
